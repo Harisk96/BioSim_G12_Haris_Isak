@@ -10,6 +10,7 @@ class Animals:
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
     """
+<<<<<<< Updated upstream
     def __init__(self):
         """
         Constructor for animal class.
@@ -58,6 +59,13 @@ class Animals:
         :return:
         """
 
+=======
+    parameters = {}
+
+    @staticmethod
+    @jit
+    def _q
+>>>>>>> Stashed changes
 
 class Herbivore(Animal):
     """
