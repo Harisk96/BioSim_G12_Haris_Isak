@@ -12,12 +12,30 @@ class Animals:
     """
     parameters = {}
 
-    def __init__(self):
+    @jit
+    @staticmethod
+    def _q(sign, x, x_half, phi):
+        """
+        Function used to compute fitness
+        :param sign: int, takes the value +1 for age and -1 for weight
+        :param x: int, float, age multiplied with weight
+        :param x_half: int, float, age halved multiplied with weight halved
+        :param phi: int, float, phi_age multiplied with phi_weight
+        :return: float
+        """
+        return 1.0/(1 + np.exp(sign*phi*(x - x_half)))
+    
+
+
+
+    def __init__(self, age=0, w_birth):
         """
         Constructor for animal class.
         """
+        self.age = age
+        self.w_birth = w_birth
 
-    def Set_Params(self):
+    def set_params(self):
         """
         Setting the parameters given in the project PDF for the animal superclass.
         :return:
@@ -25,34 +43,39 @@ class Animals:
 
         w_birth =
 
-    def Inital_Weight(self):
+    def initial_weight(self):
         """
          the birth weight is drawn from a Gaussian distribution with wmean_birth and sigma_birth.
         :return:
         """
 
-    def Weight_Update(self):
+    def weight_update(self):
         """
         When an animal eats an amount F of fodder, its weight increases by βF. Every year,
         the weight of the animal decreases by ηw.
         :return:
         """
 
-    def Birth(self):
+    def birth(self):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
 
-    def Fitness(self):
+    def fitness(self):
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
         :return: Float, value between 0 and 1 representing fitness.
         """
-
-    def Migrate(self):
+    def update_fitness(self):
+        """
+        Updates the fitness of the animal, which is re-calculated as a consequence of changes in
+        the attributes of the animal.
+        :return: Float, value between 0 and 1 representing the new value of the fitness
+        """
+    def migrate(self):
         """
         Decides the probability that the animal will move to one of the neighbouring four cells.
         All four cells have equal probability and the animal will not move if the chosen cell
@@ -60,11 +83,6 @@ class Animals:
         :return:
         """
 
-    parameters = {}
-
-    @staticmethod
-    @jit
-    def _q
 
 class Herbivore(Animal):
     """
