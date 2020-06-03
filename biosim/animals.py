@@ -10,7 +10,8 @@ class Animals:
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
     """
-<<<<<<< Updated upstream
+    parameters = {}
+
     def __init__(self):
         """
         Constructor for animal class.
