@@ -12,8 +12,8 @@ class Animals:
     """
     parameters = {}
 
-    @jit
     @staticmethod
+    @jit
     def _q(sign, x, x_half, phi):
         """
         Function used to compute fitness
@@ -46,11 +46,20 @@ class Animals:
 
         w_birth =
 
-    def initial_weight(self):
+    @classmethod
+    @jit
+    def initial_weight(cls, params):
         """
-         the birth weight is drawn from a Gaussian distribution with wmean_birth and sigma_birth.
-        :return:
+         the birth weight is drawn from a Gaussian distribution with w_mean_birth and sigma_birth.
+         We use numpy.random to draw a random value from the distribution we create with .normal.
+         The mean and the standard deviation of the weight are pulled from the parameters dictionary
+          of the subclass.
+
+        :return: float; initial weight
         """
+
+        return np.random.normal(params['w_birth'], params['sigma_birth'])
+
 
     def weight_update(self):
         """
