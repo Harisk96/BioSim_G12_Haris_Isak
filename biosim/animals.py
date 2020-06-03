@@ -24,7 +24,10 @@ class Animals:
         :return: float
         """
         return 1.0/(1 + np.exp(sign*phi*(x - x_half)))
-    
+
+    @classmethod
+    def _calculate_fitness(cls):
+
 
 
 
