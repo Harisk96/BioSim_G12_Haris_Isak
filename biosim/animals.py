@@ -59,13 +59,11 @@ class Animals:
         :return:
         """
 
-=======
     parameters = {}
 
     @staticmethod
     @jit
     def _q
->>>>>>> Stashed changes
 
 class Herbivore(Animal):
     """
