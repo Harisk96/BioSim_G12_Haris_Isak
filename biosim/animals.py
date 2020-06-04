@@ -104,7 +104,11 @@ class Animals:
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
+<<<<<<< HEAD
         np.min(1, self.params['gamma']*self.fitness*(N-1))
+=======
+        
+>>>>>>> animals_superclass
 
  #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
