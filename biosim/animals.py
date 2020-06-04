@@ -80,11 +80,6 @@ class Animals:
         :return:
         """
 
-        
-
-
-
-
     def update_age(self):
         """
         Updates the age of the animal with one year pr cycle
