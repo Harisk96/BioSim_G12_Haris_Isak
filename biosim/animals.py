@@ -25,14 +25,22 @@ class Animals:
         """
         return 1.0/(1 + np.exp(sign*phi*(x - x_half)))
 
+
     @classmethod
-    def _calculate_fitness(cls, age, weight, params):
+    def _update_fitness(cls, age, weight, params):
     """
     Function that calculates the current fitness of the animal.
     :param age: int, age of the animal
     :param weight: float, weight of the animal
     :param params: dict, dictionary containing the parameters
     """
+
+    q_positive = cls.q(1, age, params['a_half'], params['phi_age'])
+    q_negative = cls.q(-1, weight, params['w_half'], params['phi_weight'])
+
+    q = q_positive*q_negative
+
+    return q
 
     @classmethod
     @jit
