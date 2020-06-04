@@ -10,7 +10,15 @@ class Animals:
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
     """
-    parameters = {}
+    params = {}
+
+    def __init__(self, age=0, weight=None):
+        """
+        Constructor for animal class.
+        """
+        self.age = age
+        if  isinstance(weight, None):
+            self.w_birth = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
 
     @staticmethod
     @jit
@@ -45,7 +53,6 @@ class Animals:
     return q
 
     @classmethod
-    @jit
     def initial_weight(cls, params):
     """
     the birth weight is drawn from a Gaussian distribution with w_mean_birth and sigma_birth.
@@ -58,12 +65,6 @@ class Animals:
 
     return np.random.normal(params['w_birth'], params['sigma_birth'])
 
-    def __init__(self, age=0, w_birth):
-        """
-        Constructor for animal class.
-        """
-        self.age = age
-        self.w_birth = w_birth
 
     def set_params(self):
         """
@@ -73,15 +74,23 @@ class Animals:
 
 
 
-    def weight_update(self, params):
+ #   def weight_update(self, params):
         """
         When an animal eats an amount F of fodder, its weight increases by βF. Every year,
         the weight of the animal decreases by ηw.
         :return:
         """
 
-        
 
+    def eat(self, F):
+
+        added_weight = self.params['beta']*F
+        self.weight += added_weight
+
+
+    def yearly_weight_loss
+
+        self.weight += -
 
 
 
@@ -125,7 +134,7 @@ class Herbivore(Animal):
     food it can eat depends on the amount of food in the cell. Herbivores eat in a random order.
     """
 
-    parameters = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
+    params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
     'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5,
     'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
 
@@ -143,7 +152,7 @@ class Carnivore(Animal):
     try to kill one herbivore at a time, trying to kill the herbivore with the lowest fitness first.
     """
 
-    parameters = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 4.0,
+    params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 4.0,
     'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5,
     'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
