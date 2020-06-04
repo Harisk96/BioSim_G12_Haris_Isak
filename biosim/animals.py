@@ -101,7 +101,7 @@ class Animals:
         """
         pass
 
-    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
+ #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
