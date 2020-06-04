@@ -99,7 +99,7 @@ class Animals:
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
-        pass
+        
 
  #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
