@@ -73,12 +73,17 @@ class Animals:
 
 
 
-    def weight_update(self):
+    def weight_update(self, params):
         """
         When an animal eats an amount F of fodder, its weight increases by βF. Every year,
         the weight of the animal decreases by ηw.
         :return:
         """
+
+        
+
+
+
 
     def update_age(self):
         """
@@ -94,7 +99,8 @@ class Animals:
         :return:
         """
 
-    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
+
+#    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
