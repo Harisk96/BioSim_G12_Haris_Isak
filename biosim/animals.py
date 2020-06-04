@@ -52,7 +52,9 @@ class Animals:
         if  isinstance(weight, None):
             self.weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
 
-        self.fitness = self._fitness_equation(self.age,self.weight,self.params)
+        self.fitness = None
+        if self.fitness = None
+            update_fitness()
 
 
     def update_fitness(self):
@@ -63,6 +65,7 @@ class Animals:
         Setting the parameters given in the project PDF for the animal superclass.
         :return:
         """
+        pass
 
 
     def eat(self, F):
@@ -73,6 +76,7 @@ class Animals:
         """
         added_weight = self.params['beta']*F
         self.weight += added_weight
+        update_fitness()
 
 
 
@@ -83,6 +87,7 @@ class Animals:
         """
         subtracted_weight = self.weight*self.params['eta']
         self.weight -= subtracted_weight
+        update_fitness()
 
 
     def update_age(self):
@@ -93,13 +98,13 @@ class Animals:
         self.age += 1
         self.update_fitness()
 
-    def birth(self):
+    def birth(self, N):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
-        pass
+        np.min(1, self.params['gamma']*self.fitness*(N-1))
 
  #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
