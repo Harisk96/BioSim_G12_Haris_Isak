@@ -26,10 +26,27 @@ class Animals:
         return 1.0/(1 + np.exp(sign*phi*(x - x_half)))
 
     @classmethod
-    def _calculate_fitness(cls):
+    def _calculate_fitness(cls, age, weight, params):
+    """
+    Function that calculates the current fitness of the animal.
+    :param age: int, age of the animal
+    :param weight: float, weight of the animal
+    :param params: dict, dictionary containing the parameters
+    """
 
+    @classmethod
+    @jit
+    def initial_weight(cls, params):
+    """
+    the birth weight is drawn from a Gaussian distribution with w_mean_birth and sigma_birth.
+    We use numpy.random to draw a random value from the distribution we create with .normal.
+    The mean and the standard deviation of the weight are pulled from the parameters dictionary
+    of the subclass.
 
+    :return: float; initial weight
+    """
 
+    return np.random.normal(params['w_birth'], params['sigma_birth'])
 
     def __init__(self, age=0, w_birth):
         """
@@ -46,19 +63,7 @@ class Animals:
 
         w_birth =
 
-    @classmethod
-    @jit
-    def initial_weight(cls, params):
-        """
-         the birth weight is drawn from a Gaussian distribution with w_mean_birth and sigma_birth.
-         We use numpy.random to draw a random value from the distribution we create with .normal.
-         The mean and the standard deviation of the weight are pulled from the parameters dictionary
-          of the subclass.
 
-        :return: float; initial weight
-        """
-
-        return np.random.normal(params['w_birth'], params['sigma_birth'])
 
 
     def weight_update(self):
