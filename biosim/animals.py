@@ -27,12 +27,14 @@ class Animals:
 
 
     @classmethod
-    def _update_fitness(cls, age, weight, params):
+    def _current_fitness(cls, age, weight, params):
     """
     Function that calculates the current fitness of the animal.
     :param age: int, age of the animal
     :param weight: float, weight of the animal
     :param params: dict, dictionary containing the parameters
+
+    :return: float, value between 0 and 1, returns current fitness of animal
     """
 
     q_positive = cls.q(1, age, params['a_half'], params['phi_age'])
@@ -69,9 +71,6 @@ class Animals:
         :return:
         """
 
-        w_birth =
-
-
 
 
     def weight_update(self):
@@ -81,7 +80,12 @@ class Animals:
         :return:
         """
 
-    def update_age(self,):
+    def update_age(self):
+        """
+        Updates the age of the animal with one year pr cycle
+        :return: int, positive integer greater or equal than zero, age of the animal
+        """
+        self.age += 1
 
     def birth(self):
         """
@@ -90,18 +94,14 @@ class Animals:
         :return:
         """
 
-    def fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
+    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
         :return: Float, value between 0 and 1 representing fitness.
         """
-    def update_fitness(self): (incorporate into first function)
-        """
-        Updates the fitness of the animal, which is re-calculated as a consequence of changes in
-        the attributes of the animal.
-        :return: Float, value between 0 and 1 representing the new value of the fitness
-        """
+
+
     def migrate(self):
         """
         Decides the probability that the animal will move to one of the neighbouring four cells.
