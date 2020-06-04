@@ -13,14 +13,6 @@ class Animals:
     """
     params = {}
 
-    def __init__(self, age=0, weight=None):
-        """
-        Constructor for animal class.
-        """
-        self.age = age
-        if  isinstance(weight, None):
-            self.w_birth = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
-
     @staticmethod
     @jit
     def _q(sign, x, x_half, phi):
@@ -32,40 +24,39 @@ class Animals:
         :param phi: int, float, phi_age multiplied with phi_weight
         :return: float
         """
-        return 1.0/(1 + np.exp(sign*phi*(x - x_half)))
-
-
-    @classmethod
-    def _current_fitness(cls, age, weight, params):
-    """
-    Function that calculates the current fitness of the animal.
-    :param age: int, age of the animal
-    :param weight: float, weight of the animal
-    :param params: dict, dictionary containing the parameters
-
-    :return: float, value between 0 and 1, returns current fitness of animal
-    """
-
-    q_positive = cls.q(1, age, params['a_half'], params['phi_age'])
-    q_negative = cls.q(-1, weight, params['w_half'], params['phi_weight'])
-
-    q = q_positive*q_negative
-
-    return q
+        return 1.0 / (1 + np.exp(sign * phi * (x - x_half)))
 
     @classmethod
-    def initial_weight(cls, params):
-    """
-    the birth weight is drawn from a Gaussian distribution with w_mean_birth and sigma_birth.
-    We use numpy.random to draw a random value from the distribution we create with .normal.
-    The mean and the standard deviation of the weight are pulled from the parameters dictionary
-    of the subclass.
+    def _fitness_equation(cls, age, weight, params):
+        """
+        Function that calculates the current fitness of the animal.
+        :param age: int, age of the animal
+        :param weight: float, weight of the animal
+        :param params: dict, dictionary containing the parameters
 
-    :return: float; initial weight
-    """
+        :return: float, value between 0 and 1, returns current fitness of animal
+        """
 
-    return np.random.normal(params['w_birth'], params['sigma_birth'])
+        q_positive = cls._q(1, age, params['a_half'], params['phi_age'])
+        q_negative = cls._q(-1, weight, params['w_half'], params['phi_weight'])
 
+        q = q_positive * q_negative
+
+        return q
+
+    def __init__(self, age=0, weight=None):
+        """
+        Constructor for animal class.
+        """
+        self.age = age
+        if  isinstance(weight, None):
+            self.weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+
+        self.fitness = self._fitness_equation(self.age,self.weight,self.params)
+
+
+    def update_fitness(self):
+        self.fitness = self._fitness_equation(self.age, self.weight, self.params)
 
     def set_params(self):
         """
@@ -74,25 +65,24 @@ class Animals:
         """
 
 
-
- #   def weight_update(self, params):
-        """
-        When an animal eats an amount F of fodder, its weight increases by βF. Every year,
-        the weight of the animal decreases by ηw.
-        :return:
-        """
-
-
     def eat(self, F):
-
+        """
+        When an animal eats an amount F of fodder, its weight increases by βF.
+        :param F: Amount of food eaten by the animal
+        :return: float, increase of weight
+        """
         added_weight = self.params['beta']*F
         self.weight += added_weight
 
 
-    def yearly_weight_loss
-        substracted_weight = self.weight*self.params['eta']
-        self.weight -= substracted_weight
 
+    def yearly_weight_loss(self):
+        """
+        Every year, the weight of the animal decreases by ηw.
+        :return: float, amount the animals weight decreases by
+        """
+        subtracted_weight = self.weight*self.params['eta']
+        self.weight -= subtracted_weight
 
 
     def update_age(self):
@@ -101,6 +91,7 @@ class Animals:
         :return: int, positive integer greater or equal than zero, age of the animal
         """
         self.age += 1
+        self.update_fitness()
 
     def birth(self):
         """
@@ -108,15 +99,15 @@ class Animals:
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
+        pass
 
-
-#    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
+    def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
         :return: Float, value between 0 and 1 representing fitness.
         """
-
+        self._fitness_fitness(self, weight)
 
     def migrate(self):
         """
@@ -125,7 +116,7 @@ class Animals:
         is water.
         :return:
         """
-
+        pass
 
 class Herbivore(Animal):
     """
