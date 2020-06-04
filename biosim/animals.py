@@ -77,7 +77,7 @@ class Animals:
         """
         added_weight = self.params['beta']*F
         self.weight += added_weight
-        update_fitness()
+        self.update_fitness()
 
 
 
@@ -88,7 +88,7 @@ class Animals:
         """
         subtracted_weight = self.weight*self.params['eta']
         self.weight -= subtracted_weight
-        update_fitness()
+        self.update_fitness()
 
 
     def update_age(self):
@@ -154,6 +154,8 @@ class Animals:
         :return:
         """
         pass
+    # def prob_move():
+    # def prob_die():
 
 class Herbivore(Animal):
     """
