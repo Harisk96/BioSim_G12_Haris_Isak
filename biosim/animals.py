@@ -68,6 +68,8 @@ class Animals:
         :return:
         """
 
+    def update_age(self,):
+
     def birth(self):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
@@ -75,13 +77,13 @@ class Animals:
         :return:
         """
 
-    def fitness(self):
+    def fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
         """
         The overall condition of the animal is described by its ﬁtness,
         which is calculated based on age and weight using a formula.
         :return: Float, value between 0 and 1 representing fitness.
         """
-    def update_fitness(self):
+    def update_fitness(self): (incorporate into first function)
         """
         Updates the fitness of the animal, which is re-calculated as a consequence of changes in
         the attributes of the animal.
@@ -132,3 +134,11 @@ class Carnivore(Animal):
         Function that determines wether and when a carnivore will kill a herbivore and consume it.
         :return:
         """
+
+if __name__ == "__main__":
+    h = Herbivore(age=2, weight=100)
+    print(h.fitness)
+    h.update_wih
+
+    #more for animals with more weight
+    #less for animals with less weight
