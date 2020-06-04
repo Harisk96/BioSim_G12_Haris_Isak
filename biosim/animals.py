@@ -90,8 +90,8 @@ class Animals:
 
 
     def yearly_weight_loss
-
-        self.weight += -
+        substracted_weight = self.weight*self.params['eta']
+        self.weight -= substracted_weight
 
 
 
