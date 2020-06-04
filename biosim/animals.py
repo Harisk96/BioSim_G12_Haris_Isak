@@ -2,6 +2,7 @@
 
 from numba import jit
 import numpy as np
+import random
 
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
@@ -105,7 +106,36 @@ class Animals:
         :return:
         """
         g = self.params['gamma']
+        zeta = self.params['zeta']
+        xi = self.params['xi']
         p_birth = np.min(1, g * self.fitness * (N - 1))
+
+        #Each animal can only give birth to one offspring
+        # If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
+        while offspring = False:
+
+            if self.weight < zeta(params['w_birth'] + params['sigma_weight']):
+                return
+            #sannsynligheten for at offspring skjer
+            else:
+                p_birth = p_birth
+
+            if random.uniform(0, 1) <= p_birth:
+                birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+                self.weight -= xi*birth_weight
+
+
+                if isinstance(self, Herbivore):
+                    self.update_fitness()
+                    return Herbivore(0, birth_weight)
+
+
+                elif isinstance(self, Carnivore):
+                    self.update_fitness()
+                    return Carnivore(0, birth_weight)
+
+                offspring = True
+                return offspring
 
 
  #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
