@@ -126,43 +126,41 @@ class Animals:
         self.age += 1
         self.update_fitness()
 
+    def birth_check(self):
+        if self.weight > zeta(params['w_birth'] + params['sigma_weight']):
+            return birth(N)
+
+    @staticmethod
+    def birth_prob(g, fitness, N)
+        return np.min(1, g * fitness * (N - 1))
+
     def birth(self, N):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
+
         g = self.params['gamma']
         zeta = self.params['zeta']
         xi = self.params['xi']
-        p_birth = np.min(1, g * self.fitness * (N - 1))
+        p_birth = birth_prob(g, self.fitness, N)  # Egen funksjon, static method
 
-        #Each animal can only give birth to one offspring
-        #If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
-        while not offspring: # while offspring = False
+        # Each animal can only give birth to one offspring
+        # If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
 
-            if self.weight < zeta(params['w_birth'] + params['sigma_weight']):
-                return
-            #sannsynligheten for at offspring skjer
-            else:
-                p_birth = p_birth
+        if random.uniform(0, 1) <= p_birth:
+            birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+            self.weight -= xi * birth_weight
 
-            if random.uniform(0, 1) <= p_birth:
-                birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
-                self.weight -= xi*birth_weight
+            if isinstance(self, Herbivore):
+                self.update_fitness()
+                return Herbivore(0, birth_weight)
 
 
-                if isinstance(self, Herbivore):
-                    self.update_fitness()
-                    return Herbivore(0, birth_weight)
-
-
-                elif isinstance(self, Carnivore):
-                    self.update_fitness()
-                    return Carnivore(0, birth_weight)
-
-                offspring = True
-                return offspring
+            elif isinstance(self, Carnivore):
+                self.update_fitness()
+                return Carnivore(0, birth_weight)
 
 
  #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
