@@ -10,8 +10,46 @@ class Cell:
 
     def __init__(self):
         self.fodder = 0
-        current_animals = {Herbivore: [], Carnivore: []}
-        newborn_animals = {Herbivore: [], Carnivore: []}
+        current_animals = {Herbivore: []}
+
+    def grow_fodder(self):
+
+    def place_animals(self):
+        """
+        Place animals from list (list containing dicts?) into the cell.
+        :return:
+        """
+
+    def birth_cycle(self):
+
+
+    def weightloss(self):
+
+    def feed(self):
+        #grow fodder
+        #feed_carnivores()
+        #feed_herbivores
+
+    def feed_herbivore
+
+    #def feed carnivore (Jobber vi med senere)
+
+    def age(self):
+
+    def death_square(self):
+        surviving = []
+        eller_en_liste_med_dode = ?
+
+    def add_newborn_square(self):???
+
+
+
+
+    def reset_square(self):
+
+
+
+    def delete(self):???
 
 class Highland(Cell):
     migrate_to: True
