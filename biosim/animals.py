@@ -181,6 +181,13 @@ class Animals:
         :return:
         """
         pass
+
+    def death(self):
+        if self.weight == 0:
+            return False
+        prob_death = self.weight * (1 - self.fitness)
+        random_num = random.uniform(0, 1)
+        return prob_death > random_num
     # def prob_move():
     # def prob_die():
 
