@@ -45,17 +45,42 @@ class Animals:
 
         return q
 
+    @classmethod
+    def set_params(cls, params):
+        """
+        Updates the parameters
+        :param params:
+        :return:
+        """
+
+        if not isinstance(params, dict):
+            raise TypeError('params must be of type dict')
+
+        cls.params.update(params)
+
     def __init__(self, age=0, weight=None):
         """
         Constructor for animal class.
         """
+        if not isinstance(age, int):
+            raise TypeError("'age' must be of type int ")
+
+        if age > 0 and (not isinstance(weight, (int, float))):
+            raise TypeError('Weight must be of either type int or type float after first iteration')
+
+        if age < 0:
+            raise ValueError("'age' must be greater than or equal to zero")
+
+        if weight < 0:
+            raise ValueError("'weight' must be greater than or equal to zero")
+
         self.age = age
-        if  isinstance(weight, None):
+        if weight is None:
             self.weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
 
         self.fitness = None
-        if self.fitness = None
-            update_fitness()
+        if self.fitness is None:
+            self.update_fitness()
 
 
     def update_fitness(self):
@@ -111,8 +136,8 @@ class Animals:
         p_birth = np.min(1, g * self.fitness * (N - 1))
 
         #Each animal can only give birth to one offspring
-        # If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
-        while offspring = False:
+        #If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
+        while not offspring: # while offspring = False
 
             if self.weight < zeta(params['w_birth'] + params['sigma_weight']):
                 return
@@ -169,6 +194,9 @@ class Herbivore(Animal):
     'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5,
     'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
 
+    def __init__(self, age, weight):
+        super().__init__(age, weight)
+
     def feed(self):
 
 class Carnivore(Animal):
@@ -183,10 +211,12 @@ class Carnivore(Animal):
     try to kill one herbivore at a time, trying to kill the herbivore with the lowest fitness first.
     """
 
-    params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 4.0,
+    params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
     'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5,
     'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
+    def __init__(self, age, weight):
+        super().__init__(age, weight)
 
     def slay(self):
         """
