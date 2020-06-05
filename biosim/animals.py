@@ -102,7 +102,12 @@ class Animals:
         :param F: Amount of food eaten by the animal
         :return: float, increase of weight
         """
-        added_weight = self.params['beta']*F
+        if F < self.params('F'):
+            food_eaten = F
+        else:
+            food_eaten = self.params['F']
+
+        added_weight = self.params['beta']*food_eaten
         self.weight += added_weight
         self.update_fitness()
 
@@ -126,9 +131,10 @@ class Animals:
         self.age += 1
         self.update_fitness()
 
-    def birth_check(self):
-        if self.weight > zeta(params['w_birth'] + params['sigma_weight']):
-            return birth(N)
+    def birth_check(self, N):
+        zeta = self.params['zeta']
+        if self.weight > zeta*(self.params['w_birth'] + self.params['sigma_weight']):
+            return self.birth(N)
 
     @staticmethod
     def birth_prob(g, fitness, N)
@@ -142,7 +148,6 @@ class Animals:
         """
 
         g = self.params['gamma']
-        zeta = self.params['zeta']
         xi = self.params['xi']
         p_birth = birth_prob(g, self.fitness, N)  # Egen funksjon, static method
 
@@ -163,14 +168,6 @@ class Animals:
                 return Carnivore(0, birth_weight)
 
 
- #   def update_fitness(self): (Completing and testing, is it between zero and 1, does it increase with weight)
-        """
-        The overall condition of the animal is described by its ﬁtness,
-        which is calculated based on age and weight using a formula.
-        :return: Float, value between 0 and 1 representing fitness.
-        """
-        self._fitness_fitness(self, weight)
-
     def migrate(self):
         """
         Decides the probability that the animal will move to one of the neighbouring four cells.
@@ -178,7 +175,9 @@ class Animals:
         is water.
         :return:
         """
-        pass
+        prob_mig = self.params['mu'] * self.fitness
+        random_numb = random.uniform(0, 1)
+        return prob_mig > random_numb
 
     def death(self):
         if self.weight == 0:
@@ -204,8 +203,6 @@ class Herbivore(Animal):
     def __init__(self, age, weight):
         super().__init__(age, weight)
 
-    def feed(self):
-
 class Carnivore(Animal):
     """
     Carnivore subclass. Carnivores can stay in all landscape types except water, i.e desert,
@@ -230,7 +227,7 @@ class Carnivore(Animal):
         Function that determines wether and when a carnivore will kill a herbivore and consume it.
         :return:
         """
-
+        pass
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=100)
     print(h.fitness)
