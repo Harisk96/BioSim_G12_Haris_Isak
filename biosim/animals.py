@@ -77,6 +77,8 @@ class Animals:
         self.age = age
         if weight is None:
             self.weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+        else:
+            self.weight = weight
 
         self.fitness = None
         if self.fitness is None:
