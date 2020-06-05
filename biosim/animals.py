@@ -8,6 +8,7 @@ __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
 
 class Animals:
+
     """
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
@@ -17,6 +18,7 @@ class Animals:
     @staticmethod
     @jit
     def _q(sign, x, x_half, phi):
+
         """
         Function used to compute fitness
         :param sign: int, takes the value +1 for age and -1 for weight
@@ -88,13 +90,6 @@ class Animals:
     def update_fitness(self):
         self.fitness = self._fitness_equation(self.age, self.weight, self.params)
 
-    def set_params(self):
-        """
-        Setting the parameters given in the project PDF for the animal superclass.
-        :return:
-        """
-        pass
-
 
     def eat(self, F):
         """
@@ -102,7 +97,7 @@ class Animals:
         :param F: Amount of food eaten by the animal
         :return: float, increase of weight
         """
-        if F < self.params('F'):
+        if F < self.params['F']:
             food_eaten = F
         else:
             food_eaten = self.params['F']
@@ -137,7 +132,7 @@ class Animals:
             return self.birth(N)
 
     @staticmethod
-    def birth_prob(g, fitness, N)
+    def birth_prob(g, fitness, N):
         return np.min(1, g * fitness * (N - 1))
 
     def birth(self, N):
@@ -149,10 +144,7 @@ class Animals:
 
         g = self.params['gamma']
         xi = self.params['xi']
-        p_birth = birth_prob(g, self.fitness, N)  # Egen funksjon, static method
-
-        # Each animal can only give birth to one offspring
-        # If weight of baby is higher than mothers weight, no offpsring is born, mother weight is same.
+        p_birth = self.birth_prob(g, self.fitness, N)
 
         if random.uniform(0, 1) <= p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
@@ -185,10 +177,8 @@ class Animals:
         prob_death = self.weight * (1 - self.fitness)
         random_num = random.uniform(0, 1)
         return prob_death > random_num
-    # def prob_move():
-    # def prob_die():
 
-class Herbivore(Animal):
+class Herbivore(Animals):
     """
     Herbivore subclass. Herbivores can stay in all the landscape types except water,
     i.e desert, highland and lowland, but will only be able to feed in cells with highland or
@@ -200,10 +190,10 @@ class Herbivore(Animal):
     'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5,
     'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
 
-    def __init__(self, age, weight):
+    def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
 
-class Carnivore(Animal):
+class Carnivore(Animals):
     """
     Carnivore subclass. Carnivores can stay in all landscape types except water, i.e desert,
     highland and lowland, and will be able to prey on herbivores in all the aforementioned
@@ -219,7 +209,7 @@ class Carnivore(Animal):
     'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5,
     'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
-    def __init__(self, age, weight):
+    def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
 
     def slay(self):
@@ -231,7 +221,7 @@ class Carnivore(Animal):
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=100)
     print(h.fitness)
-    h.update_wih
+    
 
     #more for animals with more weight
     #less for animals with less weight
