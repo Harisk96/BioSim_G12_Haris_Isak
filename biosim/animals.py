@@ -174,7 +174,7 @@ class Animals:
     def death(self):
         if self.weight == 0:
             return False
-        prob_death = self.weight * (1 - self.fitness)
+        prob_death = self.param['omega'] * (1 - self.fitness)
         random_num = random.uniform(0, 1)
         return prob_death > random_num
 
@@ -219,9 +219,9 @@ class Carnivore(Animals):
         """
         pass
 if __name__ == "__main__":
-    h = Herbivore(age=2, weight=100)
+    h = Herbivore(age=2, weight=5.0)
     print(h.fitness)
-    
+
 
     #more for animals with more weight
     #less for animals with less weight
