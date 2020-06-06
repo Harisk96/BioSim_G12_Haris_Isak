@@ -14,6 +14,7 @@ class Cell:
 
     def grow_fodder(self):
 
+
     def place_animals(self):
         """
         Place animals from list (list containing dicts?) into the cell.
