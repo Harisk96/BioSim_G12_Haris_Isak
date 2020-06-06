@@ -73,8 +73,10 @@ class Animals:
         if age < 0:
             raise ValueError("'age' must be greater than or equal to zero")
 
-        if weight < 0:
-            raise ValueError("'weight' must be greater than or equal to zero")
+
+        if weight is not None:
+            if weight < 0:
+                raise ValueError("'weight' must be greater than or equal to zero")
 
         self.age = age
         if weight is None:
