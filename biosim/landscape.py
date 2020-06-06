@@ -1,5 +1,6 @@
 from biosim.animals import Animals, Herbivore, Carnivore
 
+import random
 
 class Cell:
     params = {}
@@ -10,24 +11,25 @@ class Cell:
 
     def __init__(self):
         self.fodder = 0
-        current_herbivores = []
+        self.current_herbivores = []
         # current_carnivores = []
 
     @property
-    def n_herbivores:
-        return self.len(current_herbivores)
+    def n_herbivores(self):
+        return len(self.current_herbivores)
 
+# Funksjonen under bruker vi når carnivores kommer.
     #    @property
     #    def n_carnivores:
     #        return self.len(current_carnivores)
 
     @property
-    def n_animals
-        return self_n_herbivores  # +self.len(current_carnivores)
+    def n_animals(self):
+        return self.n_herbivores  # +self.len(current_carnivores)
 
     def randomise_herbivores(self):
         # Her må randomisere herbivores listen for å kunne feede listen bortover.
-        random.shuffle(current_herbivores)
+        random.shuffle(self.current_herbivores)
 
     def grow_fodder(self):
         self.fodder += 0
@@ -43,31 +45,32 @@ class Cell:
         newborn_herbivores = []
         nr_herbivores = self.n_herbivores
         if nr_herbivores > 1:
-            for herbivore in self.herbivores:
+            for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.animals.birth_check(nr_herbivores)
                 if not newborn:
                     continue
-                self.herbivores.append(newborn)
+                self.current_herbivores.append(newborn)
                 newborn_herbivores.append(newborn)
 
-                return self.herbivors, newborn_herbivores
+                return self.current_herbivores, newborn_herbivores
 
     def weightloss(self):
-        for herbivore in self.herbivores:
-            herbivore.animals.yearly_weightloss()
+        for herbivore in self.current_herbivores:
+            herbivore.animals.yearly_weight_loss()
 
     def feed(self):
         self.grow_fodder()
-        self.feed_carnivores()
+        #self.feed_carnivores()
         self.feed_herbivores
 
-    def feed_herbivore(self):
-        biosim.animals.eat
+    def feed_herbivores(self):
+        randomise_herbivores()
+        .eat
 
     # def feed carnivore (Jobber vi med senere)
 
     def age_animals(self):
-        for herbivore in self.herbivores:
+        for herbivore in self.current_herbivores:
             herbivore.animals.update_age()
 
     def death_square(self):
@@ -106,8 +109,8 @@ class Lowland(Cell):
     def _yearly_fodder(self):
                 self.fodder = self.params['fmax']
 
-    lass Desert(Cell):\
+class Desert(Cell):
         migrate_to = True
 
-    class Sea(Cell):
+class Sea(Cell):
         migrate_to = False
