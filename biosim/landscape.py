@@ -93,7 +93,7 @@ class Cell:
             if herbivore.death():
                 dead_herbivores.append(herbivore)
         for dead_herbivore in dead_herbivores:
-            dead_herbivores.remove(dead_herbivore)
+            self.current_herbivores.remove(dead_herbivore)
         return dead_herbivores
 
 
@@ -128,7 +128,7 @@ class Lowland(Cell):
             self.fodder = self.params['f_max']
 
     def _yearly_fodder(self):
-                self.fodder = self.params['fmax']
+                self.fodder = self.params['f_max']
 
 class Desert(Cell):
         migrate_to = True
