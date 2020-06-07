@@ -1,10 +1,10 @@
 from pytest import approx
+from pytest_mock import mocker
 
-from biosim import animals
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
 from unittest import mock
-
+import random
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
@@ -137,8 +137,21 @@ class TestAnimals:
         assert f1 != f2
 
     def test_update_fitness_same_param(self):
+        """
+        Testing that the update_fitness function doesnt change fitness for same parameters
+        """
         h = Herbivore(2, 5.0)
         f1 = h.fitness
         h.update_fitness()
         f2 = h.fitness
         assert f1 == f2
+
+    # mocks out the random.uniform function with the value 0
+    def test_birth(mocker):
+        """
+        Testing the birth function
+        """
+        mocker.patch("random.uniform", return_value=0)
+        h = Herbivore(2, 5.0)
+        herb = h.birth(30)
+        assert isinstance(herb, Herbivore)
