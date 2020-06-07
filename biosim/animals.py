@@ -2,7 +2,7 @@
 
 from numba import jit
 import numpy as np
-import random
+from random import uniform
 
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
@@ -155,7 +155,7 @@ class Animals:
         xi = self.params['xi']
         p_birth = self.birth_prob(g, self.fitness, N)
 
-        if random.uniform(0, 1) <= p_birth:
+        if uniform(0, 1) <= p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
             self.weight -= xi * birth_weight
 
@@ -177,14 +177,14 @@ class Animals:
         :return: Bool, decides whether the animal moves to a neighboring cell or not
         """
         prob_mig = self.params['mu'] * self.fitness
-        random_numb = random.uniform(0, 1)
+        random_numb = uniform(0, 1)
         return prob_mig > random_numb
 
     def death(self):
         if self.weight == 0:
             return False
         prob_death = self.param['omega'] * (1 - self.fitness)
-        random_num = random.uniform(0, 1)
+        random_num = uniform(0, 1)
         return prob_death > random_num
 
 class Herbivore(Animals):
