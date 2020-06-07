@@ -97,17 +97,6 @@ class Cell:
         return dead_herbivores
 
 
-
-        def add_newborn_square(self): ?
-
-            ??
-
-        def reset_square(self):
-
-        def delete(self): ?
-
-            ??
-
 class Highland(Cell):
     migrate_to: True
     params = {'f_max': 300.0}
