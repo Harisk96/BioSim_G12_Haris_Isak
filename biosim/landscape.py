@@ -47,10 +47,10 @@ class Cell:
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.animals.birth_check(nr_herbivores)
-                if not newborn:
+                if not newborn_herbivore:
                     continue
-                self.current_herbivores.append(newborn)
-                newborn_herbivores.append(newborn)
+                self.current_herbivores.append(newborn_herbivore)
+                newborn_herbivores.append(newborn_herbivore)
 
                 return self.current_herbivores, newborn_herbivores
 
@@ -64,7 +64,7 @@ class Cell:
         self.feed_herbivores
 
     def feed_herbivores(self):
-        randomise_herbivores()
+        self.randomise_herbivores()
         .eat
 
     # def feed carnivore (Jobber vi med senere)
