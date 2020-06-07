@@ -103,6 +103,7 @@ class Animals:
         :param F: Amount of food eaten by the animal
         :return: float, increase of weight
         """
+
         if F < 0:
             raise ValueError('Fodder available must be greater than or equal to 0')
         if F < self.params['F']:
@@ -114,6 +115,7 @@ class Animals:
         self.weight += added_weight
         self.update_fitness()
 
+        return food_eaten
 
 
     def yearly_weight_loss(self):

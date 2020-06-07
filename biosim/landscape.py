@@ -74,7 +74,7 @@ class Cell:
             if remaining_fodder == 0:
                 break
             elif remaining_fodder >= herbivore.params['F']:
-                herbivore.eat(herbivore.params['F'])
+                herbivore.eat(remaining_fodder)
                 self.fodder -= herbivore.params['F']
             elif 0 < herbivore.self.fodder < herbivore.params['F']:
                 herbivore.eat(remaining_fodder)
