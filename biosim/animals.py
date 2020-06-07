@@ -29,6 +29,10 @@ class Animals:
         """
         return 1.0 / (1 + np.exp(sign * phi * (x - x_half)))
 
+    @staticmethod
+    def birth_prob(g, fitness, N):
+        return np.min(1, g * fitness * (N - 1))
+
     @classmethod
     def _fitness_equation(cls, age, weight, params):
         """
@@ -99,6 +103,8 @@ class Animals:
         :param F: Amount of food eaten by the animal
         :return: float, increase of weight
         """
+        if F < 0:
+            raise ValueError('Fodder available must be greater than or equal to 0')
         if F < self.params['F']:
             food_eaten = F
         else:
@@ -129,13 +135,14 @@ class Animals:
         self.update_fitness()
 
     def birth_check(self, N):
+        """
+        Checks if conditions for birth is satisfied. If so it will run the birth function
+        :param N: int, number of animals in a cell
+        :return: method on instance, birth function
+        """
         zeta = self.params['zeta']
         if self.weight > zeta*(self.params['w_birth'] + self.params['sigma_weight']):
             return self.birth(N)
-
-    @staticmethod
-    def birth_prob(g, fitness, N):
-        return np.min(1, g * fitness * (N - 1))
 
     def birth(self, N):
         """
@@ -167,7 +174,7 @@ class Animals:
         Decides the probability that the animal will move to one of the neighbouring four cells.
         All four cells have equal probability and the animal will not move if the chosen cell
         is water.
-        :return:
+        :return: Bool, decides whether the animal moves to a neighboring cell or not
         """
         prob_mig = self.params['mu'] * self.fitness
         random_numb = random.uniform(0, 1)
