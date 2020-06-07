@@ -28,7 +28,10 @@ class Cell:
         return self.n_herbivores  # +self.len(current_carnivores)
 
     def randomise_herbivores(self):
-        # Her må randomisere herbivores listen for å kunne feede listen bortover.
+        """
+        Shuffles list of herbivores, so feeding can be done at random.
+        :return:
+        """
         random.shuffle(self.current_herbivores)
 
     def grow_fodder(self):
