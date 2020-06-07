@@ -56,19 +56,29 @@ class Cell:
                 newborn_herbivores.append(newborn_herbivore)
 
                 return self.current_herbivores, newborn_herbivores
+            #Må huske på at vi får newborns inn i selve current herbivores
 
-    def weightloss(self):
+    def weight_loss(self):
         for herbivore in self.current_herbivores:
             herbivore.animals.yearly_weight_loss()
 
     def feed(self):
         self.grow_fodder()
         #self.feed_carnivores()
-        self.feed_herbivores
+        self.feed_herbivores()
 
     def feed_herbivores(self):
         self.randomise_herbivores()
-        .eat
+        for herbivore in self.current_herbivores:
+            remaining_fodder = self.fodder
+            if remaining_fodder == 0:
+                break
+            elif remaining_fodder >= herbivore.params['F']:
+                herbivore.eat(herbivore.params['F'])
+                self.fodder -= herbivore.params['F']
+            elif 0 < herbivore.self.fodder < herbivore.params['F']:
+                herbivore.eat(remaining_fodder)
+                self.fodder = 0
 
     # def feed carnivore (Jobber vi med senere)
 
@@ -77,8 +87,16 @@ class Cell:
             herbivore.animals.update_age()
 
     def death_square(self):
-        surviving = []
-        eller_en_liste_med_dode = ?
+
+        dead_herbivores = []
+        for herbivore in self.current_herbivores:
+            if herbivore.death():
+                dead_herbivores.append(herbivore)
+        for dead_herbivore in dead_herbivores:
+            dead_herbivores.remove(dead_herbivore)
+        return dead_herbivores
+
+
 
         def add_newborn_square(self): ?
 
@@ -99,7 +117,7 @@ class Highland(Cell):
         self.fodder = self.params['f_max']
 
     def _yearly_fodder(self):
-        self.fodder = self.params['fmax']
+        self.fodder = self.params['f_max']
 
 class Lowland(Cell):
             migrate_to: True
