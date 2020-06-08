@@ -38,12 +38,16 @@ class Cell:
 
         pass
 
-    def place_animals(self):
+    def place_animals(self, list_of_animals):
         """
         Place animals from list (list containing dicts?) into the cell.
         :return:
         """
-        pass
+        if not isinstance(list_of_animals, list):
+            raise TypeError('lololol')
+
+        for animal in list_of_animals:
+            self.current_herbivores.append(animal)
 
     def birth_cycle(self):
 
@@ -51,7 +55,7 @@ class Cell:
         nr_herbivores = self.n_herbivores
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
-                newborn_herbivore = herbivore.animals.birth_check(nr_herbivores)
+                newborn_herbivore = herbivore.birth(nr_herbivores)
                 if not newborn_herbivore:
                     continue
                 #self.current_herbivores.append(newborn_herbivore)
@@ -127,3 +131,30 @@ class Desert(Cell):
 
 class Sea(Cell):
         migrate_to = False
+
+
+if __name__ == "__main__":
+    c = Lowland()
+    h1 = Herbivore()
+    h2 = Herbivore()
+    h3 = Herbivore()
+    h4 = Herbivore()
+    h5 = Herbivore()
+    h6 = Herbivore()
+    h7 = Herbivore()
+    h8 = Herbivore()
+    h9 = Herbivore()
+    h10 = Herbivore()
+
+    herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
+
+    c.place_animals(herbivore_list)
+
+    for i in range(10):
+        for i in range(200):
+            c.feed()
+            c.birth_cycle()
+            c.age_animals()
+            c.weight_loss()
+            c.animals.death()
+        print(c.n_animals)

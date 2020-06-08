@@ -13,5 +13,10 @@ class Island:
                   'D': Desert,
                   'S': Sea}
 
-    def __init__(self):
+    def __init__(self, letter_map, init_animals):
 
+    def procreate_cells
+    def feed_cells
+
+
+    def run_function_one_year(self):
