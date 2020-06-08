@@ -153,7 +153,9 @@ def test_birth(mocker):
     Testing the birth function
     """
 
-    mocker.patch("random.uniform", return_value=0)
+    mocker.patch("numpy.random.uniform", return_value=0)
     h = Herbivore(2, 5.0)
     herb = h.birth(30)
     assert isinstance(herb, Herbivore)
+
+#def test_

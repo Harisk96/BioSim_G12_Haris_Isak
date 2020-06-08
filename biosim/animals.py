@@ -29,54 +29,34 @@ class Animals:
         """
         return 1.0 / (1 + np.exp(sign * phi * (x - x_half)))
 
-    @staticmethod #???
-    def birth_prob(g, fitness, N):
-        return min(1, g * fitness * (N - 1))
-
-    @classmethod #Gjøre om til vanlig metode, byte ut cls med self. params kan fjernes fra argument listen
-    def _fitness_equation(cls, age, weight, params):
-        """
-        Function that calculates the current fitness of the animal.
-        :param age: int, age of the animal
-        :param weight: float, weight of the animal
-        :param params: dict, dictionary containing the parameters
-
-        :return: float, value between 0 and 1, returns current fitness of animal
-        """
-
-        # if weight <0, fitness er 0.
-
-        q_positive = cls._q(1, age, params['a_half'], params['phi_age'])
-        q_negative = cls._q(-1, weight, params['w_half'], params['phi_weight'])
-
-
-        q = q_positive * q_negative
-
-        return q
-
     @classmethod
-    def set_params(cls, params):
+    def set_params(cls, new_params):
         """
         Updates the parameters
-        :param params:
-        :return:
+        :param new_params:
+        :return: dict, updated parameters
         """
 
-        if not isinstance(params, dict):
+        for key in new_params:
+            if key not in cls.params.keys():
+                raise KeyError('Invalid parameter name: ' + key)
+
+        if not isinstance(new_params, dict):
             raise TypeError('params must be of type dict')
 
-        cls.params.update(params)
+        cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
         """
         Constructor for animal class.
         """
-        #teste om age er avrundet tall, har det desimaler eller ikke. age og int av age
+
         if age != int(age):
             raise TypeError("'age' must be of type int ")
-        #Blande alder og vekt, unngå negativ vekt, hva hvis vekt er string eller dict, første test her er unødvendig.
-        if age > 0 and (not isinstance(weight, (int, float))):
-            raise TypeError('Weight must be of either type int or type float after first iteration')
+
+        if weight is not None:
+            if not isinstance(weight, (int, float)):
+                raise TypeError('Weight must be either of type int or type float')
 
         if age < 0:
             raise ValueError("'age' must be greater than or equal to zero")
@@ -92,25 +72,31 @@ class Animals:
         else:
             self.weight = weight
 
-
         self.update_fitness()
 
-
     def update_fitness(self):
-        self.fitness = self._fitness_equation(self.age, self.weight, self.params)
+        """
+        Function that updates the fitness of the animal.
+        :return: float, value between 0 and 1, returns current fitness of animal
+        """
+        if self.weight < 0:
+            self.fitness = 0
+        q_positive = self._q(1, self.age, self.params['a_half'], self.params['phi_age'])
+        q_negative = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+        self.fitness = q_positive * q_negative
 
-    #Bedre variabelnavn!
-    def eat(self, F):
+
+    def eat(self, fodder):
         """
         When an animal eats an amount F of fodder, its weight increases by βF.
-        :param F: Amount of food eaten by the animal
+        :param fodder: Amount of food available the animal
         :return: float, increase of weight
         """
 
-        if F < 0:
+        if fodder < 0:
             raise ValueError('Fodder available must be greater than or equal to 0')
-        if F < self.params['F']:
-            food_eaten = F
+        if fodder < self.params['F']:
+            food_eaten = fodder
         else:
             food_eaten = self.params['F']
 
@@ -149,30 +135,28 @@ class Animals:
         if self.weight > zeta*(self.params['w_birth'] + self.params['sigma_weight']):
             return self.birth(N)
 
-    def birth(self, N):
+    def birth(self, num_animals):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
-    #Flytte birth_prob inn her:
         g = self.params['gamma']
         xi = self.params['xi']
-        p_birth = self.birth_prob(g, self.fitness, N)
-    #Passe på å ikke blande python og numpy sin random
-        if uniform(0, 1) < p_birth:
+        zeta = self.params['zeta']
+        if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_weight']):
+            return
+        p_birth = min(1, g * self.fitness * (num_animals-1))
+        if np.random.uniform(0, 1) < p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
             self.weight -= xi * birth_weight
 
             if isinstance(self, Herbivore):
-                self.update_fitness()
                 return Herbivore(0, birth_weight)
 
-
             elif isinstance(self, Carnivore):
-                self.update_fitness()
                 return Carnivore(0, birth_weight)
-            self.update_fitness() #Denne er satt inn, fjerne de to andre
+            self.update_fitness()
 
     def migrate(self):
         """
@@ -182,15 +166,19 @@ class Animals:
         :return: Bool, decides whether the animal moves to a neighboring cell or not
         """
         prob_mig = self.params['mu'] * self.fitness
-        random_numb = uniform(0, 1)
+        random_numb = np.random.uniform(0, 1)
         return prob_mig > random_numb
 
     def death(self):
+        """
+        Function that returns True if the animal is dead, false if it is alive
+        :return: Bool, where True represents dead and False alive
+        """
         #Docstring som forklarer return. Hva betyr true/false? (Sette death som  True)
         if self.weight <= 0:
-            return False
+            return True
         prob_death = self.param['omega'] * (1 - self.fitness)
-        random_num = uniform(0, 1)
+        random_num = np.random.uniform(0, 1)
         return prob_death > random_num
 
 class Herbivore(Animals):
