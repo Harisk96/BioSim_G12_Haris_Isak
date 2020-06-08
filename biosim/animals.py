@@ -37,6 +37,7 @@ class Animals:
         :return: dict, updated parameters
         """
 
+        # Taken from bacteria.py from the biolab example folder. Modified to the current project
         for key in new_params:
             if key not in cls.params.keys():
                 raise KeyError('Invalid parameter name: ' + key)

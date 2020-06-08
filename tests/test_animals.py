@@ -152,14 +152,36 @@ def test_birth(mocker):
     """
     Testing the birth function
     """
+    mocker.patch("numpy.random.uniform", return_value=0)
+    h = Herbivore(2, 50.0)
+    c = Carnivore(3, 50.0)
+    herb = h.birth(30)
+    carni = c.birth(50)
+    assert isinstance(herb, Herbivore)
+    assert isinstance(carni, Carnivore)
 
+def test_death(mocker):
+    """
+    Testing the death function. Mocks out the random function with 0, guaranteeing that the
+    probability for death exceeds the random function, which should yield the boolean True.
+    """
     mocker.patch("numpy.random.uniform", return_value=0)
     h = Herbivore(2, 5.0)
-    herb = h.birth(30)
-    assert isinstance(herb, Herbivore)
+    c = Carnivore(3, 7.0)
+    dead_herb = h.death()
+    dead_carn = c.death()
+    assert dead_herb == True
+    assert dead_carn == True
 
-def test_eat(mocker):
+def test_migrate(mocker):
     """
-    testing the eat function 
+    Testing the migration function. Mocks out the random function with 0, guaranteeing that the
+    probability for migration exceeds the random function, which will then yield the boolean True.
     """
-    mocker.patch("numpy.random.uniform", return_value=0)
+    mocker.patch('numpy.random.uniform', return_value=0)
+    h = Herbivore(2, 5.0)
+    c = Carnivore(3, 7.0)
+    move_herb = h.migrate()
+    move_carn = c.migrate()
+    assert move_herb == True
+    assert move_carn == True
