@@ -147,11 +147,13 @@ class TestAnimals:
     # mocks out the random.uniform function with the value 0
 
 
-@mock.patch("animals.uniform", return_value=0)
-def test_birth(mock_uniform):
+
+def test_birth(mocker):
     """
     Testing the birth function
     """
+
+    mocker.patch("random.uniform", return_value=0)
     h = Herbivore(2, 5.0)
     herb = h.birth(30)
     assert isinstance(herb, Herbivore)

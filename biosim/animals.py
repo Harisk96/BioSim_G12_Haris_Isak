@@ -29,11 +29,11 @@ class Animals:
         """
         return 1.0 / (1 + np.exp(sign * phi * (x - x_half)))
 
-    @staticmethod
+    @staticmethod #???
     def birth_prob(g, fitness, N):
-        return np.min(1, g * fitness * (N - 1))
+        return min(1, g * fitness * (N - 1))
 
-    @classmethod
+    @classmethod #Gjøre om til vanlig metode, byte ut cls med self. params kan fjernes fra argument listen
     def _fitness_equation(cls, age, weight, params):
         """
         Function that calculates the current fitness of the animal.
@@ -44,8 +44,11 @@ class Animals:
         :return: float, value between 0 and 1, returns current fitness of animal
         """
 
+        # if weight <0, fitness er 0.
+
         q_positive = cls._q(1, age, params['a_half'], params['phi_age'])
         q_negative = cls._q(-1, weight, params['w_half'], params['phi_weight'])
+
 
         q = q_positive * q_negative
 
@@ -68,9 +71,10 @@ class Animals:
         """
         Constructor for animal class.
         """
-        if not isinstance(age, int):
+        #teste om age er avrundet tall, har det desimaler eller ikke. age og int av age
+        if age != int(age):
             raise TypeError("'age' must be of type int ")
-
+        #Blande alder og vekt, unngå negativ vekt, hva hvis vekt er string eller dict, første test her er unødvendig.
         if age > 0 and (not isinstance(weight, (int, float))):
             raise TypeError('Weight must be of either type int or type float after first iteration')
 
@@ -88,15 +92,14 @@ class Animals:
         else:
             self.weight = weight
 
-        self.fitness = None
-        if self.fitness is None:
-            self.update_fitness()
+
+        self.update_fitness()
 
 
     def update_fitness(self):
         self.fitness = self._fitness_equation(self.age, self.weight, self.params)
 
-
+    #Bedre variabelnavn!
     def eat(self, F):
         """
         When an animal eats an amount F of fodder, its weight increases by βF.
@@ -152,12 +155,12 @@ class Animals:
         Does also provide the conditions that have to be met in order to give birth.
         :return:
         """
-
+    #Flytte birth_prob inn her:
         g = self.params['gamma']
         xi = self.params['xi']
         p_birth = self.birth_prob(g, self.fitness, N)
-
-        if uniform(0, 1) <= p_birth:
+    #Passe på å ikke blande python og numpy sin random
+        if uniform(0, 1) < p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
             self.weight -= xi * birth_weight
 
@@ -169,7 +172,7 @@ class Animals:
             elif isinstance(self, Carnivore):
                 self.update_fitness()
                 return Carnivore(0, birth_weight)
-
+            self.update_fitness() #Denne er satt inn, fjerne de to andre
 
     def migrate(self):
         """
@@ -183,7 +186,8 @@ class Animals:
         return prob_mig > random_numb
 
     def death(self):
-        if self.weight == 0:
+        #Docstring som forklarer return. Hva betyr true/false? (Sette death som  True)
+        if self.weight <= 0:
             return False
         prob_death = self.param['omega'] * (1 - self.fitness)
         random_num = uniform(0, 1)

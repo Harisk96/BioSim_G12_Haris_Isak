@@ -35,13 +35,15 @@ class Cell:
         random.shuffle(self.current_herbivores)
 
     def grow_fodder(self):
-        self.fodder += 0
+
+        pass
 
     def place_animals(self):
         """
         Place animals from list (list containing dicts?) into the cell.
         :return:
         """
+        pass
 
     def birth_cycle(self):
 
@@ -52,10 +54,13 @@ class Cell:
                 newborn_herbivore = herbivore.animals.birth_check(nr_herbivores)
                 if not newborn_herbivore:
                     continue
-                self.current_herbivores.append(newborn_herbivore)
+                #self.current_herbivores.append(newborn_herbivore)
                 newborn_herbivores.append(newborn_herbivore)
 
-                return self.current_herbivores, newborn_herbivores
+        self.current_herbivores.extend(newborn_herbivores)
+
+
+        #return self.current_herbivores, newborn_herbivores
             #Må huske på at vi får newborns inn i selve current herbivores
 
     def weight_loss(self):
@@ -66,19 +71,17 @@ class Cell:
         self.grow_fodder()
         #self.feed_carnivores()
         self.feed_herbivores()
+        #Herbivores spiser først
 
     def feed_herbivores(self):
         self.randomise_herbivores()
         for herbivore in self.current_herbivores:
             remaining_fodder = self.fodder
-            if remaining_fodder == 0:
+            if remaining_fodder <= 0:
                 break
-            elif remaining_fodder >= herbivore.params['F']:
-                herbivore.eat(remaining_fodder)
-                self.fodder -= herbivore.params['F']
-            elif 0 < herbivore.self.fodder < herbivore.params['F']:
-                herbivore.eat(remaining_fodder)
-                self.fodder = 0
+            eaten = herbivore.eat(remaining_fodder)
+            self.fodder -= eaten
+
 
     # def feed carnivore (Jobber vi med senere)
 
@@ -87,7 +90,7 @@ class Cell:
             herbivore.animals.update_age()
 
     def death_square(self):
-
+    #Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
         dead_herbivores = []
         for herbivore in self.current_herbivores:
             if herbivore.death():
@@ -98,26 +101,26 @@ class Cell:
 
 
 class Highland(Cell):
-    migrate_to: True
+    migrate_to = True
     params = {'f_max': 300.0}
 
     def __init__(self):
         super().__init__()
         self.fodder = self.params['f_max']
 
-    def _yearly_fodder(self):
+    def grow_fodder(self):
         self.fodder = self.params['f_max']
 
 class Lowland(Cell):
-            migrate_to: True
-            params = {'f_max': 800.0}
+    migrate_to = True
+    params = {'f_max': 800.0}
 
     def __init__(self):
         super().__init__()
-            self.fodder = self.params['f_max']
+        self.fodder = self.params['f_max']
 
-    def _yearly_fodder(self):
-                self.fodder = self.params['f_max']
+    def grow_fodder(self):
+        self.fodder = self.params['f_max']
 
 class Desert(Cell):
         migrate_to = True
