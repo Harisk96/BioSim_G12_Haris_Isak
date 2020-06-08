@@ -15,8 +15,19 @@ class Island:
 
     def __init__(self, letter_map, init_animals):
 
-    def procreate_cells
-    def feed_cells
+    def procreate_cells(self):
 
+    def feed_cells(self):
+
+    def create_map(self):
 
     def run_function_one_year(self):
+
+    def place_herbivores(self):
+
+    def age_in_cells(self):
+
+    def weightloss_cell(self):
+
+
+    def place_population
