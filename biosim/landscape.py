@@ -69,7 +69,7 @@ class Cell:
 
     def weight_loss(self):
         for herbivore in self.current_herbivores:
-            herbivore.animals.yearly_weight_loss()
+            herbivore.yearly_weight_loss()
 
     def feed(self):
         self.grow_fodder()
@@ -91,7 +91,7 @@ class Cell:
 
     def age_animals(self):
         for herbivore in self.current_herbivores:
-            herbivore.animals.update_age()
+            herbivore.update_age()
 
     def death_square(self):
     #Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
@@ -156,5 +156,5 @@ if __name__ == "__main__":
             c.birth_cycle()
             c.age_animals()
             c.weight_loss()
-            c.animals.death()
-        print(c.n_animals)
+            c.death_square()
+            print(c.n_animals)

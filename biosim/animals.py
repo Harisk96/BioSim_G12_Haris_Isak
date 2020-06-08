@@ -134,7 +134,7 @@ class Animals:
         g = self.params['gamma']
         xi = self.params['xi']
         zeta = self.params['zeta']
-        if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_weight']):
+        if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_birth']):
             return
         p_birth = min(1, g * self.fitness * (num_animals-1))
         if np.random.uniform(0, 1) < p_birth:
@@ -166,7 +166,7 @@ class Animals:
         """
         if self.weight <= 0:
             return True
-        prob_death = self.param['omega'] * (1 - self.fitness)
+        prob_death = self.params['omega'] * (1 - self.fitness)
         random_num = np.random.uniform(0, 1)
         return prob_death > random_num
 
