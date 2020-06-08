@@ -158,4 +158,8 @@ def test_birth(mocker):
     herb = h.birth(30)
     assert isinstance(herb, Herbivore)
 
-#def test_
+def test_eat(mocker):
+    """
+    testing the eat function 
+    """
+    mocker.patch("numpy.random.uniform", return_value=0)

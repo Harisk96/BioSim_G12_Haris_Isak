@@ -125,16 +125,6 @@ class Animals:
         self.age += 1
         self.update_fitness()
 
-    def birth_check(self, N):
-        """
-        Checks if conditions for birth is satisfied. If so it will run the birth function
-        :param N: int, number of animals in a cell
-        :return: method on instance, birth function
-        """
-        zeta = self.params['zeta']
-        if self.weight > zeta*(self.params['w_birth'] + self.params['sigma_weight']):
-            return self.birth(N)
-
     def birth(self, num_animals):
         """
         Decides probability for each animal in each cell whether it will give birth or not.
@@ -174,7 +164,6 @@ class Animals:
         Function that returns True if the animal is dead, false if it is alive
         :return: Bool, where True represents dead and False alive
         """
-        #Docstring som forklarer return. Hva betyr true/false? (Sette death som  True)
         if self.weight <= 0:
             return True
         prob_death = self.param['omega'] * (1 - self.fitness)
