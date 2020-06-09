@@ -2,6 +2,7 @@ from pytest import approx
 
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
+import numba
 from unittest import mock
 import random
 
@@ -19,19 +20,15 @@ class TestAnimals:
         """
         Sets the testing environment up
         """
-        self.default_params = {
-            Herbivore:
-                {
-                    'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
-                    'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
-                    'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None
-                },
-            Carnivore:
-                {
-                    'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
-                    'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
-                    'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
-                }
+        self.herb_params = {
+            'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
+            'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
+            'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None
+        }
+        self.carn_params = {
+            'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
+            'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
+            'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
         }
 
     animals = {Herbivore: Herbivore(), Carnivore: Carnivore()}
@@ -144,44 +141,98 @@ class TestAnimals:
         f2 = h.fitness
         assert f1 == f2
 
-    # mocks out the random.uniform function with the value 0
+    def test_fitness(self):
+        """
+        Testing that the fitness attribute is a float.
+        """
+        h = Herbivore(2, 5.0)
+        c = Carnivore(3, 7.0)
+        assert isinstance(h.fitness, float)
+        assert isinstance(c.fitness, float)
+
+    def test_fitness_weight(self):
+        """
+        Testing that fitness equals zero if weight is zero.
+        """
+        h = Herbivore(2, 0.0)
+        c = Carnivore(3, 0.0)
+        c.update_fitness()
+        h.update_fitness()
+        assert h.fitness == 0
+        assert c.fitness == 0
+
+    def test_eat_valerr(self):
+        """
+        Asserts that input of negative fodder raises a ValueError.
+        """
+        h = Herbivore(2, 5.0)
+        with pytest.raises(ValueError):
+            assert h.eat(-1)
+
+    def test_eat_fodder(self):
+        """
+        Asserts that animal
+        """
+        h = Herbivore(2, 5.0)
+        fodder = h.params['F'] - 5
+        assert h.eat(fodder) == fodder
+
+    def test_eat_food_eaten(self):
+        h = Herbivore(2, 5.0)
+        float_ = 5.0
+        fodder = h.eat(float_)
+        assert isinstance(fodder, float)
+
+    def test_set_params(self):
+        h = Herbivore()
+        old_params = h.params
+        new_herb_params = {'w_birth': 8.0, 'sigma_birth': 1.7, 'beta': 1.2}
+        h.set_params(new_herb_params)
+        assert h.params['w_birth'] == pytest.approx(8.0)
+        assert h.params != old_params
 
 
+    def test_constructor(self):
+        h = Herbivore()
+        c = Carnivore()
+        assert isinstance(c, Carnivore)
+        assert isinstance(h, Herbivore)
 
-def test_birth(mocker):
-    """
-    Testing the birth function
-    """
-    mocker.patch("numpy.random.uniform", return_value=0)
-    h = Herbivore(2, 50.0)
-    c = Carnivore(3, 50.0)
-    herb = h.birth(30)
-    carni = c.birth(50)
-    assert isinstance(herb, Herbivore)
-    assert isinstance(carni, Carnivore)
+    def test_birth(self, mocker):
+        """
+        Testing the birth function. Mocks out the random function with 0, guaranteeing that the
+        probability for death exceeds the random function, which should yield the boolean True.
+        """
+        mocker.patch("numpy.random.uniform", return_value=0)
+        h = Herbivore(2, 50.0)
+        c = Carnivore(3, 50.0)
+        herb = h.birth(30)
+        carni = c.birth(50)
+        assert isinstance(herb, Herbivore)
+        assert isinstance(carni, Carnivore)
 
-def test_death(mocker):
-    """
-    Testing the death function. Mocks out the random function with 0, guaranteeing that the
-    probability for death exceeds the random function, which should yield the boolean True.
-    """
-    mocker.patch("numpy.random.uniform", return_value=0)
-    h = Herbivore(2, 5.0)
-    c = Carnivore(3, 7.0)
-    dead_herb = h.death()
-    dead_carn = c.death()
-    assert dead_herb == True
-    assert dead_carn == True
+    def test_death(self, mocker):
+        """
+        Testing the death function. Mocks out the random function with 0, guaranteeing that the
+        probability for death exceeds the random function, which should yield the boolean True.
+        """
+        mocker.patch("numpy.random.uniform", return_value=0)
+        h = Herbivore(2, 5.0)
+        c = Carnivore(3, 7.0)
+        dead_herb = h.death()
+        dead_carn = c.death()
+        assert dead_herb is True
+        assert dead_carn is True
 
-def test_migrate(mocker):
-    """
-    Testing the migration function. Mocks out the random function with 0, guaranteeing that the
-    probability for migration exceeds the random function, which will then yield the boolean True.
-    """
-    mocker.patch('numpy.random.uniform', return_value=0)
-    h = Herbivore(2, 5.0)
-    c = Carnivore(3, 7.0)
-    move_herb = h.migrate()
-    move_carn = c.migrate()
-    assert move_herb == True
-    assert move_carn == True
+    def test_migrate(self, mocker):
+        """
+        Testing the migration function. Mocks out the random function with 0, guaranteeing that the
+        probability for migration exceeds the random function, which will then yield the boolean True.
+        """
+        mocker.patch('numpy.random.uniform', return_value=0)
+        h = Herbivore(2, 5.0)
+        c = Carnivore(3, 7.0)
+        move_herb = h.migrate()
+        move_carn = c.migrate()
+        assert move_herb is True
+        assert move_carn is True

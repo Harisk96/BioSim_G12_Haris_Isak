@@ -58,33 +58,33 @@ class Animals:
         if weight is not None:
             if not isinstance(weight, (int, float)):
                 raise TypeError('Weight must be either of type int or type float')
+            if weight < 0:
+                raise ValueError("'weight' must be greater than or equal to zero")
 
         if age < 0:
             raise ValueError("'age' must be greater than or equal to zero")
 
-
-        if weight is not None:
-            if weight < 0:
-                raise ValueError("'weight' must be greater than or equal to zero")
-
         self.age = age
+
         if weight is None:
             self.weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
         else:
             self.weight = weight
 
-        self.update_fitness()
+        self.fitness = self.update_fitness()
 
     def update_fitness(self):
         """
         Function that updates the fitness of the animal.
         :return: float, value between 0 and 1, returns current fitness of animal
         """
-        if self.weight < 0:
+        if self.weight == 0:
             self.fitness = 0
-        q_positive = self._q(1, self.age, self.params['a_half'], self.params['phi_age'])
-        q_negative = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
-        self.fitness = q_positive * q_negative
+        else:
+            q_positive = self._q(1, self.age, self.params['a_half'], self.params['phi_age'])
+            q_negative = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+            self.fitness = q_positive * q_negative
+        return self.fitness
 
 
     def eat(self, fodder):
@@ -179,12 +179,15 @@ class Herbivore(Animals):
     food it can eat depends on the amount of food in the cell. Herbivores eat in a random order.
     """
 
-    params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
-    'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5,
-    'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None}
+    params = {
+        'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
+        'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25,
+        'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0
+        }
 
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
+
 
 class Carnivore(Animals):
     """
@@ -198,23 +201,25 @@ class Carnivore(Animals):
     try to kill one herbivore at a time, trying to kill the herbivore with the lowest fitness first.
     """
 
-    params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
-    'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5,
-    'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
+    params = {
+    'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
+    'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
+    'zeta': 3.5,'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
+    }
 
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
 
     def slay(self):
         """
-        Function that determines wether and when a carnivore will kill a herbivore and consume it.
+        Function that determines whether and when a carnivore will kill a herbivore and consume it.
         :return:
         """
         pass
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=5.0)
     print(h.fitness)
-
+    print(type(h.fitness))
 
     #more for animals with more weight
     #less for animals with less weight
