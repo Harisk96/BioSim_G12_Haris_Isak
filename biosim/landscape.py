@@ -16,6 +16,9 @@ class Cell:
 
     @property
     def n_herbivores(self):
+        """
+        Function that returns number of herbivores by taking the length of herbivores list.
+        """
         return len(self.current_herbivores)
 
 # Funksjonen under bruker vi når carnivores kommer.
@@ -25,6 +28,10 @@ class Cell:
 
     @property
     def n_animals(self):
+        """
+        Function that returns the total number of both species in one cell.
+        :return:
+        """
         return self.n_herbivores  # +self.len(current_carnivores)
 
     def randomise_herbivores(self):
@@ -35,22 +42,30 @@ class Cell:
         random.shuffle(self.current_herbivores)
 
     def grow_fodder(self):
-
+        """
+        Function that can be calle upon to grow fodder at the end of a year.
+        This function is overridden in the highland and lowland subclass.
+        """
         pass
 
     def place_animals(self, list_of_animals):
         """
-        Place animals from list (list containing dicts?) into the cell.
+        Place animals from list into the cell.
         :return:
         """
         if not isinstance(list_of_animals, list):
-            raise TypeError('lololol')
+            raise TypeError('list_of_animals has to be of type list')
 
         for animal in list_of_animals:
             self.current_herbivores.append(animal)
 
     def birth_cycle(self):
-
+        """
+        Function that procreates the animals in a cell by iterating through all animals.
+        Appends newborn herbivores in to a list, then extends that list into list containing
+        current herbivores in cell
+        :return:
+        """
         newborn_herbivores = []
         nr_herbivores = self.n_herbivores
         if nr_herbivores > 1:
@@ -58,20 +73,20 @@ class Cell:
                 newborn_herbivore = herbivore.birth(nr_herbivores)
                 if not newborn_herbivore:
                     continue
-                #self.current_herbivores.append(newborn_herbivore)
                 newborn_herbivores.append(newborn_herbivore)
 
         self.current_herbivores.extend(newborn_herbivores)
 
 
-        #return self.current_herbivores, newborn_herbivores
-            #Må huske på at vi får newborns inn i selve current herbivores
-
     def weight_loss(self):
+        """
+
+        :return:
+        """
         for herbivore in self.current_herbivores:
             herbivore.yearly_weight_loss()
 
-    def feed(self):
+    def feed_all(self):
         self.grow_fodder()
         #self.feed_carnivores()
         self.feed_herbivores()
@@ -93,7 +108,7 @@ class Cell:
         for herbivore in self.current_herbivores:
             herbivore.update_age()
 
-    def death_square(self):
+    def death_in_cell(self):
     #Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
         dead_herbivores = []
         for herbivore in self.current_herbivores:
@@ -152,9 +167,9 @@ if __name__ == "__main__":
 
     for i in range(10):
         for i in range(200):
-            c.feed()
+            c.feed_all()
             c.birth_cycle()
             c.age_animals()
             c.weight_loss()
-            c.death_square()
+            c.death_in_cell()
             print(c.n_animals)
