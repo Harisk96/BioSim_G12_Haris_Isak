@@ -204,7 +204,12 @@ class Carnivore(Animals):
 
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
-
+        #Same function, start with that.
+    def check_if_carnivore_will_eat_herbivore(self):
+        pass
+    def eat(self):
+        #Override/ammend function
+        pass
     def slay(self):
         """
         Function that determines wether and when a carnivore will kill a herbivore and consume it.
