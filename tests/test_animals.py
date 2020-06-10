@@ -27,35 +27,32 @@ def set_params():
     Herbivore.set_params(**herb_params)
     Carnivore.set_params(**carn_params)
 
-
+@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
 class TestAnimals:
     """
     Test animals module
     """
 
-<<<<<<< Updated upstream
-    def test_constructor(self):
-        h = Herbivore(5, 15.0)
-        assert hasattr(h, 'age')
-        assert hasattr(h, 'weight')
-        assert hasattr(h, 'fitness')
-        assert h.age == 5
-        assert h.weight == 15.0
-        assert isinstance(h, Herbivore)
+
+    def test_constructor(self, Species):
+        s = Species(5, 15.0)
+        assert hasattr(s, 'age')
+        assert hasattr(s, 'weight')
+        assert hasattr(s, 'fitness')
+        assert s.age == 5
+        assert s.weight == 15.0
+        assert isinstance(s, Animals)
         with pytest.raises(TypeError, match="'age' must be of type int "):
             assert Animals(age=3.4)
         with pytest.raises(TypeError, match='Weight must be either of type int or type float'):
             assert Animals(weight='string')
         with pytest.raises(ValueError, match="'age' must be greater than or equal to zero"):
-            assert Animals(age=-1, weight=-2.0)
+            assert Animals(age=-1)
+        with pytest.raises(ValueError, match="'weight' must be greater than or equal to zero"):
+            assert Animals(weight=-1)
 
-
-
-    def test_new_animal(self):
-=======
-    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_new_animal(self, Species):
->>>>>>> Stashed changes
+
         """
         Tests that a new herbivore has age 0
         """
