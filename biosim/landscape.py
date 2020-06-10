@@ -1,6 +1,8 @@
 from biosim.animals import Animals, Herbivore, Carnivore
 
 import random
+from operator import attrgetter
+
 
 class Cell:
     params = {}
@@ -12,7 +14,7 @@ class Cell:
     def __init__(self):
         self.fodder = 0
         self.current_herbivores = []
-        # current_carnivores = []
+        self.current_carnivores = []
 
     @property
     def n_herbivores(self):
@@ -21,10 +23,9 @@ class Cell:
         """
         return len(self.current_herbivores)
 
-# Funksjonen under bruker vi når carnivores kommer.
-    #    @property
-    #    def n_carnivores:
-    #        return self.len(current_carnivores)
+    @property
+    def n_carnivores(self):
+        return len(self.current_carnivores)
 
     @property
     def n_animals(self):
@@ -32,7 +33,7 @@ class Cell:
         Function that returns the total number of both species in one cell.
         :return:
         """
-        return self.n_herbivores  # +self.len(current_carnivores)
+        return self.n_herbivores + len(self.current_carnivores)
 
     def randomise_herbivores(self):
         """
@@ -57,7 +58,10 @@ class Cell:
             raise TypeError('list_of_animals has to be of type list')
 
         for animal in list_of_animals:
-            self.current_herbivores.append(animal)
+            if animal.__class__.__name__ == "Carnivore":
+                self.current_carnivores.append(animal)
+            else:
+                self.current_herbivores.append(animal)
 
     def birth_cycle(self):
         """
@@ -77,7 +81,6 @@ class Cell:
 
         self.current_herbivores.extend(newborn_herbivores)
 
-
     def weight_loss(self):
         """
 
@@ -86,11 +89,13 @@ class Cell:
         for herbivore in self.current_herbivores:
             herbivore.yearly_weight_loss()
 
+        for carnivore in self.current_carnivores:
+            carnivore.yearly_weight_loss()
+
     def feed_all(self):
         self.grow_fodder()
-        #self.feed_carnivores()
         self.feed_herbivores()
-        #Herbivores spiser først
+        self.feed_carnivores()
 
     def feed_herbivores(self):
         self.randomise_herbivores()
@@ -101,22 +106,39 @@ class Cell:
             eaten = herbivore.eat(remaining_fodder)
             self.fodder -= eaten
 
+    def feed_carnivores(self):
 
-    # def feed carnivore (Jobber vi med senere)
+        self.current_herbivores = sorted(self.current_herbivores, key=attrgetter('fitness'))
+        self.current_carnivores = sorted(self.current_carnivores, key=attrgetter('fitness'),
+                                         reverse=True)
+
+        for carnivore in self.current_carnivores:
+            dead_herbivores = carnivore.eat_carn(self.current_herbivores)
+            self.current_herbivores = [herb for herb in self.current_herbivores if
+                                       herb not in dead_herbivores]
 
     def age_animals(self):
         for herbivore in self.current_herbivores:
             herbivore.update_age()
 
+        for carnivore in self.current_carnivores:
+            carnivore.update_age()
+
     def death_in_cell(self):
-    #Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
+        # Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
         dead_herbivores = []
         for herbivore in self.current_herbivores:
             if herbivore.death():
                 dead_herbivores.append(herbivore)
         for dead_herbivore in dead_herbivores:
             self.current_herbivores.remove(dead_herbivore)
-        return dead_herbivores
+
+        dead_carnivores = []
+        for carnivore in self.current_carnivores:
+            if carnivore.death():
+                dead_carnivores.append(carnivore)
+        for dead_carnivore in dead_carnivores:
+            self.current_carnivores.remove(dead_carnivore)
 
 
 class Highland(Cell):
@@ -130,6 +152,7 @@ class Highland(Cell):
     def grow_fodder(self):
         self.fodder = self.params['f_max']
 
+
 class Lowland(Cell):
     migrate_to = True
     params = {'f_max': 800.0}
@@ -141,11 +164,13 @@ class Lowland(Cell):
     def grow_fodder(self):
         self.fodder = self.params['f_max']
 
+
 class Desert(Cell):
-        migrate_to = True
+    migrate_to = True
+
 
 class Sea(Cell):
-        migrate_to = False
+    migrate_to = False
 
 
 if __name__ == "__main__":
@@ -161,15 +186,23 @@ if __name__ == "__main__":
     h9 = Herbivore()
     h10 = Herbivore()
 
+    c1 = Carnivore()
+    c2 = Carnivore()
+    c3 = Carnivore()
+    c4 = Carnivore()
+
     herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
+    carnivore_list = [c1, c2, c3, c4]
 
     c.place_animals(herbivore_list)
+    c.place_animals(carnivore_list)
 
     for i in range(10):
-        for i in range(200):
+        for j in range(200):
             c.feed_all()
             c.birth_cycle()
             c.age_animals()
             c.weight_loss()
             c.death_in_cell()
-            print(c.n_animals)
+            #print(c.n_animals)
+            print(c.n_carnivores)

@@ -3,7 +3,6 @@
 from numba import jit
 import numpy as np
 import random
-from operator import attrgetter
 from random import uniform
 
 __author__ = "Haris Karovic", "Isak Finnøy"
@@ -212,17 +211,15 @@ class Carnivore(Animals):
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
 
-    def sort_by_fitness(self, herbivore_list):
+ #   def sort_by_fitness(self, herbivore_list):
+#
+ #       sorted_herbivores_fitness = sorted(herbivore_list, key = attrgetter('fitness'))
+  #      return sorted_herbivores_fitness
 
-        sorted_herbivores_fitness = sorted(herbivore_list, key = attrgetter('fitness'))
-        return sorted_herbivores_fitness
+    def consumption_herb(self, herb_weight):
 
-    def consumption_herb(self, herb_weight, amount_eaten):
-        if herb_weight + amount_eaten < self.params['F']:
-            self.weight = self.params['beta'] * herb_weight
+        self.weight += self.params['beta'] * herb_weight
 
-        else:
-            self.weight = self.params['beta'] * (self.params['F'] - amount_eaten)
         self.update_fitness()
 
     def slay(self, herb):
@@ -249,44 +246,44 @@ class Carnivore(Animals):
 
         return slay
 
-    def eat(self, herbivore_list):
+    def eat_carn(self, herbivore_list):
 
-        fitness_sorted_herb = self.sort_by_fitness(herbivore_list)
+        #fitness_sorted_herb = self.sort_by_fitness(herbivore_list)
         dead_herbs = []
         amount_eaten = 0
 
-        for herbivore in fitness_sorted_herb:
-
-            if self.fitness <= herbivore.fitness:
-                break
+        for herbivore in herbivore_list:
 
             if amount_eaten >= self.params['F']:
                 break
 
-            if self.params['DeltaPhiMax'] < self.fitness - herbivore.fitness:
-                self.consumption_herb(herbivore.weight, amount_eaten)
+            if self.fitness <= herbivore.fitness:
+                break
+
+            if self.slay(herbivore):
+                self.consumption_herb(herbivore.weight)
                 amount_eaten += herbivore.weight
                 dead_herbs.append(herbivore)
+        return dead_herbs
 
-            elif self.slay:
-                self.consumption_herb(herbivore.weight, amount_eaten)
-                amount_eaten += herbivore.weight
-                dead_herbs.append(herbivore)
+        #self.remove_eaten_herbivores(dead_herbs, fitness_sorted_herb)
+        # Gjøre i landscape
 
-            return dead_herbs
-
-    def remove_eaten_herbivores(self, dead_herbivore_list, fitness_sorted_herbivores):
-
-        for herbivore in dead_herbivore_list:
-            fitness_sorted_herbivores.remove(dead_herbivore_list)
-        return fitness_sorted_herbivores
+    #def remove_eaten_herbivores(self, dead_herbivore_list, fitness_sorted_herbivores):
+#
+#        for herbivore in dead_herbivore_list:
+#           fitness_sorted_herbivores.remove(dead_herbivore_list)
+#        return fitness_sorted_herbivores
 
 
 
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=5.0)
+    c = Carnivore(age=2, weight=5.0)
     print(h.fitness)
     print(type(h.fitness))
+    print(c.fitness)
+    print(type(c.fitness))
 
     #more for animals with more weight
     #less for animals with less weight
