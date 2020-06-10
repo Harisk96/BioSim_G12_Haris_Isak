@@ -211,11 +211,6 @@ class Carnivore(Animals):
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
 
- #   def sort_by_fitness(self, herbivore_list):
-#
- #       sorted_herbivores_fitness = sorted(herbivore_list, key = attrgetter('fitness'))
-  #      return sorted_herbivores_fitness
-
     def consumption_herb(self, herb_weight):
 
         self.weight += self.params['beta'] * herb_weight
@@ -248,7 +243,6 @@ class Carnivore(Animals):
 
     def eat_carn(self, herbivore_list):
 
-        #fitness_sorted_herb = self.sort_by_fitness(herbivore_list)
         dead_herbs = []
         amount_eaten = 0
 
@@ -266,14 +260,6 @@ class Carnivore(Animals):
                 dead_herbs.append(herbivore)
         return dead_herbs
 
-        #self.remove_eaten_herbivores(dead_herbs, fitness_sorted_herb)
-        # Gjøre i landscape
-
-    #def remove_eaten_herbivores(self, dead_herbivore_list, fitness_sorted_herbivores):
-#
-#        for herbivore in dead_herbivore_list:
-#           fitness_sorted_herbivores.remove(dead_herbivore_list)
-#        return fitness_sorted_herbivores
 
 
 

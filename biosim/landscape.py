@@ -33,7 +33,7 @@ class Cell:
         Function that returns the total number of both species in one cell.
         :return:
         """
-        return self.n_herbivores + len(self.current_carnivores)
+        return self.n_herbivores + self.n_carnivores
 
     def randomise_herbivores(self):
         """
