@@ -36,12 +36,12 @@ class Cell:
         """
         return self.n_herbivores, self.n_carnivores
 
-    def randomise_herbivores(self):
+    def randomise_herbivores(self): # completely useless function
         """
         Shuffles list of herbivores, so feeding can be done at random.
         :return:
         """
-        random.shuffle(self.current_herbivores)
+        random.shuffle(self.current_herbivores) # Use np.random.shuffle because you have been using np.random in the other files. Assign a np.random.seed(1) at the top.
 
     def grow_fodder(self):
         """
@@ -76,7 +76,8 @@ class Cell:
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.birth(nr_herbivores)
-                if not newborn_herbivore:
+                if not newborn_herbivore:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
+                    # If you still want to use your method with the ''None'' you should change the if test to if newborn_herbivore is not None, this should work better and you can avoid problems in this manner.
                     continue
                 newborn_herbivores.append(newborn_herbivore)
 
@@ -92,6 +93,7 @@ class Cell:
                 newborn_carnivores.append(newborn_carnivore)
 
         self.current_carnivores.extend(newborn_carnivores)
+        # Can you think of a better way to implement this function? No need to do it now.
 
     def weight_loss(self):
         """
@@ -189,6 +191,7 @@ if __name__ == "__main__":
 
     seed=1
     c = Lowland()
+<<<<<<< HEAD
 
     anims = list()
     for i in range(50):
@@ -206,3 +209,45 @@ if __name__ == "__main__":
         c.death_in_cell()
         print('herbivores, carnivores: ', c.n_animals)
 
+=======
+    h1 = Herbivore()
+    h2 = Herbivore()
+    h3 = Herbivore()
+    h4 = Herbivore()
+    h5 = Herbivore()
+    h6 = Herbivore()
+    h7 = Herbivore()
+    h8 = Herbivore()
+    h9 = Herbivore()
+    h10 = Herbivore()
+
+    c1 = Carnivore()
+    c2 = Carnivore()
+    c3 = Carnivore()
+    c4 = Carnivore()
+    c5 = Carnivore()
+    c6 = Carnivore()
+    c7 = Carnivore()
+    c8 = Carnivore()
+    # Placing animals like this is cumbersome.
+    # Do this:
+    # Bishnu's image:
+    # herbivore_list = [Herbivore(5,20) for i in range(50)]
+    # carnivore_list = [Carnivore(5,20) for i in range(20)]'
+    # plot afterwards
+    herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
+    carnivore_list = [c1, c2, c3, c4, c5, c6, c7, c8]
+
+    c.place_animals(herbivore_list)
+    c.place_animals(carnivore_list)
+
+    for i in range(10):
+        for j in range(200):
+            c.feed_all()
+            c.birth_cycle()
+            c.age_animals()
+            c.weight_loss()
+            c.death_in_cell()
+            #print(c.n_animals)
+            print(c.n_carnivores)
+>>>>>>> animals_superclass

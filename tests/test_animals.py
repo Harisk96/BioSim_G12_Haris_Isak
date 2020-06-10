@@ -27,13 +27,12 @@ def set_params():
     Herbivore.set_params(**herb_params)
     Carnivore.set_params(**carn_params)
 
-@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
 class TestAnimals:
     """
     Test animals module
     """
 
-
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_constructor(self, Species):
         s = Species(5, 15.0)
         assert hasattr(s, 'age')
@@ -51,71 +50,65 @@ class TestAnimals:
         with pytest.raises(ValueError, match="'weight' must be greater than or equal to zero"):
             assert Animals(weight=-1)
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_new_animal(self, Species):
-
         """
         Tests that a new herbivore has age 0
         """
         s = Species()
         assert s.age == 0
 
-    def test_animal_age(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_animal_age(self, Species):
         """
         Tests that fitness equation returns float
         """
-        h = Herbivore(2, 5.0)
-        c = Carnivore(4, 7.0)
-        h.update_age()
-        c.update_age()
-        assert h.age == 3 and c.age == 5  # 2 + 1
+        s = Species(2, 5.0)
+        s.update_age()
+        assert s.age == 3
 
-    def test_subclass(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_subclass(self, Species):
         """
         Tests that Herbivore and Carnivore is a subclass of Animals
         """
-        h = Herbivore()
-        c = Carnivore()
-        assert issubclass(h.__class__, Animals)
-        assert issubclass(c.__class__, Animals)
+        s = Species()
+        assert issubclass(s.__class__, Animals)
 
-    def test_instance_super(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_instance_super(self, Species):
         """
         Tests that Herbivore-object and Carnivore-object is an instance of Animals
         """
-        h = Herbivore()
-        c = Carnivore()
-        assert isinstance(h, Animals)
-        assert isinstance(c, Animals)
+        s = Species()
+        assert isinstance(s, Animals)
 
-    def test_initial_weight(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_initial_weight(self, Species):
         """
         Testing if the birth weight is positive
         """
-        h = Herbivore()
-        c = Carnivore()
-        assert h.weight and c.weight >= 0
+        s = Species()
+        assert s.weight >= 0
 
-    def test_yearly_weight_loss(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_yearly_weight_loss(self, Species):
         """
         Testing if yearly_weight_loss results in lower weight
         """
-        h = Herbivore(2, 5.0)
-        c = Carnivore(2, 7.0)
-        h.yearly_weight_loss()
-        c.yearly_weight_loss()
-        assert h.weight < 5.0 and c.weight < 7.0
+        s = Species(2, 20)
+        s.yearly_weight_loss()
+        assert s.weight < 20
 
-    def test_eat_limits(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_eat_limits(self, Species):
         """
         Testing if available food lower than appetite leads to expected weight increase
         """
-        h = Herbivore(2, 5.0)
-        c = Carnivore(3, 7.0)
-        h.eat(5.0)
-        c.eat(7.0)
-        exp_inc_h = h.params['beta'] * 5.0
-        exp_inc_c = c.params['beta'] * 7.0
-        assert h.weight == (5.0 + exp_inc_h) and c.weight == (7.0 + exp_inc_c)
+        s = Species(2, 5.0)
+        s.eat(7.0)
+        exp_inc_s = s.params['beta'] * 7.0
+        assert s.weight == (5.0 + exp_inc_s)
 
     def test_eat_appetite(self):
         """
@@ -130,63 +123,63 @@ class TestAnimals:
         exp_inc_c = c.params['beta'] * 50.0
         assert h.weight == (5.0 + exp_inc_h) and c.weight == (7.0 + exp_inc_c)
 
-    def test_update_fitness_new_param(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_update_fitness_new_param(self, Species):
         """
         Testing if update_fitness updates fitness with different parameters
         """
-        h = Herbivore(2, 5.0)
-        f1 = h.fitness
-        h.age = 5
-        h.weight = 10.0
-        h.update_fitness()
-        f2 = h.fitness
+        s = Species(2, 5.0)
+        f1 = s.fitness
+        s.age = 5
+        s.weight = 10.0
+        s.update_fitness()
+        f2 = s.fitness
         assert f1 != f2
 
-    def test_update_fitness_same_param(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_update_fitness_same_param(self, Species):
         """
-        Testing that the update_fitness function doesnt change fitness for same parameters
+        Testing that the update_fitness function doesnt change fitness for same parameters.
         """
-        h = Herbivore(2, 5.0)
-        f1 = h.fitness
-        h.update_fitness()
-        f2 = h.fitness
+        s = Species(2, 5.0)
+        f1 = s.fitness
+        s.update_fitness()
+        f2 = s.fitness
         assert f1 == f2
 
-    def test_fitness(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_fitness(self, Species):
         """
         Testing that the fitness attribute is a float.
         """
-        h = Herbivore(2, 5.0)
-        c = Carnivore(3, 7.0)
-        assert isinstance(h.fitness, float)
-        assert isinstance(c.fitness, float)
+        s = Species(2, 5.0)
+        assert isinstance(s.fitness, float)
 
-    def test_fitness_weight(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_fitness_weight(self, Species):
         """
         Testing that fitness equals zero if weight is zero.
         """
-        h = Herbivore(2, 0.0)
-        c = Carnivore(3, 0.0)
-        c.update_fitness()
-        h.update_fitness()
-        assert h.fitness == 0
-        assert c.fitness == 0
+        s = Herbivore(2, 0.0)
+        s.update_fitness()
+        assert s.fitness == 0
 
-    def test_eat_valerr(self):
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_eat_valerr(self, Species):
         """
         Asserts that input of negative fodder raises a ValueError.
         """
-        h = Herbivore(2, 5.0)
+        s = Species(2, 5.0)
         with pytest.raises(ValueError):
-            assert h.eat(-1)
+            assert s.eat(-1)
 
-    def test_eat_fodder(self):
+    def test_eat_fodder(self, Species):
         """
         Asserts that animal
         """
-        h = Herbivore(2, 5.0)
-        fodder = h.params['F'] - 5
-        assert h.eat(fodder) == fodder
+        s = Species(2, 5.0)
+        fodder = s.params['F'] - 5
+        assert s.eat(fodder) == fodder
 
     def test_eat_food_eaten(self):
         h = Herbivore(2, 5.0)
