@@ -81,6 +81,17 @@ class Cell:
 
         self.current_herbivores.extend(newborn_herbivores)
 
+        newborn_carnivores = []
+        nr_carnivores = self.n_carnivores
+        if nr_carnivores > 1:
+            for carnivore in self.current_carnivores:
+                newborn_carnivore = carnivore.birth(nr_carnivores)
+                if not newborn_carnivore:
+                    continue
+                newborn_carnivores.append(newborn_carnivore)
+
+        self.current_carnivores.extend(newborn_carnivores)
+
     def weight_loss(self):
         """
 
@@ -190,9 +201,13 @@ if __name__ == "__main__":
     c2 = Carnivore()
     c3 = Carnivore()
     c4 = Carnivore()
+    c5 = Carnivore()
+    c6 = Carnivore()
+    c7 = Carnivore()
+    c8 = Carnivore()
 
     herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
-    carnivore_list = [c1, c2, c3, c4]
+    carnivore_list = [c1, c2, c3, c4, c5, c6, c7, c8]
 
     c.place_animals(herbivore_list)
     c.place_animals(carnivore_list)

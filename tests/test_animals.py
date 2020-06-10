@@ -33,6 +33,7 @@ class TestAnimals:
     Test animals module
     """
 
+<<<<<<< Updated upstream
     def test_constructor(self):
         h = Herbivore(5, 15.0)
         assert hasattr(h, 'age')
@@ -51,12 +52,15 @@ class TestAnimals:
 
 
     def test_new_animal(self):
+=======
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_new_animal(self, Species):
+>>>>>>> Stashed changes
         """
         Tests that a new herbivore has age 0
         """
-        h = Herbivore()
-        c = Carnivore()
-        assert h.age == 0 and c.age == 0
+        s = Species()
+        assert s.age == 0
 
     def test_animal_age(self):
         """
