@@ -95,7 +95,7 @@ class Animals:
         :return: float, increase of weight
         """
 
-        if fodder < 0:
+        if fodder <= 0:
             raise ValueError('Fodder available must be greater than or equal to 0')
         if fodder < self.params['F']:
             food_eaten = fodder
