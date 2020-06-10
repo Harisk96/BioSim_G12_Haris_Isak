@@ -2,6 +2,7 @@
 
 from numba import jit
 import numpy as np
+np.random.seed(1)
 import random
 from random import uniform
 

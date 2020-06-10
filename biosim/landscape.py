@@ -5,6 +5,8 @@ from operator import attrgetter
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.random.seed(1)
+
 class Cell:
     params = {}
     """
@@ -188,25 +190,38 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
+
+
+
+
+
+
+
+
     l = Lowland()
 
-    herb_list = [Herbivore(5,20) for i in range(50)]
-    carn_list = [Carnivore(5,20) for i in range(20)]
+    l.herb_list = [Herbivore(5,20) for i in range(50)]
+    l.carn_list = [Carnivore(5,20) for i in range(20)]
 
-    l.place_animals(herb_list)
-    l.place_animals(carn_list)
+    l.place_animals(l.herb_list)
+    l.place_animals(l.carn_list)
 
-    fig = plt.figure(figsize=(8, 6.4))
-    plt.plot(0, len(herb_list), '*-', color='g', lw=0.5)
-    plt.plot(0, len(carn_list), '*-', color='r', lw=0.5)
-    plt.draw()
-    plt.pause(0.001)
+#    fig = plt.figure(figsize=(8, 6.4))
+#    plt.plot(0, len(l.herb_list), '*-', color='g', lw=0.5)
+#    plt.plot(0, len(l.carn_list), '*-', color='r', lw=0.5)
+#    plt.draw()
+#    plt.pause(0.001)
 
-    count_herb = [len(herb_list)]
-    count_carn = [len(carn_list)]
+#    count_herb = [len(l.herb_list)]
+#    count_carn = [len(l.carn_list)]
 
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlim(0, 200)
+    ax.set_ylim(0, 175)
 
-
+    line_herb = ax.plot(np.arange(200),
+                   np.full(200, np.nan), 'b-')[0]
 
     for i in range(200):
         l.grow_fodder()
@@ -216,19 +231,28 @@ if __name__ == "__main__":
         l.weight_loss()
         l.death_in_cell()
 
-        count_herb.append(len(herb_list))
-        count_carn.append(len(carn_list))
+        ydata = line_herb.get_ydata()
+        ydata[i] = l.n_herbivores
+        line_herb.set_ydata(ydata)
+        plt.pause(1e-6)
 
-        plt.plot(list(range(i + 2)), count_herb, '*-', color='g', lw=0.5)
-        plt.plot(list(range(i + 2)), count_carn, '*-', color='r', lw=0.5)
-        plt.draw()
-        plt.pause(0.001)
+
+
+#        count_herb.append(len(l.herb_list))
+#        count_carn.append(len(l.carn_list))
+
+#        plt.plot(list(range(i + 2)), count_herb, '*-', color='g', lw=0.5)
+#        plt.plot(list(range(i + 2)), count_carn, '*-', color='r', lw=0.5)
+#        plt.draw()
+#        plt.pause(0.001)
 
 #        print(i, " Year End Herb numbers :-", len(herb_list))
 #        print(i, " Year End Carn numbers :-", len(carn_list))
 #    print(i, " Year End Herb numbers :-", len(herb_list))
 #    print(i, " Year End Carn numbers :-", len(carn_list))
-    plt.show()
+#    plt.show()
+
+
 
 
 
