@@ -2,8 +2,9 @@
 
 from numba import jit
 import numpy as np
-np.random.seed(1)
 import random
+np.random.seed(1)
+
 from random import uniform
 
 __author__ = "Haris Karovic", "Isak Finnøy"

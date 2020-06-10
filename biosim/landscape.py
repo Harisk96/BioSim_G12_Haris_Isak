@@ -191,13 +191,6 @@ class Sea(Cell):
 
 if __name__ == "__main__":
 
-
-
-
-
-
-
-
     l = Lowland()
 
     l.herb_list = [Herbivore(5,20) for i in range(50)]
@@ -217,12 +210,14 @@ if __name__ == "__main__":
 
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-    ax.set_xlim(0, 200)
-    ax.set_ylim(0, 175)
+    ax.set_xlim(0, 180)
+    ax.set_ylim(0, 200)
 
     line_herb = ax.plot(np.arange(200),
                    np.full(200, np.nan), 'b-')[0]
 
+    line_carn = ax.plot(np.arange(200),
+                        np.full(200, np.nan), 'r-')[0]
     for i in range(200):
         l.grow_fodder()
         l.feed_all()
@@ -234,7 +229,13 @@ if __name__ == "__main__":
         ydata = line_herb.get_ydata()
         ydata[i] = l.n_herbivores
         line_herb.set_ydata(ydata)
+
+        ydata2 = line_carn.get_ydata()
+        ydata2[i] = l.n_carnivores
+        line_carn.set_ydata(ydata2)
+
         plt.pause(1e-6)
+    plt.show()
 
 
 
