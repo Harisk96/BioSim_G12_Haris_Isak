@@ -2,7 +2,8 @@ from biosim.animals import Animals, Herbivore, Carnivore
 
 import random
 from operator import attrgetter
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Cell:
     params = {}
@@ -33,7 +34,7 @@ class Cell:
         Function that returns the total number of both species in one cell.
         :return:
         """
-        return self.n_herbivores + self.n_carnivores
+        return self.n_herbivores, self.n_carnivores
 
     def randomise_herbivores(self):
         """
@@ -185,39 +186,23 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
+
+    seed=1
     c = Lowland()
-    h1 = Herbivore()
-    h2 = Herbivore()
-    h3 = Herbivore()
-    h4 = Herbivore()
-    h5 = Herbivore()
-    h6 = Herbivore()
-    h7 = Herbivore()
-    h8 = Herbivore()
-    h9 = Herbivore()
-    h10 = Herbivore()
 
-    c1 = Carnivore()
-    c2 = Carnivore()
-    c3 = Carnivore()
-    c4 = Carnivore()
-    c5 = Carnivore()
-    c6 = Carnivore()
-    c7 = Carnivore()
-    c8 = Carnivore()
+    anims = list()
+    for i in range(50):
+        anims.append(Herbivore(5, 20))
+    for i in range(20):
+        anims.append(Carnivore(5, 20))
 
-    herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
-    carnivore_list = [c1, c2, c3, c4, c5, c6, c7, c8]
+    c.place_animals(anims)
 
-    c.place_animals(herbivore_list)
-    c.place_animals(carnivore_list)
+    for i in range(200):
+        c.feed_all()
+        c.birth_cycle()
+        c.age_animals()
+        c.weight_loss()
+        c.death_in_cell()
+        print('herbivores, carnivores: ', c.n_animals)
 
-    for i in range(10):
-        for j in range(200):
-            c.feed_all()
-            c.birth_cycle()
-            c.age_animals()
-            c.weight_loss()
-            c.death_in_cell()
-            #print(c.n_animals)
-            print(c.n_carnivores)

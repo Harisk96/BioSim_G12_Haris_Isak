@@ -114,7 +114,7 @@ class Animals:
         Every year, the weight of the animal decreases by ηw.
         :return: float, amount the animals weight decreases by
         """
-        subtracted_weight = self.weight*self.params['eta']
+        subtracted_weight = self.weight * self.params['eta']
         self.weight -= subtracted_weight
         self.update_fitness()
 
@@ -232,7 +232,7 @@ class Carnivore(Animals):
 
             prob_kill = 1
 
-        if random.uniform(0, 1) < prob_kill:
+        if np.random.uniform(0, 1) < prob_kill:
 
             slay = True
 
@@ -265,7 +265,7 @@ class Carnivore(Animals):
 
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=5.0)
-    c = Carnivore(age=2, weight=5.0)
+    c = Carnivore(age=10, weight=5.0)
     print(h.fitness)
     print(type(h.fitness))
     print(c.fitness)
