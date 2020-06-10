@@ -137,10 +137,11 @@ class Animals:
         xi = self.params['xi']
         zeta = self.params['zeta']
         if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_birth']):
-            return
+            return # Returns ''None'', see comments in landscape
         p_birth = min(1, g * self.fitness * (num_animals-1))
         if np.random.uniform(0, 1) < p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+            # You are missing a check for whether xi*birth_weight > self.weight
             self.weight -= xi * birth_weight
 
             if isinstance(self, Herbivore):
@@ -148,7 +149,7 @@ class Animals:
 
             elif isinstance(self, Carnivore):
                 return Carnivore(0, birth_weight)
-            self.update_fitness()
+            self.update_fitness() # This one is never called if the function returns a Herbivore or a Carnivore
 
     def migrate(self):
         """
@@ -219,12 +220,12 @@ class Carnivore(Animals):
 
     def slay(self, herb):
 
-        slay = None
+        slay = None # No point in having this.
         if self.fitness <= herb.fitness:
 
             prob_kill = 0
 
-        if 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']:
+        if 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']: # change if to elif
 
             prob_kill = (self.fitness - herb.fitness) / self.params['DeltaPhiMax']
 
@@ -234,12 +235,12 @@ class Carnivore(Animals):
 
         if random.uniform(0, 1) < prob_kill:
 
-            slay = True
+            slay = True # Useless
 
         else:
-            slay = False
+            slay = False # Useless
 
-        return slay
+        return slay # Delete all the slay variables. and return Random.uniform(0,1) < prob_kill instead.
 
     def eat_carn(self, herbivore_list):
 
@@ -255,7 +256,7 @@ class Carnivore(Animals):
                 break
 
             if self.slay(herbivore):
-                self.consumption_herb(herbivore.weight)
+                self.consumption_herb(herbivore.weight) # Consumption herb is also an useless function, you are dividing up the code too excessively.
                 amount_eaten += herbivore.weight
                 dead_herbs.append(herbivore)
         return dead_herbs
