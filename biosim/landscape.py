@@ -41,7 +41,7 @@ class Cell:
         Shuffles list of herbivores, so feeding can be done at random.
         :return:
         """
-        random.shuffle(self.current_herbivores) # Use np.random.shuffle because you have been using np.random in the other files. Assign a np.random.seed(1) at the top.
+        np.random.shuffle(self.current_herbivores) #endret # Use np.random.shuffle because you have been using np.random in the other files. Assign a np.random.seed(1) at the top.
 
     def grow_fodder(self):
         """
@@ -76,7 +76,7 @@ class Cell:
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.birth(nr_herbivores)
-                if not newborn_herbivore:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
+                if newborn_herbivore is None:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
                     # If you still want to use your method with the ''None'' you should change the if test to if newborn_herbivore is not None, this should work better and you can avoid problems in this manner.
                     continue
                 newborn_herbivores.append(newborn_herbivore)
@@ -88,7 +88,7 @@ class Cell:
         if nr_carnivores > 1:
             for carnivore in self.current_carnivores:
                 newborn_carnivore = carnivore.birth(nr_carnivores)
-                if not newborn_carnivore:
+                if newborn_carnivore is None:
                     continue
                 newborn_carnivores.append(newborn_carnivore)
 
@@ -188,66 +188,59 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
+    l = Lowland()
 
-    seed=1
-    c = Lowland()
-<<<<<<< HEAD
+    herb_list = [Herbivore(5,20) for i in range(50)]
+    carn_list = [Carnivore(5,20) for i in range(20)]
 
-    anims = list()
-    for i in range(50):
-        anims.append(Herbivore(5, 20))
-    for i in range(20):
-        anims.append(Carnivore(5, 20))
+    l.place_animals(herb_list)
+    l.place_animals(carn_list)
 
-    c.place_animals(anims)
+    fig = plt.figure(figsize=(8, 6.4))
+    plt.plot(0, len(herb_list), '*-', color='g', lw=0.5)
+    plt.plot(0, len(carn_list), '*-', color='r', lw=0.5)
+    plt.draw()
+    plt.pause(0.001)
+
+    count_herb = [len(herb_list)]
+    count_carn = [len(carn_list)]
+
+
+
 
     for i in range(200):
-        c.feed_all()
-        c.birth_cycle()
-        c.age_animals()
-        c.weight_loss()
-        c.death_in_cell()
-        print('herbivores, carnivores: ', c.n_animals)
+        l.grow_fodder()
+        l.feed_all()
+        l.birth_cycle()
+        l.age_animals()
+        l.weight_loss()
+        l.death_in_cell()
 
-=======
-    h1 = Herbivore()
-    h2 = Herbivore()
-    h3 = Herbivore()
-    h4 = Herbivore()
-    h5 = Herbivore()
-    h6 = Herbivore()
-    h7 = Herbivore()
-    h8 = Herbivore()
-    h9 = Herbivore()
-    h10 = Herbivore()
+        count_herb.append(len(herb_list))
+        count_carn.append(len(carn_list))
 
-    c1 = Carnivore()
-    c2 = Carnivore()
-    c3 = Carnivore()
-    c4 = Carnivore()
-    c5 = Carnivore()
-    c6 = Carnivore()
-    c7 = Carnivore()
-    c8 = Carnivore()
-    # Placing animals like this is cumbersome.
-    # Do this:
+        plt.plot(list(range(i + 2)), count_herb, '*-', color='g', lw=0.5)
+        plt.plot(list(range(i + 2)), count_carn, '*-', color='r', lw=0.5)
+        plt.draw()
+        plt.pause(0.001)
+
+#        print(i, " Year End Herb numbers :-", len(herb_list))
+#        print(i, " Year End Carn numbers :-", len(carn_list))
+#    print(i, " Year End Herb numbers :-", len(herb_list))
+#    print(i, " Year End Carn numbers :-", len(carn_list))
+    plt.show()
+
+
+
     # Bishnu's image:
-    # herbivore_list = [Herbivore(5,20) for i in range(50)]
-    # carnivore_list = [Carnivore(5,20) for i in range(20)]'
+
     # plot afterwards
-    herbivore_list = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
-    carnivore_list = [c1, c2, c3, c4, c5, c6, c7, c8]
 
-    c.place_animals(herbivore_list)
-    c.place_animals(carnivore_list)
 
-    for i in range(10):
-        for j in range(200):
-            c.feed_all()
-            c.birth_cycle()
-            c.age_animals()
-            c.weight_loss()
-            c.death_in_cell()
-            #print(c.n_animals)
-            print(c.n_carnivores)
->>>>>>> animals_superclass
+
+
+
+
+
+#        print(c.n_carnivores)
+#        print(c.n_herbivores)

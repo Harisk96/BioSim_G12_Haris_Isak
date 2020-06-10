@@ -139,17 +139,22 @@ class Animals:
         if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_birth']):
             return # Returns ''None'', see comments in landscape
         p_birth = min(1, g * self.fitness * (num_animals-1))
+
         if np.random.uniform(0, 1) < p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
+
+            if xi*birth_weight < self.weight:
             # You are missing a check for whether xi*birth_weight > self.weight
-            self.weight -= xi * birth_weight
+                self.weight -= xi * birth_weight
 
             if isinstance(self, Herbivore):
-                return Herbivore(0, birth_weight)
+                self.update_fitness()
+                return Herbivore(0, birth_weight) #endret
 
             elif isinstance(self, Carnivore):
-                return Carnivore(0, birth_weight)
-            self.update_fitness() # This one is never called if the function returns a Herbivore or a Carnivore
+                self.update_fitness()
+                return Carnivore(0, birth_weight) #endret
+                 # This one is never called if the function returns a Herbivore or a Carnivore
 
     def migrate(self):
         """
@@ -219,13 +224,14 @@ class Carnivore(Animals):
         self.update_fitness()
 
     def slay(self, herb):
+#        slay = None # No point in having this.
+        prob_kill = None
 
-        slay = None # No point in having this.
         if self.fitness <= herb.fitness:
 
             prob_kill = 0
 
-        if 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']: # change if to elif
+        elif 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']: # change if to elif
 
             prob_kill = (self.fitness - herb.fitness) / self.params['DeltaPhiMax']
 
@@ -233,14 +239,15 @@ class Carnivore(Animals):
 
             prob_kill = 1
 
-        if np.random.uniform(0, 1) < prob_kill:
+        return np.random.uniform(0, 1) < prob_kill
 
-            slay = True # Useless
 
-        else:
-            slay = False # Useless
+#            slay = True # Useless
 
-        return slay # Delete all the slay variables. and return Random.uniform(0,1) < prob_kill instead.
+#        else:
+#            slay = False # Useless
+
+#        return slay # Delete all the slay variables. and return Random.uniform(0,1) < prob_kill instead.
 
     def eat_carn(self, herbivore_list):
 
