@@ -13,12 +13,13 @@ def set_params():
     """
     Sets the testing environment up
     """
-    herb_params = {
+    herb_params= {
         'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
         'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
-        'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0, 'DeltaPhiMax': None
+        'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0
     }
-    carn_params = {
+
+    carn_params= {
         'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
         'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
         'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
@@ -31,6 +32,23 @@ class TestAnimals:
     """
     Test animals module
     """
+
+    def test_constructor(self):
+        h = Herbivore(5, 15.0)
+        assert hasattr(h, 'age')
+        assert hasattr(h, 'weight')
+        assert hasattr(h, 'fitness')
+        assert h.age == 5
+        assert h.weight == 15.0
+        assert isinstance(h, Herbivore)
+        with pytest.raises(TypeError, match="'age' must be of type int "):
+            assert Animals(age=3.4)
+        with pytest.raises(TypeError, match='Weight must be either of type int or type float'):
+            assert Animals(weight='string')
+        with pytest.raises(ValueError, match="'age' must be greater than or equal to zero"):
+            assert Animals(age=-1, weight=-2.0)
+
+
 
     def test_new_animal(self):
         """
@@ -176,29 +194,17 @@ class TestAnimals:
         assert isinstance(fodder, float)
 
     def test_set_params(self):
+        """
+        Testing if the set_params method updates herbivore's default parameters with new_parameters.
+        """
         h = Herbivore()
-        old_params = h.params
-        old = old_params
-        print("old")
-        print(old_params)
-        new_herb_params = {'w_birth': 8.0, 'sigma_birth': 1.7, 'beta': 1.2}
-        print("new")
-        print(new_herb_params)
-        h.set_params(new_herb_params)
-        print("param")
-        print(h.params)
-        assert h.params['w_birth'] == pytest.approx(8.0)
-        print("h.param")
-        print(h.params)
-        print("MMMMMMMMMMMMMMMMMMMMMMMMM")
-        print(old_params)
-        assert h.params == old
-
-    def test_constructor(self):
-        h = Herbivore()
-        c = Carnivore()
-        assert isinstance(c, Carnivore)
-        assert isinstance(h, Herbivore)
+        new_parameters = {
+            'w_birth': 8.0, 'sigma_birth': 2.0, 'beta': 1.5, 'eta': 0.25, 'a_half': 40.0,
+            'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
+            'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0
+        }
+        h.set_params(new_parameters)
+        assert h.params == new_parameters
 
     def test_birth(self, mocker):
         """
