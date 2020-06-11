@@ -139,7 +139,7 @@ class Animals:
         xi = self.params['xi']
         zeta = self.params['zeta']
         if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_birth']):
-            return # Returns ''None'', see comments in landscape
+            return None # Returns ''None'', see comments in landscape
         p_birth = min(1, g * self.fitness * (num_animals-1))
 
         if np.random.uniform(0, 1) < p_birth:
@@ -148,9 +148,8 @@ class Animals:
             if xi*birth_weight < self.weight:
             # You are missing a check for whether xi*birth_weight > self.weight
                 self.weight -= xi * birth_weight
-
-            if isinstance(self, Herbivore):
                 self.update_fitness()
+            if isinstance(self, Herbivore):
                 return Herbivore(0, birth_weight) #endret
 
             elif isinstance(self, Carnivore):
@@ -226,22 +225,19 @@ class Carnivore(Animals):
         self.update_fitness()
 
     def slay(self, herb):
-#        slay = None # No point in having this.
-        prob_kill = None
-
         if self.fitness <= herb.fitness:
 
-            prob_kill = 0
+            return False
 
-        elif 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']: # change if to elif
+        elif 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']:
 
             prob_kill = (self.fitness - herb.fitness) / self.params['DeltaPhiMax']
+            return np.random.uniform(0, 1) < prob_kill
 
         else:
 
-            prob_kill = 1
+            return True
 
-        return np.random.uniform(0, 1) < prob_kill
 
 
 #            slay = True # Useless

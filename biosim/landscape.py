@@ -1,11 +1,11 @@
+import numpy as np
+np.random.seed(1)
+
 from biosim.animals import Animals, Herbivore, Carnivore
 
-import random
 from operator import attrgetter
-import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(1)
 
 class Cell:
     params = {}
@@ -15,6 +15,9 @@ class Cell:
     """
 
     def __init__(self):
+        """
+        constructor for the cell super class.
+        """
         self.fodder = 0
         self.current_herbivores = []
         self.current_carnivores = []
@@ -22,32 +25,39 @@ class Cell:
     @property
     def n_herbivores(self):
         """
-        Function that returns number of herbivores by taking the length of herbivores list.
+        Function that returns number of herbivores in one cell by calculating the length
+        of herbivores list.
+        :return: int >= 0, number of herbivores in one cell.
         """
         return len(self.current_herbivores)
 
     @property
     def n_carnivores(self):
+        """
+        Function that returns number of carnivores in one cell by calculating the length
+        of carnivores list.
+        :return: int >= 0, number of carnivores in one cell.
+        """
         return len(self.current_carnivores)
 
     @property
     def n_animals(self):
         """
         Function that returns the total number of both species in one cell.
-        :return:
+        :return: int >= 0, number of animals in one cell.
         """
         return self.n_herbivores, self.n_carnivores
 
     def randomise_herbivores(self): # completely useless function
         """
-        Shuffles list of herbivores, so feeding can be done at random.
-        :return:
+        Shuffles list of herbivores in random order, so feeding can be done at random.
+        :return: None
         """
         np.random.shuffle(self.current_herbivores) #endret # Use np.random.shuffle because you have been using np.random in the other files. Assign a np.random.seed(1) at the top.
-
+                                                    # slett funksjon,
     def grow_fodder(self):
         """
-        Function that can be calle upon to grow fodder at the end of a year.
+        Function that can be called upon to grow fodder at the end of a year.
         This function is overridden in the highland and lowland subclass.
         """
         pass
@@ -78,10 +88,9 @@ class Cell:
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.birth(nr_herbivores)
-                if newborn_herbivore is None:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
+                if newborn_herbivore is not None:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
                     # If you still want to use your method with the ''None'' you should change the if test to if newborn_herbivore is not None, this should work better and you can avoid problems in this manner.
-                    continue
-                newborn_herbivores.append(newborn_herbivore)
+                    newborn_herbivores.append(newborn_herbivore)
 
         self.current_herbivores.extend(newborn_herbivores)
 
@@ -146,15 +155,15 @@ class Cell:
         for herbivore in self.current_herbivores:
             if herbivore.death():
                 dead_herbivores.append(herbivore)
-        for dead_herbivore in dead_herbivores:
-            self.current_herbivores.remove(dead_herbivore)
+        self.current_herbivores = [herb for herb in self.current_herbivores if
+                                   herb not in dead_herbivores]
 
         dead_carnivores = []
         for carnivore in self.current_carnivores:
             if carnivore.death():
                 dead_carnivores.append(carnivore)
-        for dead_carnivore in dead_carnivores:
-            self.current_carnivores.remove(dead_carnivore)
+        self.current_carnivores = [carn for carn in self.current_carnivores if
+                                   carn not in dead_carnivores]
 
 
 class Highland(Cell):
@@ -205,20 +214,23 @@ if __name__ == "__main__":
 #    plt.draw()
 #    plt.pause(0.001)
 
-#    count_herb = [len(l.herb_list)]
-#    count_carn = [len(l.carn_list)]
+    count_herb = [len(l.herb_list)]
+    count_carn = [len(l.carn_list)]
 
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-    ax.set_xlim(0, 180)
-    ax.set_ylim(0, 200)
+   # fig = plt.figure()
+   # ax = fig.add_subplot(1, 1, 1)
 
-    line_herb = ax.plot(np.arange(200),
-                   np.full(200, np.nan), 'b-')[0]
+   #ax.set_xlim(0, 180)
+    #ax.set_ylim(0, 200)
 
-    line_carn = ax.plot(np.arange(200),
-                        np.full(200, np.nan), 'r-')[0]
+  #  line_herb = ax.plot(np.arange(200),
+   #                np.full(200, np.nan), 'b-')[0]
+
+    #line_carn = ax.plot(np.arange(200),
+     #                   np.full(200, np.nan), 'r-')[0]
     for i in range(200):
+        count_herb.append(l.n_herbivores)
+        count_carn.append(l.n_carnivores)
         l.grow_fodder()
         l.feed_all()
         l.birth_cycle()
@@ -226,15 +238,17 @@ if __name__ == "__main__":
         l.weight_loss()
         l.death_in_cell()
 
-        ydata = line_herb.get_ydata()
-        ydata[i] = l.n_herbivores
-        line_herb.set_ydata(ydata)
+        #ydata = line_herb.get_ydata()
+        #ydata[i] = l.n_herbivores
+        #line_herb.set_ydata(ydata)
 
-        ydata2 = line_carn.get_ydata()
-        ydata2[i] = l.n_carnivores
-        line_carn.set_ydata(ydata2)
+      #  ydata2 = line_carn.get_ydata()
+       # ydata2[i] = l.n_carnivores
+        #line_carn.set_ydata(ydata2)
 
-        plt.pause(1e-6)
+        #plt.pause(1e-6)
+    plt.plot(count_herb, 'b-')
+    plt.plot(count_carn, 'r-')
     plt.show()
 
 
