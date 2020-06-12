@@ -253,10 +253,15 @@ class Carnivore(Animals):
                 break
 
             if self.slay(herbivore):
-                self.weight += self.params['beta'] * herbivore.weight
+                if amount_eaten + herbivore.weight > self.params['F']:
+                    reduced_amount_eaten = self.params['F'] - amount_eaten
+                    self.weight += self.params['beta']*reduced_amount_eaten
+                    amount_eaten += reduced_amount_eaten
+                else:
+                    self.weight += self.params['beta'] * herbivore.weight
+                    amount_eaten += herbivore.weight
                 #self.consumption_herb(herbivore.weight) # Consumption herb is also an useless function, you are dividing up the code too excessively.
                 self.update_fitness()
-                amount_eaten += herbivore.weight
                 dead_herbs.append(herbivore)
         return dead_herbs
 
