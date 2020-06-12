@@ -43,8 +43,9 @@ class Cell:
     @property
     def n_animals(self):
         """
-        Function that returns the total number of both species in one cell.
-        :return: int >= 0, number of animals in one cell.
+        Function that returns a tuple with number of herbivores and number of carnivores in one
+        cell.
+        :return: tuple of positive integers, which represents number of each type in one cell.
         """
         return self.n_herbivores, self.n_carnivores
 

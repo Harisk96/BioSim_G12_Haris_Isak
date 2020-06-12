@@ -3,15 +3,15 @@ from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 import pytest
 from unittest import mock
 
-__author__ == "Haris Karovic", "Isak Finnøy"
-__email__ == "harkarov@nmbu.no", "isfi@nmbu.no"
+__author__ = "Haris Karovic", "Isak Finnøy"
+__email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
 
 def set_params():
     """
     Sets the testing environment up.
     """
-    low_params = {'f':800, 'migrate_to': True}
-    high_params = {'f':300, 'migrate_to': True}
+    low_params = {'f': 800, 'migrate_to': True}
+    high_params = {'f': 300, 'migrate_to': True}
     desert_params = {'migrate_to': True}
     sea_params = {'migrate_to': False}
 
@@ -24,7 +24,10 @@ class TestLandscape:
     """
     Class for testing the methods of landscape-file.
     """
-    @pytest.mark.parametrize('FertileCells', [Lowland, Highland])
-    @pytest.mark.parametrize('InfertileCells', [Desert, Sea])
-    def test_constructor(self, Cells):
-        c = Cells()
+    #@pytest.mark.parametrize('FerCells', [Lowland, Highland])
+    #@pytest.mark.parametrize('InferCells', [Desert, Sea])
+    def test_constructor(self):
+        c = Cell()
+        assert c.fodder == 0
+        assert isinstance(c.current_carnivores, list)
+        assert isinstance(c.current_herbivores, list)
