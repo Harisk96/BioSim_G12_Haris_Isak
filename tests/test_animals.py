@@ -247,19 +247,6 @@ class TestAnimals:
         assert move_herb is True
         assert move_carn is True
 
-
-
-    def test_slay2(self,mocker):
-        mocker.patch('numpy.random.uniform', return_value=1)
-        h3 = Herbivore()
-        c3 = Carnivore()
-        h3.fitness = 5
-        c3.fitness = 10
-        c3.set_params({'DeltaPhiMax': 0.1})
-
-        carn_slay_herb3 = c3.slay(h3)
-        assert carn_slay_herb3 is True
-
     def test_slay(self, mocker):
 
         mocker.patch('numpy.random.uniform', return_value=0)
@@ -280,6 +267,59 @@ class TestAnimals:
 
         assert carn_slay_herb is False
         assert carn_slay_herb2 is True
+
+    def test_eat_carn(self):
+        herb_list = [Herbivore(5, 20) for i in range(10)]
+        for herbivore in herb_list:
+            herbivore.fitness = 100
+        carn_list = [Carnivore(5, 20) for i in range(10)]
+        for carnivore in carn_list:
+            carnivore.fitness = 10
+            dead_herbs = carnivore.eat_carn(herb_list)
+
+            assert len(dead_herbs) == 0
+
+    def test_slay2(self,mocker):
+        mocker.patch('numpy.random.uniform', return_value=1)
+        h3 = Herbivore()
+        c3 = Carnivore()
+        h3.fitness = 5
+        c3.fitness = 10
+        c3.set_params({'DeltaPhiMax': 0.1})
+
+        carn_slay_herb3 = c3.slay(h3)
+        assert carn_slay_herb3 is True
+
+    def test_eat_carn2(self):
+
+#        herb_list = [Herbivore(5, 20) for i in range(10)]
+#        for herbivore in herb_list:
+#            herbivore.fitness = 20
+#        carn_list = [Carnivore(5, 20) for i in range(10)]
+#        for carnivore in carn_list:
+#            carnivore.fitness = 40
+#
+#        for carnivore in carn_list[:5]:
+#            carnivore.fitness = 10
+#
+#        for carnivore in carn_list:
+#            carnivore.eat_carn(herb_list)
+
+#DENNE FUNKER IKKE ISAK
+
+        herb_list = [Herbivore() for i in range(10)]
+        for herbivore in herb_list:
+            herbivore.age = 2
+            herbivore.weight = 10
+
+        c = Carnivore(5,200)
+        c.set_params({'DeltaPhiMax': 10.0})
+        assert len(c.eat_carn(herb_list)) == 10
+
+
+
+
+
 
 
 
