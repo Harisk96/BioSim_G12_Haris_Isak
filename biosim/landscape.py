@@ -199,7 +199,7 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
-
+    """
     l = Lowland()
 
     l.herb_list = [Herbivore(5, 20) for i in range(50)]
@@ -267,7 +267,10 @@ if __name__ == "__main__":
 #    print(i, " Year End Herb numbers :-", len(herb_list))
 #    print(i, " Year End Carn numbers :-", len(carn_list))
 #    plt.show()
-
+    """
+    c = Cell()
+    c.current_herbivores = [Herbivore() for _ in range(10)]
+    print(type(c.n_herbivores))
 
 
 

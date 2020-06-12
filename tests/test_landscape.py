@@ -27,7 +27,42 @@ class TestLandscape:
     #@pytest.mark.parametrize('FerCells', [Lowland, Highland])
     #@pytest.mark.parametrize('InferCells', [Desert, Sea])
     def test_constructor(self):
+        """
+        Test that constructor instantiates the objects with the correct parameters.
+        """
         c = Cell()
         assert c.fodder == 0
         assert isinstance(c.current_carnivores, list)
         assert isinstance(c.current_herbivores, list)
+
+    def test_n_herbivores(self):
+        """
+        Tests that n_herbivores property returns correct amount of herbivores.
+        """
+        nr_herbs = 10
+        c = Cell()
+        c.current_herbivores = [Herbivore() for _ in range(nr_herbs)]
+        assert c.n_herbivores == nr_herbs
+
+    def test_n_carnivores(self):
+        """
+        Tests that n_carnivores property returns correct amount of carnivores.
+        """
+        nr_carns = 10
+        c = Cell()
+        c.current_carnivores = [Carnivore() for _ in range(nr_carns)]
+        assert c.n_carnivores == nr_carns
+
+    def test_n_animals(self):
+        """
+        Tests that n_animals property returns a tuple with number of carnivores and herbivores in
+        each cell.
+        """
+        nr_carns = 15
+        nr_herbs = 10
+        c = Cell()
+        c.current_herbivores = [Herbivore() for _ in range(nr_herbs)]
+        c.current_carnivores = [Carnivore() for _ in range(nr_carns)]
+        assert c.n_animals == (10, 15)
+
+
