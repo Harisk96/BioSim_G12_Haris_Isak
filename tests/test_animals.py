@@ -307,14 +307,16 @@ class TestAnimals:
 
 #DENNE FUNKER IKKE ISAK
 
-        herb_list = [Herbivore() for i in range(10)]
-        for herbivore in herb_list:
-            herbivore.age = 2
-            herbivore.weight = 10
+#        herb_list = [Herbivore() for i in range(10)]
+        h = Herbivore(2,10)
+        h.fitness = 10
+        h_list = [h]
 
-        c = Carnivore(5,200)
+        c = Carnivore(5,20)
+        c.fitness = 20
         c.set_params({'DeltaPhiMax': 10.0})
-        assert len(c.eat_carn(herb_list)) == 10
+        c.eat_carn(h_list)
+        assert c.weight == 20 + 0.75 * h.weight
 
 
 
