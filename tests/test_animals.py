@@ -96,9 +96,15 @@ class TestAnimals:
         """
         Testing if yearly_weight_loss results in lower weight
         """
+
         s = Species(2, 20)
+        old_weight = s.weight
+        old_fitness = s.fitness
         s.yearly_weight_loss()
-        assert s.weight < 20
+        new_weight = s.weight
+        new_fitness = s.fitness
+        assert new_weight < old_weight
+        assert new_fitness < old_fitness
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_eat_limits(self, Species):
@@ -134,7 +140,7 @@ class TestAnimals:
         s.weight = 10.0
         s.update_fitness()
         f2 = s.fitness
-        assert f1 != f2
+        assert f1 < f2
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_update_fitness_same_param(self, Species):

@@ -99,9 +99,8 @@ class Cell:
         if nr_carnivores > 1:
             for carnivore in self.current_carnivores:
                 newborn_carnivore = carnivore.birth(nr_carnivores)
-                if newborn_carnivore is None:
-                    continue
-                newborn_carnivores.append(newborn_carnivore)
+                if newborn_carnivore is not None:
+                    newborn_carnivores.append(newborn_carnivore)
 
         self.current_carnivores.extend(newborn_carnivores)
         # Can you think of a better way to implement this function? No need to do it now.
@@ -133,9 +132,9 @@ class Cell:
 
     def feed_carnivores(self):
 
-        self.current_herbivores = sorted(self.current_herbivores, key=attrgetter('fitness'))
-        self.current_carnivores = sorted(self.current_carnivores, key=attrgetter('fitness'),
-                                         reverse=True)
+        self.current_herbivores.sort(key=attrgetter('fitness')) #= sorted(self.current_herbivores, key=attrgetter('fitness'))
+        self.current_carnivores.sort(key=attrgetter('fitness'), reverse=True)  #= sorted(self.current_carnivores, key=attrgetter('fitness'),
+                                         #reverse=True)
 
         for carnivore in self.current_carnivores:
             dead_herbivores = carnivore.eat_carn(self.current_herbivores)
@@ -202,8 +201,9 @@ if __name__ == "__main__":
 
     l = Lowland()
 
-    l.herb_list = [Herbivore(5,20) for i in range(50)]
-    l.carn_list = [Carnivore(5,20) for i in range(20)]
+    l.herb_list = [Herbivore(5, 20) for i in range(50)]
+    l.carn_list = [Carnivore(5, 20) for i in range(20)]
+
 
     l.place_animals(l.herb_list)
     l.place_animals(l.carn_list)

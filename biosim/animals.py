@@ -2,10 +2,7 @@
 
 from numba import jit
 import numpy as np
-import random
 np.random.seed(1)
-
-from random import uniform
 
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
@@ -153,7 +150,6 @@ class Animals:
                 return Herbivore(0, birth_weight) #endret
 
             elif isinstance(self, Carnivore):
-                self.update_fitness()
                 return Carnivore(0, birth_weight) #endret
                  # This one is never called if the function returns a Herbivore or a Carnivore
 
@@ -217,25 +213,21 @@ class Carnivore(Animals):
 
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
-
+    """
     def consumption_herb(self, herb_weight):
 
         self.weight += self.params['beta'] * herb_weight
-
         self.update_fitness()
-
+    """
     def slay(self, herb):
         if self.fitness <= herb.fitness:
-
             return False
 
         elif 0 < self.fitness - herb.fitness < self.params['DeltaPhiMax']:
-
             prob_kill = (self.fitness - herb.fitness) / self.params['DeltaPhiMax']
             return np.random.uniform(0, 1) < prob_kill
 
         else:
-
             return True
 
 
@@ -261,12 +253,12 @@ class Carnivore(Animals):
                 break
 
             if self.slay(herbivore):
-                self.consumption_herb(herbivore.weight) # Consumption herb is also an useless function, you are dividing up the code too excessively.
+                self.weight += self.params['beta'] * herbivore.weight
+                #self.consumption_herb(herbivore.weight) # Consumption herb is also an useless function, you are dividing up the code too excessively.
+                self.update_fitness()
                 amount_eaten += herbivore.weight
                 dead_herbs.append(herbivore)
         return dead_herbs
-
-
 
 
 if __name__ == "__main__":
