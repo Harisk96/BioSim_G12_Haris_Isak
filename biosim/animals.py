@@ -78,7 +78,7 @@ class Animals:
         Function that updates the fitness of the animal.
         :return: float, value between 0 and 1, returns current fitness of animal
         """
-        if self.weight == 0:
+        if self.weight <= 0:
             self.fitness = 0
         else:
             q_positive = self._q(1, self.age, self.params['a_half'], self.params['phi_age'])
