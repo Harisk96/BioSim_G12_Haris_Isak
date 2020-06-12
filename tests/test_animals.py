@@ -305,7 +305,6 @@ class TestAnimals:
 #        for carnivore in carn_list:
 #            carnivore.eat_carn(herb_list)
 
-#DENNE FUNKER IKKE ISAK
 
 #        herb_list = [Herbivore() for i in range(10)]
         h = Herbivore(2,10)
