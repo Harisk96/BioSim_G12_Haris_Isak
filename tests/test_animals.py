@@ -227,10 +227,12 @@ class TestAnimals:
         mocker.patch("numpy.random.uniform", return_value=0)
         h = Herbivore(2, 5.0)
         c = Carnivore(3, 7.0)
+        c2 = Carnivore(0, 0)
         dead_herb = h.death()
         dead_carn = c.death()
         assert dead_herb is True
         assert dead_carn is True
+
 
     def test_migrate(self, mocker):
         """
@@ -244,3 +246,43 @@ class TestAnimals:
         move_carn = c.migrate()
         assert move_herb is True
         assert move_carn is True
+
+
+
+    def test_slay2(self,mocker):
+        mocker.patch('numpy.random.uniform', return_value=1)
+        h3 = Herbivore()
+        c3 = Carnivore()
+        h3.fitness = 5
+        c3.fitness = 10
+        c3.set_params({'DeltaPhiMax': 0.1})
+
+        carn_slay_herb3 = c3.slay(h3)
+        assert carn_slay_herb3 is True
+
+    def test_slay(self, mocker):
+
+        mocker.patch('numpy.random.uniform', return_value=0)
+
+        h = Herbivore()
+        c = Carnivore()
+        h.fitness = 10
+        c.fitness = 5
+
+        carn_slay_herb = c.slay(h)
+
+        h2 = Herbivore()
+        c2 = Carnivore()
+        h2.fitness = 5
+        c2.fitness = 10
+
+        carn_slay_herb2 = c2.slay(h2)
+
+        assert carn_slay_herb is False
+        assert carn_slay_herb2 is True
+
+
+
+
+
+
