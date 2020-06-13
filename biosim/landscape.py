@@ -66,7 +66,7 @@ class Cell:
     def place_animals(self, list_of_animals):
         """
         Place animals from list into the cell.
-        :return:
+        :return: None
         """
         if not isinstance(list_of_animals, list):
             raise TypeError('list_of_animals has to be of type list')
@@ -270,7 +270,8 @@ if __name__ == "__main__":
     """
     c = Cell()
     c.current_herbivores = [Herbivore() for _ in range(10)]
-    print(type(c.n_herbivores))
+    c.current_carnivores = [Carnivore() for _ in range(10)]
+    print(type(c.n_animals))
 
 
 

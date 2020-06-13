@@ -65,4 +65,13 @@ class TestLandscape:
         c.current_carnivores = [Carnivore() for _ in range(nr_carns)]
         assert c.n_animals == (10, 15)
 
+    @pytest.mark.parametrize('FerCells', [Lowland, Highland])
+    def test_grow_fodder(self, FerCells):
+        c = FerCells()
+        c.grow_fodder()
+        assert c.fodder == c.params['f_max']
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_place_animals(self, Species):
+
+        c = Cell()
