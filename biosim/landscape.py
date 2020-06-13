@@ -43,8 +43,9 @@ class Cell:
     @property
     def n_animals(self):
         """
-        Function that returns the total number of both species in one cell.
-        :return: int >= 0, number of animals in one cell.
+        Function that returns a tuple with number of herbivores and number of carnivores in one
+        cell.
+        :return: tuple of positive integers, which represents number of each type in one cell.
         """
         return self.n_herbivores, self.n_carnivores
 
@@ -65,7 +66,7 @@ class Cell:
     def place_animals(self, list_of_animals):
         """
         Place animals from list into the cell.
-        :return:
+        :return: None
         """
         if not isinstance(list_of_animals, list):
             raise TypeError('list_of_animals has to be of type list')
@@ -198,7 +199,7 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
-
+    """
     l = Lowland()
 
     l.herb_list = [Herbivore(5, 20) for i in range(50)]
@@ -266,7 +267,11 @@ if __name__ == "__main__":
 #    print(i, " Year End Herb numbers :-", len(herb_list))
 #    print(i, " Year End Carn numbers :-", len(carn_list))
 #    plt.show()
-
+    """
+    c = Cell()
+    c.current_herbivores = [Herbivore() for _ in range(10)]
+    c.current_carnivores = [Carnivore() for _ in range(10)]
+    print(type(c.n_animals))
 
 
 
