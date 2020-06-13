@@ -103,7 +103,7 @@ class TestLandscape:
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
-        fc = FerCells
+        fc = FerCells()
         fc.feed_all()
         assert fc.fodder == fc.params['f_max']
 
