@@ -71,7 +71,14 @@ class TestLandscape:
         c.grow_fodder()
         assert c.fodder == c.params['f_max']
 
-    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
-    def test_place_animals(self, Species):
-
+    #@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_place_animals(self):
         c = Cell()
+        h_list = [Herbivore() for _ in range(10)]
+        c_list = [Carnivore() for _ in range(15)]
+        with pytest.raises(TypeError, match='list_of_animals has to be of type list'):
+            assert c.place_animals("string")
+        assert c.place_animals(h_list) == c.current_herbivores.append(h_list)
+        assert c.place_animals(c_list) == c.current_carnivores.append(c_list)
+
+
