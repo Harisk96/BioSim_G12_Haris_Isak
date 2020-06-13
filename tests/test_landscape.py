@@ -106,4 +106,4 @@ class TestLandscape:
         fc = FerCells()
         fc.feed_all()
         assert fc.fodder == fc.params['f_max']
-
+        
