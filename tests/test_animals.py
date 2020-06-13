@@ -2,6 +2,7 @@ from pytest import approx
 
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
+import numpy as np
 from unittest import mock
 import random
 
@@ -179,6 +180,7 @@ class TestAnimals:
         with pytest.raises(ValueError):
             assert s.eat(-1)
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_eat_fodder(self, Species):
         """
         Asserts that animal
@@ -227,11 +229,15 @@ class TestAnimals:
         mocker.patch("numpy.random.uniform", return_value=0)
         h = Herbivore(2, 5.0)
         c = Carnivore(3, 7.0)
-        c2 = Carnivore(0, 0)
         dead_herb = h.death()
         dead_carn = c.death()
         assert dead_herb is True
         assert dead_carn is True
+
+    def test_death2(self):
+
+        h = Herbivore(0,0)
+        assert h.death() == True
 
 
     def test_migrate(self, mocker):
@@ -292,21 +298,6 @@ class TestAnimals:
 
     def test_eat_carn2(self):
 
-#        herb_list = [Herbivore(5, 20) for i in range(10)]
-#        for herbivore in herb_list:
-#            herbivore.fitness = 20
-#        carn_list = [Carnivore(5, 20) for i in range(10)]
-#        for carnivore in carn_list:
-#            carnivore.fitness = 40
-#
-#        for carnivore in carn_list[:5]:
-#            carnivore.fitness = 10
-#
-#        for carnivore in carn_list:
-#            carnivore.eat_carn(herb_list)
-
-
-#        herb_list = [Herbivore() for i in range(10)]
         h = Herbivore(2,10)
         h.fitness = 10
         h_list = [h]
@@ -318,8 +309,19 @@ class TestAnimals:
         assert c.weight == 20 + 0.75 * h.weight
 
 
+    def test_eat_carn3(self):
 
 
+        h = Herbivore(2,60)
+        h.fitness = 10
+        h_list = [h]
+
+        c = Carnivore(5,20)
+        c.fitness = 20
+        old_weight = c.weight
+        c.set_params({'DeltaPhiMax': 10.0})
+        c.eat_carn(h_list)
+        assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
 
 
 
