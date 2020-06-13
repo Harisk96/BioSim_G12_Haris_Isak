@@ -1,6 +1,6 @@
 #LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-geogr = """
+stringmap = """
 WWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWHWWWWLLLLLLLW
 WHHHHHLLLLWWLLLLLLLWW
@@ -21,6 +21,7 @@ from biosim.animals import Herbivore, Carnivore
 
 import numpy as np
 
+
 def check_length(strings):
     strings = list(map(len, strings))
     if strings.count(strings[0]) == len(strings):
@@ -28,18 +29,18 @@ def check_length(strings):
 
 class Island:
 
-
-
     cell_types = {'H': Highland,
                   'L': Lowland,
                   'D': Desert,
-                  'S': Sea}
+                  'W': Sea}
 
     def __init__(self, letter_map, init_animals):
-        self.map = self.create_map(geogr)
-        self.place_population(SETTE INN STARTPOPULASJON HER)
+        self.len_x_coord = None
+        self.len_y_coord = None
+        self.map = self.create_map(stringmap)
+#        self.place_population_map(SETTE INN STARTPOPULASJON HER)
 
-    def clean_stringmap(stringmap):
+    def check_map(stringmap):
         stringmap = stringmap.strip()
         strings = stringmap.split('\n')
 
@@ -61,6 +62,9 @@ class Island:
                 raise ValueError('Not island, island must be surrounded by water, '
                                  'error on eastside')
 
+        return strings
+
+    def create_map(self, stringmap):
 
 
     def procreate_cells_map(self):
@@ -69,8 +73,18 @@ class Island:
     def feed_cells(self):
         pass
 
-    def create_map(self):
-        pass
+    def create_map(self, map):
+
+        strings = self.check_map(map)
+
+        map_island = {}
+        self.len_x_coord = len(strings[0])
+        self.len_y_coord = len(strings)
+
+        for string in strings:
+            for y_coord in string:
+                    map_island.update
+        return map_island
 
     def place_herbivores(self):
         pass
