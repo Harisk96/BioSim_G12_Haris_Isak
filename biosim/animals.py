@@ -265,7 +265,7 @@ class Carnivore(Animals):
                 dead_herbs.append(herbivore)
         return dead_herbs
 
-
+"""
 if __name__ == "__main__":
     h = Herbivore(age=2, weight=5.0)
     c = Carnivore(age=10, weight=5.0)
@@ -276,3 +276,4 @@ if __name__ == "__main__":
 
     #more for animals with more weight
     #less for animals with less weight
+"""
