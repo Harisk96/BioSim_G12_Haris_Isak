@@ -49,13 +49,6 @@ class Cell:
         """
         return self.n_herbivores, self.n_carnivores
 
-    def randomise_herbivores(self): # completely useless function
-        """
-        Shuffles list of herbivores in random order, so feeding can be done at random.
-        :return: None
-        """
-        np.random.shuffle(self.current_herbivores) #endret # Use np.random.shuffle because you have been using np.random in the other files. Assign a np.random.seed(1) at the top.
-                                                    # slett funksjon,
     def grow_fodder(self):
         """
         Function that can be called upon to grow fodder at the end of a year.
@@ -82,7 +75,7 @@ class Cell:
         Function that procreates the animals in a cell by iterating through all animals.
         Appends newborn herbivores in to a list, then extends that list into list containing
         current herbivores in cell
-        :return:
+        :return: None
         """
         newborn_herbivores = []
         nr_herbivores = self.n_herbivores
@@ -108,8 +101,8 @@ class Cell:
 
     def weight_loss(self):
         """
-
-        :return:
+        Makes it so that the animals in the cell loses weight on an annual basis.
+        :return: None
         """
         for herbivore in self.current_herbivores:
             herbivore.yearly_weight_loss()
@@ -123,7 +116,7 @@ class Cell:
         self.feed_carnivores()
 
     def feed_herbivores(self):
-        self.randomise_herbivores()
+        np.random.shuffle(self.current_herbivores)
         for herbivore in self.current_herbivores:
             remaining_fodder = self.fodder
             if remaining_fodder <= 0:
@@ -199,7 +192,7 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
-    """
+
     l = Lowland()
 
     l.herb_list = [Herbivore(5, 20) for i in range(50)]
@@ -272,7 +265,7 @@ if __name__ == "__main__":
     c.current_herbivores = [Herbivore() for _ in range(10)]
     c.current_carnivores = [Carnivore() for _ in range(10)]
     print(type(c.n_animals))
-
+    """
 
 
 

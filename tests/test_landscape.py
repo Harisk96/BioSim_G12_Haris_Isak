@@ -81,4 +81,28 @@ class TestLandscape:
         assert c.place_animals(h_list) == c.current_herbivores.append(h_list)
         assert c.place_animals(c_list) == c.current_carnivores.append(c_list)
 
+    def test_birth_cycle(self, mocker):
+        """
+        c = Cell()
+        mocker.patch("", return_value=Herbivore)
+        c.n_herbivores = 10
+        c.current_herbivores = [Herbivore() for _ in range(c.n_herbivores)]
+        h_list = [Herbivore.birth() for _ in range(c.n_herbivores)]
+        assert c.birth_cycle() == c.current_herbivores.append(h_list)
+        """
+        pass
 
+    def test_weight_loss(self):
+        c = Cell()
+        c.current_herbivores = [Herbivore(2, 10.0) for _ in range(10)]
+        c.current_carnivores = [Carnivore(2, 10.0) for _ in range(10)]
+        c.weight_loss()
+        for i in range(10):
+            assert c.current_herbivores[i].weight < 10.0
+            assert c.current_carnivores[i].weight < 10.0
+
+    @pytest.mark.parametrize('FerCells', [Lowland, Highland])
+    def test_feed_all(self, FerCells):
+        fc = FerCells
+        fc.feed_all()
+        assert fc.fodder == fc.params['f_max']
