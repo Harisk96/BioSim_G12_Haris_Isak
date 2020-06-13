@@ -235,7 +235,10 @@ class TestAnimals:
         assert dead_carn is True
 
     def test_death2(self):
-
+        """
+        Testing that an animal with zero weight will return True, which means the animal is dead
+        :return: Boolean (True = dead)
+        """
         h = Herbivore(0,0)
         assert h.death() == True
 
