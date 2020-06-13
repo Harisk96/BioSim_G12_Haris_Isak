@@ -192,7 +192,7 @@ class Sea(Cell):
 
 
 if __name__ == "__main__":
-
+    """
     l = Lowland()
 
     l.herb_list = [Herbivore(5, 20) for i in range(50)]
@@ -265,6 +265,9 @@ if __name__ == "__main__":
     c.current_herbivores = [Herbivore() for _ in range(10)]
     c.current_carnivores = [Carnivore() for _ in range(10)]
     print(type(c.n_animals))
+    l = Lowland()
+    l.feed_all()
+    print(l.fodder())
     """
 
 
@@ -272,7 +275,7 @@ if __name__ == "__main__":
     # Bishnu's image:
 
     # plot afterwards
-
+    """
 
 
 
