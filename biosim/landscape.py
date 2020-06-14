@@ -189,7 +189,7 @@ class Desert(Cell):
 class Sea(Cell):
     migrate_to = False
 
-
+"""
 if __name__ == "__main__":
 
     l = Lowland()
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 #    print(i, " Year End Carn numbers :-", len(carn_list))
 #    plt.show()
 
-    """
+    
     c = Cell()
     c.current_herbivores = [Herbivore() for _ in range(10)]
     c.current_carnivores = [Carnivore() for _ in range(10)]
@@ -268,14 +268,14 @@ if __name__ == "__main__":
     l = Lowland()
     l.feed_all()
     print(l.fodder())
-    """
+    
 
 
 
     # Bishnu's image:
 
     # plot afterwards
-    """
+
 
 
 
@@ -284,4 +284,4 @@ if __name__ == "__main__":
 
 #        print(c.n_carnivores)
 #        print(c.n_herbivores)
-    """
+"""
