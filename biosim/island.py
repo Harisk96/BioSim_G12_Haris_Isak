@@ -1,6 +1,6 @@
 #LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-stringmap = """
+default_map = """
 WWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWHWWWWLLLLLLLW
 WHHHHHLLLLWWLLLLLLLWW
@@ -34,14 +34,16 @@ class Island:
                   'D': Desert,
                   'W': Sea}
 
-    def __init__(self, letter_map, init_animals):
+    def __init__(self, maps, init_animals):
+        self.maps = maps
         self.len_x_coord = None
         self.len_y_coord = None
-        self.map = self.create_map(stringmap)
+        self.maps = self.set_map_coordinates(map_input)
+        self.init_animals = init_animals
 #        self.place_population_map(SETTE INN STARTPOPULASJON HER)
 
-    def check_map(stringmap):
-        stringmap = stringmap.strip()
+    def check_map(self, map_input):
+        stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
         if not check_length(strings):
@@ -64,7 +66,22 @@ class Island:
 
         return strings
 
-    def create_map(self, stringmap):
+    def set_map_coordinates(self, map_input):
+
+        #        strings = self.check_map(map)
+        #
+        #        map_island = {}
+        #        self.len_x_coord = len(strings[0])
+        #        self.len_y_coord = len(strings)
+
+        strings_island_map = self.check_map(map_input)
+        coordinates_map = {}
+        for y_index, line in enumerate(strings_island_map):
+            for x_index, cell in enumerate(line):
+                cell_instance = cell.types[cell]
+                coordinates_map[(y_index, x_index)] = cell_instance()
+        return coordinates_map
+
 
 
     def procreate_cells_map(self):
@@ -73,18 +90,6 @@ class Island:
     def feed_cells(self):
         pass
 
-    def create_map(self, map):
-
-        strings = self.check_map(map)
-
-        map_island = {}
-        self.len_x_coord = len(strings[0])
-        self.len_y_coord = len(strings)
-
-        for string in strings:
-            for y_coord in string:
-                    map_island.update
-        return map_island
 
     def place_herbivores(self):
         pass
