@@ -163,16 +163,40 @@ class Cell:
         self.current_carnivores = [carn for carn in self.current_carnivores if
                                    carn not in dead_carnivores]
 
-    def emigrate(self):
-        
-        self.current_herbivores
-        self.current_carnivores
+    def herb_migration(self, herb_immigrate=None):
+        """
+        Receives and removes herbivores from cell due to migration.
+        :return:
+        """
+        herb_emigrate = []
+        for herb in self.current_herbivores:
+            if herb.migrate():
+                herb_emigrate.append(herb)
+        self.current_herbivores = [herb for herb in self.current_herbivores
+                                   if herb not in herb_emigrate]
 
+        if herb_immigrate is not None:
+            self.current_herbivores.extend(herb_immigrate)
 
-    def immigrate(self):
-        self.current_herbivores
-        self.current_carnivores
+        return herb_emigrate
 
+    def carn_migration(self, carn_immigrate=None):
+        """
+        Receives and removes carnivores from cell due to migration.
+        :param carn_immigrate: list of dicts
+        :return: list of dicts
+        """
+        carn_emigrate = []
+        for carn in self.current_carnivores:
+            if carn.migrate():
+                carn_emigrate.append(carn)
+        self.current_carnivores = [carn for carn in self.current_carnivores if
+                                   carn not in carn_emigrate]
+
+        if carn_immigrate is not None:
+            self.current_carnivores.extend(carn_immigrate)
+
+        return carn_emigrate
 
 class Highland(Cell):
     migrate_to = True
@@ -205,3 +229,12 @@ class Desert(Cell):
 class Sea(Cell):
     migrate_to = False
 
+if __name__ == "__main__":
+    c = Cell()
+    c.current_herbivores = [Herbivore() for _ in range(10)]
+    h_list =
+    print(len(c.current_herbivores))
+    c.migration()
+    for i in range(len(c.current_herbivores)):
+        print(c.current_herbivores[i].weight)
+    print(len(c.current_herbivores))
