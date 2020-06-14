@@ -1,19 +1,5 @@
 #LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-default_map_string = """
-WWWWWWWWWWWWWWWWWWWWW
-WWWWWWWWHWWWWLLLLLLLW
-WHHHHHLLLLWWLLLLLLLWW
-WHHHHHHHHHWWLLLLLLWWW
-WHHHHHLLLLLLLLLLLLWWW
-WHHHHHLLLDDLLLHLLLWWW
-WHHLLLLLDDDLLLHHHHWWW
-WWHHHHLLLDDLLLHWWWWWW
-WHHHLLLLLDDLLLLLLLWWW
-WHHHHLLLLDDLLLLWWWWWW
-WWHHHHLLLLLLLLWWWWWWW
-WWWHHHHLLLLLLLWWWWWWW
-WWWWWWWWWWWWWWWWWWWWW"""
 
 
 from biosim.landscape import Highland, Lowland, Desert, Sea
@@ -43,10 +29,11 @@ class Island:
         :param init_animals: ,
         """
 
+
         self.map = self.set_map_coordinates(insert_map)
 
-       if init_animals is None:
-            self.place_population(Island.default_herbivores)
+        if init_animals is None:
+           self.place_population(Island.default_herbivores)
 
 #        y, x = loc
 #        cell_left = (y, x-1)
@@ -121,11 +108,11 @@ class Island:
         pass
 
     def place_population(self, init_pop):
-        for position in population:
+        for position in init_pop:
             loc = position['loc']
             if loc not in self.map.keys():
                 raise ValueError('nonexistent loc in the map provided')
-            if loc in self.map[loc] = self.cell_types['W']: #Rette opp denne
+            if loc in self.map[loc] == self.cell_types['W']: #IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
             self.map[loc].place_animals(pop)
@@ -136,3 +123,39 @@ class Island:
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         pass
+
+
+if __name__ == "__main__":
+
+    default_population = [
+        {'loc': (10, 10),
+         'pop': [{'species': 'Herbivore',
+                  'age': 5,
+                  'weight': 20}
+                 for _ in range(150)], },
+        {'loc': (10, 10),
+         'pop': [{'species': 'Carnivore',
+                  'age': 5,
+                  'weight': 20}
+                 for _ in range(40)], }
+    ]
+
+    default_maps = """
+    WWWWWWWWWWWWWWWWWWWWW
+    WWWWWWWWHWWWWLLLLLLLW
+    WHHHHHLLLLWWLLLLLLLWW
+    WHHHHHHHHHWWLLLLLLWWW
+    WHHHHHLLLLLLLLLLLLWWW
+    WHHHHHLLLDDLLLHLLLWWW
+    WHHLLLLLDDDLLLHHHHWWW
+    WWHHHHLLLDDLLLHWWWWWW
+    WHHHLLLLLDDLLLLLLLWWW
+    WHHHHLLLLDDLLLLWWWWWW
+    WWHHHHLLLLLLLLWWWWWWW
+    WWWHHHHLLLLLLLWWWWWWW
+    WWWWWWWWWWWWWWWWWWWWW"""
+
+    default_maps = textwrap.dedent(default_maps)
+
+    i = Island(default_maps, default_population)
+    i.place_population(default_population)
