@@ -29,7 +29,7 @@ class Island:
 
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
-        self.year = 0
+        self._year = 0
 
     #        y, x = loc
     #        cell_left = (y, x-1)
@@ -45,7 +45,11 @@ class Island:
 
     @property
     def year(self):
-        return self.year
+        return self._year
+
+    @year.setter
+    def year(self, current_year):
+        self._year = current_year
 
     @property
     def num_animals(self):
@@ -116,7 +120,7 @@ class Island:
             cell.birth_cycle()
 
 
-    def feed_cells(self):
+    def feed_cells_island(self):
         """
         Method that updates the fodder in the cell,
         and makes all the animals it contains eat.
@@ -137,20 +141,27 @@ class Island:
         """
         Method that makes it so that animals in the cell loses
         weight.
-        :return:
+        :return: None
         """
         for cell in self.map.values():
             cell.weight_loss_cell()
 
+    def die_island(self):
+
+        for cell in self.map.values():
+            cell.death_in_cell()
+
     def place_population(self, init_pop):
+        """
+        Method that places animals in the cells that constitutes the island
+        :param init_pop: list of dict, animals to be placed on the island
+        :return: None
+        """
         water = self.cell_types['W']
-        print(water)
         for position in init_pop:
             loc = position['loc']
-            print(loc)
             if loc not in self.map.keys():
                 raise ValueError('nonexistent loc in the map provided')
-            print(self.map[loc])
             if not self.map[loc].migrate_to:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
@@ -161,7 +172,14 @@ class Island:
 
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
-        pass
+        self.feed_cells_island()
+        self.procreate_cells_map()
+        self.migrate()
+        self.age_in_cells()
+        self.weightloss_island()
+        self.die_island()
+        self.year += 1
+
 
 
 if __name__ == "__main__":
@@ -195,7 +213,9 @@ if __name__ == "__main__":
     default_maps = textwrap.dedent(default_maps)
 
     i = Island(default_maps, default_population)
-    i.procreate_cells_map()
-    print(i.total_animals)
 
+    for _ in range(200):
+        i.run_function_one_year()
+        print(i.num_animals_per_species)
+        print(i.year)
     

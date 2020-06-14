@@ -163,6 +163,16 @@ class Cell:
         self.current_carnivores = [carn for carn in self.current_carnivores if
                                    carn not in dead_carnivores]
 
+    def emigrate(self):
+        
+        self.current_herbivores
+        self.current_carnivores
+
+
+    def immigrate(self):
+        self.current_herbivores
+        self.current_carnivores
+
 
 class Highland(Cell):
     migrate_to = True
