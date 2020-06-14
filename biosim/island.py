@@ -29,6 +29,7 @@ class Island:
 
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
+        self.year = 0
 
     #        y, x = loc
     #        cell_left = (y, x-1)
@@ -42,9 +43,6 @@ class Island:
     #        self.len_x_coord = None
     #        self.len_y_coord = None
 
-    # self.maps = self.set_map_coordinates(map_input)
-
-    #        self.place_population_map(SETTE INN STARTPOPULASJON HER)
 
     def check_map(self, map_input):
         stringmap = map_input.strip()
@@ -115,12 +113,8 @@ class Island:
 
     def procreate_cells_map(self):
         for cell in self.map.values():
-            new_animal = cell.birth_cycle()
-            if new_animal is not None:
-                if isinstance(new_animal, Herbivore()):
-                    cell.current_herbivores.append(new_animal)
-                if isinstance(new_animal, Carnivore()):
-                    cell.current_carnivores.append(new_animal)
+            cell.birth_cycle()
+
 
     def feed_cells(self):
         """
@@ -150,13 +144,14 @@ class Island:
 
     def place_population(self, init_pop):
         water = self.cell_types['W']
+        print(water)
         for position in init_pop:
             loc = position['loc']
             print(loc)
             if loc not in self.map.keys():
                 raise ValueError('nonexistent loc in the map provided')
             print(self.map[loc])
-            if self.map[loc] == water:  # IKKE SIKKERT DENNE FUNGERER
+            if not self.map[loc].migrate_to:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
             self.map[loc].place_animals(pop)
@@ -175,7 +170,7 @@ if __name__ == "__main__":
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-    ini_carns = [{'loc': (1, 1),
+    ini_carns = [{'loc': (10, 10),
                   'pop': [{'species': 'Carnivore',
                            'age': 5,
                            'weight': 20}
@@ -200,6 +195,7 @@ if __name__ == "__main__":
     default_maps = textwrap.dedent(default_maps)
 
     i = Island(default_maps, default_population)
+    i.procreate_cells_map()
     print(i.total_animals)
 
     
