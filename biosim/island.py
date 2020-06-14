@@ -55,7 +55,7 @@ class Island:
 #        cell_down = (y-1, x)
 #        destination_cells = [cell_left, cell_right, cell_up, cell_down]
 
-        self.destinations = destination_cells
+#        self.destinations = destination_cells
 
 #        self.len_x_coord = None
 #        self.len_y_coord = None
