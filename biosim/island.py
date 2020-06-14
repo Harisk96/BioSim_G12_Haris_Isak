@@ -1,5 +1,4 @@
-#LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
-
+# LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
 
 from biosim.landscape import Highland, Lowland, Desert, Sea
@@ -14,15 +13,12 @@ def check_length(strings):
     if strings.count(strings[0]) == len(strings):
         return True
 
+
 class Island:
-
-
-
     cell_types = {'H': Highland,
                   'L': Lowland,
                   'D': Desert,
                   'W': Sea}
-
 
     def __init__(self, insert_map, init_animals):
         """
@@ -31,24 +27,23 @@ class Island:
         :param init_animals: ,
         """
 
-
         self.map = self.set_map_coordinates(insert_map)
 
-#        y, x = loc
-#        cell_left = (y, x-1)
-#        cell_right = (y, x+1)
-#        cell_up = (y+1, x)
-#        cell_down = (y-1, x)
-#        destination_cells = [cell_left, cell_right, cell_up, cell_down]
+    #        y, x = loc
+    #        cell_left = (y, x-1)
+    #        cell_right = (y, x+1)
+    #        cell_up = (y+1, x)
+    #        cell_down = (y-1, x)
+    #        destination_cells = [cell_left, cell_right, cell_up, cell_down]
 
-#        self.destinations = destination_cells
+    #        self.destinations = destination_cells
 
-#        self.len_x_coord = None
-#        self.len_y_coord = None
+    #        self.len_x_coord = None
+    #        self.len_y_coord = None
 
-        # self.maps = self.set_map_coordinates(map_input)
+    # self.maps = self.set_map_coordinates(map_input)
 
-#        self.place_population_map(SETTE INN STARTPOPULASJON HER)
+    #        self.place_population_map(SETTE INN STARTPOPULASJON HER)
 
     def check_map(self, map_input):
         stringmap = map_input.strip()
@@ -114,6 +109,7 @@ class Island:
     
         return self.total_herbivores, self.total_carnivores
     """
+
     def procreate_cells_map(self):
         for cell in self.map.values():
             new_animal = cell.birth_cycle()
@@ -131,7 +127,6 @@ class Island:
         """
         for landscape in self.map.values():
             landscape.feed_all()
-
 
     def age_in_cells(self):
         """
@@ -158,7 +153,7 @@ class Island:
             if loc not in self.map.keys():
                 raise ValueError('nonexistent loc in the map provided')
             print(self.map[loc])
-            if self.map[loc] == water: #IKKE SIKKERT DENNE FUNGERER
+            if self.map[loc] == water:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
             print(pop)
@@ -173,7 +168,6 @@ class Island:
 
 
 if __name__ == "__main__":
-
     ini_herbs = [{'loc': (10, 10),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
@@ -185,8 +179,6 @@ if __name__ == "__main__":
                            'weight': 20}
                           for _ in range(40)]}]
     default_population = ini_herbs + ini_carns
-
-
 
     default_maps = """
     WWWWWWWWWWWWWWWWWWWWW
@@ -207,4 +199,3 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
     i.place_population(default_population)
-
