@@ -35,11 +35,11 @@ class Island:
                   'D': Desert,
                   'W': Sea}
 
-    default_map = textwrap(default_map_string)
+
     default_herbivores = []
     default_carnivores = []
 
-    def __init__(self, loc, map=None, init_animals=None):
+    def __init__(self, map=None, init_animals=None):
         """
         Constructor for Island class
         :param maps: List, nested list as a matrix describing the layout of the island geography
