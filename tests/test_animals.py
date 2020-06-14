@@ -1,5 +1,3 @@
-from pytest import approx
-
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
 import numpy as np
@@ -62,11 +60,14 @@ class TestAnimals:
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_animal_age(self, Species):
         """
-        Tests that fitness equation returns float
+        Tests that the update age method ages the animal by one year
         """
         s = Species(2, 5.0)
+        old_fitness = s.fitness
         s.update_age()
+        new_fitness = s.fitness
         assert s.age == 3
+        assert new_fitness != old_fitness
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_subclass(self, Species):
@@ -183,13 +184,16 @@ class TestAnimals:
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_eat_fodder(self, Species):
         """
-        Asserts that animal
+        Asserts that animal eat the whole of an amount.
         """
         s = Species(2, 5.0)
         fodder = s.params['F'] - 5
         assert s.eat(fodder) == fodder
 
     def test_eat_food_eaten(self):
+        """
+        Testing that fodder is float.
+        """
         h = Herbivore(2, 5.0)
         float_ = 5.0
         fodder = h.eat(float_)
@@ -278,17 +282,17 @@ class TestAnimals:
         assert carn_slay_herb2 is True
 
     def test_eat_carn(self):
-        herb_list = [Herbivore(5, 20) for i in range(10)]
+        herb_list = [Herbivore(5, 20) for _ in range(10)]
         for herbivore in herb_list:
             herbivore.fitness = 100
-        carn_list = [Carnivore(5, 20) for i in range(10)]
+        carn_list = [Carnivore(5, 20) for _ in range(10)]
         for carnivore in carn_list:
             carnivore.fitness = 10
             dead_herbs = carnivore.eat_carn(herb_list)
 
             assert len(dead_herbs) == 0
 
-    def test_slay2(self,mocker):
+    def test_slay2(self, mocker):
         mocker.patch('numpy.random.uniform', return_value=1)
         h3 = Herbivore()
         c3 = Carnivore()
@@ -315,7 +319,7 @@ class TestAnimals:
     def test_eat_carn3(self):
 
 
-        h = Herbivore(2,60)
+        h = Herbivore(2, 60)
         h.fitness = 10
         h_list = [h]
 

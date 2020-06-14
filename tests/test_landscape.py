@@ -1,6 +1,7 @@
 from biosim.animals import Herbivore, Carnivore, Animals
 from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 import pytest
+from operator import attrgetter
 from unittest import mock
 
 __author__ = "Haris Karovic", "Isak Finnøy"
@@ -101,9 +102,38 @@ class TestLandscape:
             assert c.current_herbivores[i].weight < 10.0
             assert c.current_carnivores[i].weight < 10.0
 
+    def test_feed_herbivore(self):
+        c = Cell()
+        weight = 5.0
+        c.current_herbivores = [Herbivore(2, weight) for _ in range(10)]
+        c.fodder = 0
+        c.feed_herbivores()
+        for herb in c.current_herbivores:
+            assert herb.weight - weight == pytest.approx(0)
+
+        c.fodder = 100
+        c.feed_herbivores()
+        for herb in c.current_herbivores:
+            assert herb.weight - weight > 0
+
+    def test_feed_carnivore(self):
+        c = Cell()
+        c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
+        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+        c.feed_carnivores()
+        assert c.current_carnivores[0].fitness > c.current_carnivores[1].fitness
+        assert c.current_carnivores[1].fitness > c.current_carnivores[2].fitness
+        assert c.current_herbivores[0].fitness < c.current_herbivores[1].fitness
+        assert c.current_herbivores[1].fitness < c.current_herbivores[2].fitness
+
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
         fc = FerCells()
         fc.feed_all()
         assert fc.fodder == fc.params['f_max']
-        
+
+if __name__ == "__main__":
+    c = Cell()
+    c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+    h = c.current_herbivores
+    print(h[2])
