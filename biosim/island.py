@@ -16,6 +16,8 @@ def check_length(strings):
 
 class Island:
 
+
+
     cell_types = {'H': Highland,
                   'L': Lowland,
                   'D': Desert,
@@ -91,10 +93,37 @@ class Island:
                 coordinates_map[(y_index, x_index)] = cell_instance
         return coordinates_map
 
+    def total_carnivores(self):
+        """
+        Calculates the total amount of carnivores currently on the island.
+        :return: int >= 0
+        """
+        total_carnivores = [cell.current_carnivores for cell in self.map.values()]
+        return sum(total_carnivores)
 
+    def total_herbivores(self):
+        """
+        Calculates the total amount of herbivores currently on the island.
+        :return: int >= 0
+        """
+        total_herbivores = [cell.current_herbivores for cell in self.map.values()]
+        return sum(total_herbivores)
+
+    def total_animals(self):
+        """
+        gives the total amount of both herbivores and carnivores currently on the island.
+        :return: tuple, consisting of two positive integers.
+        """
+        return self.total_herbivores, self.total_carnivores
 
     def procreate_cells_map(self):
-        pass
+        for cell in self.map.values():
+            new_animal = cell.birth_cycle()
+            if new_animal is not None:
+                if isinstance(new_animal, Herbivore()):
+                    cell.current_herbivores.append(new_animal)
+                if isinstance(new_animal, Carnivore()):
+                    cell.current_carnivores.append(new_animal)
 
     def feed_cells(self):
         """
