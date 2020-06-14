@@ -104,7 +104,7 @@ class Cell:
         self.current_carnivores.extend(newborn_carnivores)
         # Can you think of a better way to implement this function? No need to do it now.
 
-    def weight_loss(self):
+    def weight_loss_cell(self):
         """
         Makes it so that the animals in the cell loses weight on an annual basis.
         :return: None

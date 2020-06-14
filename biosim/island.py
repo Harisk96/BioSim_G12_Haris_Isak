@@ -133,14 +133,14 @@ class Island:
         for cell in self.map.values():
             cell.age_animals()
 
-    def weightloss_cell(self):
+    def weightloss_island(self):
         """
         Method that makes it so that animals in the cell loses
         weight.
         :return:
         """
         for cell in self.map.values():
-            cell.yearly_weight_loss()
+            cell.weight_loss_cell()
 
     def place_population(self, init_pop):
         water = self.cell_types['W']
