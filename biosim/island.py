@@ -34,9 +34,6 @@ class Island:
 
         self.map = self.set_map_coordinates(insert_map)
 
-        if init_animals is None:
-           self.place_population(Island.default_herbivores)
-
 #        y, x = loc
 #        cell_left = (y, x-1)
 #        cell_right = (y, x+1)
@@ -106,7 +103,7 @@ class Island:
         Calculates the total amount of herbivores currently on the island.
         :return: int >= 0
         """
-        total_herbivores = [cell.current_herbivores for cell in self.map.values()]
+        total_herbivores = [Cell.current_herbivores for cell in self.map.values()]
         return sum(total_herbivores)
 
     def total_animals(self):
@@ -153,13 +150,17 @@ class Island:
             cell.yearly_weight_loss()
 
     def place_population(self, init_pop):
+        water = self.cell_types['W']
         for position in init_pop:
             loc = position['loc']
+            print(loc)
             if loc not in self.map.keys():
                 raise ValueError('nonexistent loc in the map provided')
-            if loc in self.map[loc] == self.cell_types['W']: #IKKE SIKKERT DENNE FUNGERER
+            print(self.map[loc])
+            if self.map[loc] == water: #IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
+            print(pop)
             self.map[loc].place_animals(pop)
 
     def migrate(self):
@@ -172,18 +173,19 @@ class Island:
 
 if __name__ == "__main__":
 
-    default_population = [
-        {'loc': (10, 10),
-         'pop': [{'species': 'Herbivore',
-                  'age': 5,
-                  'weight': 20}
-                 for _ in range(150)], },
-        {'loc': (10, 10),
-         'pop': [{'species': 'Carnivore',
-                  'age': 5,
-                  'weight': 20}
-                 for _ in range(40)], }
-    ]
+    ini_herbs = [{'loc': (10, 10),
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(150)]}]
+    ini_carns = [{'loc': (10, 10),
+                  'pop': [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]}]
+    default_population = ini_herbs + ini_carns
+
+
 
     default_maps = """
     WWWWWWWWWWWWWWWWWWWWW
@@ -204,3 +206,4 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
     i.place_population(default_population)
+

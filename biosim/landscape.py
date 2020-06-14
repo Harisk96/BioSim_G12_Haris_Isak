@@ -60,14 +60,20 @@ class Cell:
         Place animals from list into the cell.
         :return: None
         """
-        if not isinstance(list_of_animals, list):
-            raise TypeError('list_of_animals has to be of type list')
 
         for animal in list_of_animals:
-            if animal.__class__.__name__ == "Carnivore":
-                self.current_carnivores.append(animal)
-            else:
-                self.current_herbivores.append(animal)
+
+            if not isinstance(list_of_animals, list):
+                raise TypeError('list_of_animals has to be of type list')
+
+            age = animal['age']
+            weight = animal['weight']
+            species = animal['species']
+
+            if species == 'Herbivore':
+                self.current_herbivores.append(Herbivore(age, weight))
+            if species == 'Carnivore':
+                self.current_carnivores.append(Carnivore(age, weight))
 
     def birth_cycle(self):
         """
@@ -189,9 +195,11 @@ class Desert(Cell):
 class Sea(Cell):
     migrate_to = False
 
-"""
+
 if __name__ == "__main__":
 
+
+"""
     l = Lowland()
 
     l.herb_list = [Herbivore(5, 20) for i in range(50)]
