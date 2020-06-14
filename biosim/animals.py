@@ -73,6 +73,7 @@ class Animals:
 
         self.fitness = self.update_fitness()
 
+
     def update_fitness(self):
         """
         Function that updates the fitness of the animal.
@@ -161,8 +162,8 @@ class Animals:
         :return: Bool, decides whether the animal moves to a neighboring cell or not
         """
         prob_mig = self.params['mu'] * self.fitness
-        random_numb = np.random.uniform(0, 1)
-        return prob_mig > random_numb
+        random_num = np.random.uniform(0, 1)
+        return prob_mig > random_num
 
     def death(self):
         """
@@ -274,5 +275,10 @@ if __name__ == "__main__":
     print(c.fitness)
     print(type(c.fitness))
 
+    h_list = [Herbivore() for _ in range(10)]
+    for h in h_list:
+        print(h.fitness)
+
     #more for animals with more weight
     #less for animals with less weight
+

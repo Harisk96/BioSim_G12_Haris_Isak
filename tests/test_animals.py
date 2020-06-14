@@ -1,7 +1,6 @@
-from pytest import approx
-
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
+import numpy as np
 from unittest import mock
 import random
 
@@ -61,11 +60,14 @@ class TestAnimals:
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_animal_age(self, Species):
         """
-        Tests that fitness equation returns float
+        Tests that the update age method ages the animal by one year
         """
         s = Species(2, 5.0)
+        old_fitness = s.fitness
         s.update_age()
+        new_fitness = s.fitness
         assert s.age == 3
+        assert new_fitness != old_fitness
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_subclass(self, Species):
@@ -179,15 +181,19 @@ class TestAnimals:
         with pytest.raises(ValueError):
             assert s.eat(-1)
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_eat_fodder(self, Species):
         """
-        Asserts that animal
+        Asserts that animal eat the whole of an amount.
         """
         s = Species(2, 5.0)
         fodder = s.params['F'] - 5
         assert s.eat(fodder) == fodder
 
     def test_eat_food_eaten(self):
+        """
+        Testing that fodder is float.
+        """
         h = Herbivore(2, 5.0)
         float_ = 5.0
         fodder = h.eat(float_)
@@ -232,6 +238,15 @@ class TestAnimals:
         assert dead_herb is True
         assert dead_carn is True
 
+    def test_death2(self):
+        """
+        Testing that an animal with zero weight will return True, which means the animal is dead
+        :return: Boolean (True = dead)
+        """
+        h = Herbivore(0,0)
+        assert h.death() == True
+
+
     def test_migrate(self, mocker):
         """
         Testing the migration function. Mocks out the random function with 0, guaranteeing that the
@@ -244,3 +259,80 @@ class TestAnimals:
         move_carn = c.migrate()
         assert move_herb is True
         assert move_carn is True
+
+    def test_slay(self, mocker):
+
+        mocker.patch('numpy.random.uniform', return_value=0)
+
+        h = Herbivore()
+        c = Carnivore()
+        h.fitness = 10
+        c.fitness = 5
+
+        carn_slay_herb = c.slay(h)
+
+        h2 = Herbivore()
+        c2 = Carnivore()
+        h2.fitness = 5
+        c2.fitness = 10
+
+        carn_slay_herb2 = c2.slay(h2)
+
+        assert carn_slay_herb is False
+        assert carn_slay_herb2 is True
+
+    def test_eat_carn(self):
+        herb_list = [Herbivore(5, 20) for _ in range(10)]
+        for herbivore in herb_list:
+            herbivore.fitness = 100
+        carn_list = [Carnivore(5, 20) for _ in range(10)]
+        for carnivore in carn_list:
+            carnivore.fitness = 10
+            dead_herbs = carnivore.eat_carn(herb_list)
+
+            assert len(dead_herbs) == 0
+
+    def test_slay2(self, mocker):
+        mocker.patch('numpy.random.uniform', return_value=1)
+        h3 = Herbivore()
+        c3 = Carnivore()
+        h3.fitness = 5
+        c3.fitness = 10
+        c3.set_params({'DeltaPhiMax': 0.1})
+
+        carn_slay_herb3 = c3.slay(h3)
+        assert carn_slay_herb3 is True
+
+    def test_eat_carn2(self):
+
+        h = Herbivore(2,10)
+        h.fitness = 10
+        h_list = [h]
+
+        c = Carnivore(5,20)
+        c.fitness = 20
+        c.set_params({'DeltaPhiMax': 10.0})
+        c.eat_carn(h_list)
+        assert c.weight == 20 + 0.75 * h.weight
+
+
+    def test_eat_carn3(self):
+
+
+        h = Herbivore(2, 60)
+        h.fitness = 10
+        h_list = [h]
+
+        c = Carnivore(5,20)
+        c.fitness = 20
+        old_weight = c.weight
+        c.set_params({'DeltaPhiMax': 10.0})
+        c.eat_carn(h_list)
+        assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
+
+
+
+
+
+
+
