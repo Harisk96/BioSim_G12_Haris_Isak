@@ -1,6 +1,7 @@
 from biosim.animals import Herbivore, Carnivore, Animals
 from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 import pytest
+import numpy as np
 from operator import attrgetter
 from unittest import mock
 
@@ -72,6 +73,10 @@ class TestLandscape:
         c.grow_fodder()
         assert c.fodder == c.params['f_max']
 
+    def test_grow_fodder_Sea(self):
+        w = Sea()
+        assert w.grow_fodder() is None
+
     #@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_place_animals(self):
         c = Cell()
@@ -91,7 +96,31 @@ class TestLandscape:
         h_list = [Herbivore.birth() for _ in range(c.n_herbivores)]
         assert c.birth_cycle() == c.current_herbivores.append(h_list)
         """
-        pass
+        mocker.patch('numpy.random.uniform', return_value=0)
+        l = Lowland()
+        l.current_herbivores = [Herbivore(5,100), Herbivore(5,100)]
+        l.current_carnivores = [Carnivore(5,100), Carnivore(5,100)]
+        l.birth_cycle()
+
+        assert len(l.current_herbivores) >= 3
+        assert len(l.current_carnivores) >= 3
+
+    def test_death_in_cell(self):
+
+        c = Cell()
+        c.current_herbivores = [Herbivore(5,0), Herbivore(5,100), Herbivore(3,0)]
+        c.current_carnivores = [Carnivore(2,0), Carnivore(5,100), Carnivore(5,100)]
+        c.current_herbivores[0].fitness = 0
+        c.current_herbivores[1].fitness = 1
+        c.current_herbivores[2].fitness = 0
+        c.current_carnivores[0].fitness = 0
+        c.current_carnivores[1].fitness = 1
+        c.current_carnivores[2].fitness = 1
+        c.death_in_cell()
+
+        assert len(c.current_herbivores) == 1
+        assert len(c.current_carnivores) == 2
+
 
     def test_weight_loss(self):
         c = Cell()
@@ -131,6 +160,17 @@ class TestLandscape:
         fc = FerCells()
         fc.feed_all()
         assert fc.fodder == fc.params['f_max']
+
+    def test_age_animals(self):
+        l = Lowland()
+        l.current_carnivores = [Carnivore(1,1), Carnivore(3,3)]
+        l.current_herbivores = [Herbivore(9,9), Herbivore(2,2)]
+        l.age_animals()
+        assert l.current_carnivores[0].age == 2
+        assert l.current_carnivores[1].age == 4
+        assert l.current_herbivores[0].age == 10
+        assert l.current_herbivores[1].age == 3
+
 
 if __name__ == "__main__":
     c = Cell()
