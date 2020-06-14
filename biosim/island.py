@@ -81,7 +81,7 @@ class Island:
         coordinates_map = {}
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
-                cell_instance = self.cell_types[cell]
+                cell_instance = self.cell_types[cell]()
                 coordinates_map[(y_index, x_index)] = cell_instance
         return coordinates_map
 
@@ -156,7 +156,6 @@ class Island:
             if self.map[loc] == water:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
-            print(pop)
             self.map[loc].place_animals(pop)
 
     def migrate(self):
@@ -199,3 +198,4 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
     i.place_population(default_population)
+    
