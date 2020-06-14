@@ -43,6 +43,33 @@ class Island:
     #        self.len_x_coord = None
     #        self.len_y_coord = None
 
+    @property
+    def year(self):
+        return self.year
+
+    @property
+    def num_animals(self):
+        """
+        Returns the total number of animals on the island.
+        :return: int >= 0
+        """
+        num_animals = 0
+        for cell in self.map.values():
+            num_animals += cell.n_herbivores + cell.n_carnivores
+        return num_animals
+
+    @property
+    def num_animals_per_species(self):
+        """
+        Returns a dictionary with number of herbivores and carnivores.
+        :return:
+        """
+
+        num_animals_per_species = {'n_herbs': 0, 'n_carns': 0}
+        for cell in self.map.values():
+            num_animals_per_species['n_herbs'] += cell.n_herbivores
+            num_animals_per_species['n_carns'] += cell.n_carnivores
+        return num_animals_per_species
 
     def check_map(self, map_input):
         stringmap = map_input.strip()
@@ -83,33 +110,6 @@ class Island:
                 cell_instance = self.cell_types[cell]()
                 coordinates_map[(y_index, x_index)] = cell_instance
         return coordinates_map
-
-    @property
-    def total_carnivores(self):
-        """
-        Calculates the total amount of carnivores currently on the island.
-        :return: int >= 0
-        """
-        total_carnivores = [cell.n_carnivores for cell in self.map.values()]
-        return sum(total_carnivores)
-
-    @property
-    def total_herbivores(self):
-        """
-        Calculates the total amount of herbivores currently on the island.
-        :return: int >= 0
-        """
-        total_herbivores = [cell.n_herbivores for cell in self.map.values()]
-        return sum(total_herbivores)
-
-    @property
-    def total_animals(self):
-        """
-        gives the total amount of both herbivores and carnivores currently on the island.
-        :return: tuple, consisting of two positive integers.
-        """
-        return self.total_herbivores, self.total_carnivores
-
 
     def procreate_cells_map(self):
         for cell in self.map.values():
