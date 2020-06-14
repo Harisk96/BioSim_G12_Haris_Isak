@@ -1,6 +1,6 @@
 #LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-default_map = """
+default_map_string = """
 WWWWWWWWWWWWWWWWWWWWW
 WWWWWWWWHWWWWLLLLLLLW
 WHHHHHLLLLWWLLLLLLLWW
@@ -18,6 +18,7 @@ WWWWWWWWWWWWWWWWWWWWW"""
 
 from biosim.landscape import Highland, Lowland, Desert, Sea
 from biosim.animals import Herbivore, Carnivore
+import textwrap
 
 import numpy as np
 
@@ -34,12 +35,43 @@ class Island:
                   'D': Desert,
                   'W': Sea}
 
-    def __init__(self, maps, init_animals):
-        self.maps = maps
+    default_map = textwrap(default_map_string)
+    default_herbivores = []
+    default_carnivores = []
+
+    def __init__(self, loc, map=None, init_animals=None):
+        """
+        Constructor for Island class
+        :param maps: List, nested list as a matrix describing the layout of the island geography
+        :param init_animals: ,
+        """
+        if map is None:
+            self.map_string = Island.default_map
+            self.map = self.set_map_coordinates(Island.default_map)
+        else:
+            if self.check_map(map):
+                self.map_string = map
+                self.map = map
+
+        if init_animals is None:
+            self.place_population(Island.default_herbivores)
+            self.place_population(Island.default_carnivores)
+        else:
+            self.place_population(init_animals)
+        y, x = loc
+        cell_left = (y, x-1)
+        cell_right = (y, x+1)
+        cell_up = (y+1, x)
+        cell_down = (y-1, x)
+        destination_cells = [cell_left, cell_right, cell_up, cell_down]
+
+        self.destinations = destination_cells
+
         self.len_x_coord = None
         self.len_y_coord = None
-        self.maps = self.set_map_coordinates(map_input)
-        self.init_animals = init_animals
+
+        # self.maps = self.set_map_coordinates(map_input)
+
 #        self.place_population_map(SETTE INN STARTPOPULASJON HER)
 
     def check_map(self, map_input):
