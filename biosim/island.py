@@ -28,6 +28,7 @@ class Island:
         """
 
         self.map = self.set_map_coordinates(insert_map)
+        self.place_population(init_animals)
 
     #        y, x = loc
     #        cell_left = (y, x-1)
@@ -85,30 +86,32 @@ class Island:
                 coordinates_map[(y_index, x_index)] = cell_instance
         return coordinates_map
 
-    """
+    @property
     def total_carnivores(self):
-    
+        """
         Calculates the total amount of carnivores currently on the island.
         :return: int >= 0
-        
-        total_carnivores = [cell.current_carnivores for cell in self.map.values()]
+        """
+        total_carnivores = [cell.n_carnivores for cell in self.map.values()]
         return sum(total_carnivores)
 
+    @property
     def total_herbivores(self):
-        
+        """
         Calculates the total amount of herbivores currently on the island.
         :return: int >= 0
-        
-        total_herbivores = [Cell.current_herbivores for cell in self.map.values()]
+        """
+        total_herbivores = [cell.n_herbivores for cell in self.map.values()]
         return sum(total_herbivores)
 
+    @property
     def total_animals(self):
-        
+        """
         gives the total amount of both herbivores and carnivores currently on the island.
         :return: tuple, consisting of two positive integers.
-    
+        """
         return self.total_herbivores, self.total_carnivores
-    """
+
 
     def procreate_cells_map(self):
         for cell in self.map.values():
@@ -172,7 +175,7 @@ if __name__ == "__main__":
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 10),
+    ini_carns = [{'loc': (1, 1),
                   'pop': [{'species': 'Carnivore',
                            'age': 5,
                            'weight': 20}
@@ -197,5 +200,6 @@ if __name__ == "__main__":
     default_maps = textwrap.dedent(default_maps)
 
     i = Island(default_maps, default_population)
-    i.place_population(default_population)
+    print(i.total_animals)
+
     
