@@ -137,12 +137,17 @@ class Island:
         """
         Method that makes it so that animals in the cell loses
         weight.
-        :return:
+        :return: None
         """
         for cell in self.map.values():
             cell.weight_loss_cell()
 
     def place_population(self, init_pop):
+        """
+        Method that places animals in the cells that constitutes the island
+        :param init_pop: list of dict, animals to be placed on the island
+        :return: None
+        """
         water = self.cell_types['W']
         print(water)
         for position in init_pop:
