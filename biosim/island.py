@@ -29,7 +29,7 @@ class Island:
 
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
-#        self.year = 0
+        self._year = 0
 
     #        y, x = loc
     #        cell_left = (y, x-1)
@@ -45,11 +45,11 @@ class Island:
 
     @property
     def year(self):
-        return self.year
+        return self._year
 
-#    @year.setter
-#    def year(self, current_year):
-#        self.year = current_year
+    @year.setter
+    def year(self, current_year):
+        self._year = current_year
 
     @property
     def num_animals(self):
@@ -178,7 +178,7 @@ class Island:
         self.age_in_cells()
         self.weightloss_island()
         self.die_island()
-#        self.year += 1
+        self.year += 1
 
 
 
@@ -217,5 +217,5 @@ if __name__ == "__main__":
     for _ in range(200):
         i.run_function_one_year()
         print(i.num_animals_per_species)
-
+        print(i.year)
     
