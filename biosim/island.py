@@ -97,15 +97,31 @@ class Island:
         pass
 
     def feed_cells(self):
+        """
+        Method that updates the fodder in the cell,
+        and makes all the animals it contains eat.
+        :return:
+        """
         for landscape in self.map.values():
             landscape.feed_all()
 
 
     def age_in_cells(self):
-        pass
+        """
+        Method that ages the animals in the cell by one year.
+        :return:
+        """
+        for cell in self.map.values():
+            cell.age_animals()
 
     def weightloss_cell(self):
-        pass
+        """
+        Method that makes it so that animals in the cell loses
+        weight.
+        :return:
+        """
+        for cell in self.map.values():
+            cell.yearly_weight_loss()
 
     def place_population(self, init_pop):
         for position in init_pop:
