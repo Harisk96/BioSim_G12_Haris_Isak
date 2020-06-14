@@ -36,39 +36,29 @@ class Island:
                   'W': Sea}
 
 
-    default_herbivores = []
-    default_carnivores = []
-
-    def __init__(self, map=None, init_animals=None):
+    def __init__(self, insert_map, init_animals):
         """
         Constructor for Island class
         :param maps: List, nested list as a matrix describing the layout of the island geography
         :param init_animals: ,
         """
-        if map is None:
-            self.map_string = Island.default_map
-            self.map = self.set_map_coordinates(Island.default_map)
-        else:
-            if self.check_map(map):
-                self.map_string = map
-                self.map = map
 
-        if init_animals is None:
+        self.map = self.set_map_coordinates(insert_map)
+
+       if init_animals is None:
             self.place_population(Island.default_herbivores)
-            self.place_population(Island.default_carnivores)
-        else:
-            self.place_population(init_animals)
-        y, x = loc
-        cell_left = (y, x-1)
-        cell_right = (y, x+1)
-        cell_up = (y+1, x)
-        cell_down = (y-1, x)
-        destination_cells = [cell_left, cell_right, cell_up, cell_down]
+
+#        y, x = loc
+#        cell_left = (y, x-1)
+#        cell_right = (y, x+1)
+#        cell_up = (y+1, x)
+#        cell_down = (y-1, x)
+#        destination_cells = [cell_left, cell_right, cell_up, cell_down]
 
         self.destinations = destination_cells
 
-        self.len_x_coord = None
-        self.len_y_coord = None
+#        self.len_x_coord = None
+#        self.len_y_coord = None
 
         # self.maps = self.set_map_coordinates(map_input)
 
@@ -110,8 +100,8 @@ class Island:
         coordinates_map = {}
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
-                cell_instance = cell.types[cell]
-                coordinates_map[(y_index, x_index)] = cell_instance()
+                cell_instance = self.cell_types[cell]
+                coordinates_map[(y_index, x_index)] = cell_instance
         return coordinates_map
 
 
@@ -120,11 +110,9 @@ class Island:
         pass
 
     def feed_cells(self):
-        pass
+        for landscape in self.map.values():
+            landscape.feed_all()
 
-
-    def place_herbivores(self):
-        pass
 
     def age_in_cells(self):
         pass
@@ -132,8 +120,15 @@ class Island:
     def weightloss_cell(self):
         pass
 
-    def place_population(self):
-        pass
+    def place_population(self, init_pop):
+        for position in population:
+            loc = position['loc']
+            if loc not in self.map.keys():
+                raise ValueError('nonexistent loc in the map provided')
+            if loc in self.map[loc] = self.cell_types['W']: #Rette opp denne
+                raise ValueError('Animal can not live in water')
+            pop = position['pop']
+            self.map[loc].place_animals(pop)
 
     def migrate(self):
         pass
