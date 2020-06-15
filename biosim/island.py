@@ -6,12 +6,10 @@ from biosim.animals import Herbivore, Carnivore
 import textwrap
 
 import numpy as np
+np.random.seed(1)
 
 
-def check_length(strings):
-    strings = list(map(len, strings))
-    if strings.count(strings[0]) == len(strings):
-        return True
+
 
 
 class Island:
@@ -30,6 +28,12 @@ class Island:
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
         self._year = 0
+
+    @staticmethod
+    def check_length(strings):
+        strings = list(map(len, strings))
+        if strings.count(strings[0]) == len(strings):
+            return True
 
     def get_adjacent_cells(self, cord):
         pass
@@ -90,7 +94,7 @@ class Island:
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
-        if not check_length(strings):
+        if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
 
         for elems in str([strings[0] + strings[-1]])[2:-2]:
@@ -186,7 +190,7 @@ class Island:
     def run_function_one_year(self):
         self.feed_cells_island()
         self.procreate_cells_map()
-        self.migrate()
+#        self.migrate()
         self.age_in_cells()
         self.weightloss_island()
         self.die_island()
@@ -230,8 +234,8 @@ if __name__ == "__main__":
     for cord, cell in i.map.items():
         print(cord, cell)
 
-    # for _ in range(200):
-        # i.run_function_one_year()
-        # print(i.num_animals_per_species)
-        # print(i.year)
-        #
+    #for _ in range(200):
+     #   i.run_function_one_year()
+      #  print(i.num_animals_per_species)
+       # print(i.year)
+
