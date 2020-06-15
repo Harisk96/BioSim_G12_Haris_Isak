@@ -13,6 +13,7 @@ class Cell:
     landscape types are subclasses of the Cell superclass.
     """
 
+
     def __init__(self):
         """
         constructor for the cell super class.
