@@ -47,3 +47,4 @@ class BioSim:
                  for _ in range(40)], }
     ]
 
+    def __init__(self),:
