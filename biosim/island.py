@@ -123,7 +123,7 @@ class Island:
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
                 cell_instance = self.cell_types[cell]()
-                coordinates_map[(y_index, x_index)] = cell_instance
+                coordinates_map[(y_index+1, x_index+1)] = cell_instance
         return coordinates_map
 
     def procreate_cells_map(self):
