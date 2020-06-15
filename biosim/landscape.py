@@ -169,7 +169,7 @@ class Cell:
         :return:
         """
         herb_emigrate = []
-        for herb in self.current_herbivores:
+        for herb in self.current_herbivores:  # +self.current_carnivores
             if herb.migrate():
                 herb_emigrate.append(herb)
         self.current_herbivores = [herb for herb in self.current_herbivores
@@ -232,9 +232,9 @@ class Sea(Cell):
 if __name__ == "__main__":
     c = Cell()
     c.current_herbivores = [Herbivore() for _ in range(10)]
-    h_list =
+    h_list = [Herbivore() for _ in range(5)]
     print(len(c.current_herbivores))
-    c.migration()
+    print(c.herb_migration(h_list))
     for i in range(len(c.current_herbivores)):
         print(c.current_herbivores[i].weight)
     print(len(c.current_herbivores))

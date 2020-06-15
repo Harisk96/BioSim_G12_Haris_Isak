@@ -31,6 +31,17 @@ class Island:
         self.place_population(init_animals)
         self._year = 0
 
+    def get_adjacent_cells(self, cord):
+        pass
+        # x,y =
+    # return [  self.map[new_cord1] , self.map[new_cord2]
+
+    def migrate_all_cells(self):
+        for cord, cell in self.map:
+            adj_cells = self.get_adjacent_cells(cord)
+            cell.migrate(adj_cells)
+
+
     #        y, x = loc
     #        cell_left = (y, x-1)
     #        cell_right = (y, x+1)
@@ -108,7 +119,7 @@ class Island:
         #        self.len_y_coord = len(strings)
 
         strings_island_map = self.check_map(map_input)
-        coordinates_map = {}
+        coordinates_map = {}  # []
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
                 cell_instance = self.cell_types[cell]()
@@ -170,6 +181,7 @@ class Island:
     def migrate(self):
         pass
 
+
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         self.feed_cells_island()
@@ -214,8 +226,12 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
 
-    for _ in range(200):
-        i.run_function_one_year()
-        print(i.num_animals_per_species)
-        print(i.year)
-    
+    print(i.map)
+    for cord, cell in i.map.items():
+        print(cord, cell)
+
+    # for _ in range(200):
+        # i.run_function_one_year()
+        # print(i.num_animals_per_species)
+        # print(i.year)
+        #
