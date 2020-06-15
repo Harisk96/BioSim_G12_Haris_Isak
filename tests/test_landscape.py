@@ -80,8 +80,15 @@ class TestLandscape:
     #@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_place_animals(self):
         c = Cell()
-        h_list = [Herbivore() for _ in range(10)]
-        c_list = [Carnivore() for _ in range(15)]
+        h_list = [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]
+        c_list = [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]
+
         with pytest.raises(TypeError, match='list_of_animals has to be of type list'):
             assert c.place_animals("string")
         assert c.place_animals(h_list) == c.current_herbivores.append(h_list)
@@ -126,7 +133,7 @@ class TestLandscape:
         c = Cell()
         c.current_herbivores = [Herbivore(2, 10.0) for _ in range(10)]
         c.current_carnivores = [Carnivore(2, 10.0) for _ in range(10)]
-        c.weight_loss()
+        c.weight_loss_cell()
         for i in range(10):
             assert c.current_herbivores[i].weight < 10.0
             assert c.current_carnivores[i].weight < 10.0
@@ -148,12 +155,12 @@ class TestLandscape:
     def test_feed_carnivore(self):
         c = Cell()
         c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
-        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 0.1), Herbivore(4, 12.0)]
         c.feed_carnivores()
         assert c.current_carnivores[0].fitness > c.current_carnivores[1].fitness
         assert c.current_carnivores[1].fitness > c.current_carnivores[2].fitness
         assert c.current_herbivores[0].fitness < c.current_herbivores[1].fitness
-        assert c.current_herbivores[1].fitness < c.current_herbivores[2].fitness
+        assert len(c.current_herbivores) < 3
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
