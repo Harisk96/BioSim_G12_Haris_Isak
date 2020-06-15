@@ -163,6 +163,47 @@ class Cell:
         self.current_carnivores = [carn for carn in self.current_carnivores if
                                    carn not in dead_carnivores]
 
+    def add_immigrants(self, list_of_immigrants):
+        """
+        Adds migrating animals to cell.
+        :param list_of_immigrants: List of animals to immigrate to cell
+        :return: None
+        """
+        herbs = [immigrant for immigrant in list_of_immigrants
+                 if immigrant.__class__.__name__ == 'Herbivore']
+
+        carns = [immigrant for immigrant in list_of_immigrants
+                 if immigrant.__class__.__name__ == 'Carnivore']
+
+        self.current_herbivores.extend(herbs)
+        self.current_herbivores.extend(carns)
+
+    def remove_emigrants(self, emigrants):
+        """
+        Removes emigrants from cell
+        :return:
+        """
+        self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
+        self.current_carnivores = list(set(self.current_herbivores) - set(emigrants))
+
+    def emigrants_list(self, adjacent_cells):
+        dct = {}
+        list_of_emigrants = [emi for emi in self.current_carnivores + self.current_herbivores
+                             if emi.migrate() and emi.has_migrated == False]
+        np.random.shuffle(list_of_emigrants)
+        
+
+    def chunkIt(seq, num):
+        avg = len(seq) / float(num)
+        out = []
+        last = 0.0
+
+        while last < len(seq):
+            out.append(seq[int(last):int(last + avg)])
+            last += avg
+
+        return out
+
     def herb_migration(self, herb_immigrate=None):
         """
         Receives and removes herbivores from cell due to migration.
