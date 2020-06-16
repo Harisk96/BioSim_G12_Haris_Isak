@@ -33,8 +33,8 @@ class Animals:
     def set_params(cls, new_params):
         """
         Updates the parameters
-        :param new_params:
-        :return: dict, updated parameters
+        :param new_params: dict, dictionary over new parameters
+        :return: None
         """
 
         # Taken from bacteria.py from the biolab example folder. Modified to the current project
