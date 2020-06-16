@@ -182,7 +182,7 @@ class Cell:
         self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))
 
     def emigration(self, adj_cells):
-        
+
 
         emigrants = {}
 
