@@ -44,7 +44,7 @@ class BioSim:
 
         for i in range(num_years):
             self.island.run_function_one_year()
-            self.visualization.update_graphics( self.create_population_heatmap() )
+            self.visualization.update_graphics( self.create_population_heatmap() , self.island.num_animals_per_species)
             #call the cycle
 
     #todo
