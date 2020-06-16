@@ -182,6 +182,13 @@ class Island:
             pop = position['pop']
             self.map[loc].place_animals(pop)
 
+    def map_size(self):
+        coordinates = self.map.keys()
+        list_of_coordinates = list(coordinates)
+        size = list_of_coordinates[-1]
+        return size
+
+
     def migrate(self):
         pass
 
@@ -230,12 +237,17 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
 
-    print(i.map)
-    for cord, cell in i.map.items():
-        print(cord, cell)
+    #print(i.map)
+    #for cord, cell in i.map.items():
+    #    print(cord, cell)
 
-    #for _ in range(200):
-     #   i.run_function_one_year()
-      #  print(i.num_animals_per_species)
-       # print(i.year)
+    for _ in range(3):
+        i.run_function_one_year()
+        print(i.num_animals_per_species)
+        print('year is {0}'.format(i.year))
 
+        print(len(i.map[10, 10].current_herbivores))
+        print(len(i.map[10, 10].current_carnivores))
+
+        if i.map[10,10].migrate_to:
+            print('lololol')
