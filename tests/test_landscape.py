@@ -208,6 +208,30 @@ class TestLandscape:
         assert isinstance(emigrants, dict)
         assert emigrants[(10, 10)] == cell.current_carnivores + cell.current_herbivores
 
+    def test_emigration_exceptions(self):
+        cell = Cell()
+        adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
+        with pytest.raises(TypeError):
+            assert cell.emigration({'1337': 1337})
+        with pytest.raises(ValueError):
+            assert cell.emigration([(1, 1)])
+        with pytest.raises(TypeError):
+            assert cell.emigration([[1]])
+
+    def test_set_params(self):
+        """
+        Testing the set_params method in landscape file
+        """
+        cell = Cell()
+        low = Lowland()
+        new_params = {'f_max': 100}
+        old_params = {'f_max': 800} # parameter for fodder for lowland object
+        assert low.params == old_params
+        low.set_params(new_params)
+        assert low.params == new_params
+        with pytest.raises(TypeError):
+            assert cell.set_params(list(2))
+
 if __name__ == "__main__":
     c = Cell()
 

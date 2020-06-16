@@ -5,3 +5,8 @@ import pytest
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
+class TestIsland:
+    """
+    Class that tests island class.
+    """
+    def test_constructor(self):
