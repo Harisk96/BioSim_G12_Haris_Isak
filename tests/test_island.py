@@ -49,3 +49,34 @@ class TestIsland:
         assert hasattr(i, 'place_population')
         assert hasattr(i, '_year')
 
+    def test_year_property(self):
+        """
+        Tests if year-property returns the value of the year-attribute
+        """
+        i = Island(default_maps, default_population)
+        i._year = 3
+        assert i.year == 3
+
+    def test_num_animals(self):
+        i = Island(default_maps, default_population)
+        assert i.num_animals == 190
+
+    def test_num_per_species(self):
+        i = Island(default_maps, default_population)
+        exp_dict = {'n_herbs': 150, 'n_carns': 40}
+        assert i.num_animals_per_species == exp_dict
+
+    def test_check_map(self):
+        i = Island(default_maps, default_population)
+        checked_map = i.check_map(default_maps)
+        assert isinstance(checked_map, list)
+        for i in checked_map:
+            assert isinstance(i, str)
+            assert len(i) == 21
+
+    def test_check_map_exceptions(self):
+        i = Island(default_maps, default_population)
+        strings = ['dddddddd', 'sssss']
+        with pytest.raises(ValueError):
+            assert i.check_length(strings) 
+

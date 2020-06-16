@@ -38,19 +38,6 @@ class Island:
         if strings.count(strings[0]) == len(strings):
             return True
 
-
-    #        y, x = loc
-    #        cell_left = (y, x-1)
-    #        cell_right = (y, x+1)
-    #        cell_up = (y+1, x)
-    #        cell_down = (y-1, x)
-    #        destination_cells = [cell_left, cell_right, cell_up, cell_down]
-
-    #        self.destinations = destination_cells
-
-    #        self.len_x_coord = None
-    #        self.len_y_coord = None
-
     @property
     def year(self):
         return self._year
@@ -87,7 +74,6 @@ class Island:
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
-
         if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
 
@@ -108,13 +94,7 @@ class Island:
 
         return strings
 
-
-
     def set_map_coordinates(self, map_input):
-
-        #        strings = self.check_map(map)
-        #
-        #        map_island = {}
 
         strings_island_map = self.check_map(map_input)
 
@@ -250,7 +230,7 @@ if __name__ == "__main__":
 
     default_maps = textwrap.dedent(default_maps)
 
-    i = Island(default_maps, default_population)
+    #i = Island(default_maps, default_population)
 
     #for _ in range(20):
         #print(i.num_animals_per_species)
@@ -260,12 +240,13 @@ if __name__ == "__main__":
     #print(i.map)
     #for cord, cell in i.map.items():
     #    print(cord, cell)
-    print("start: {0}".format(i.num_animals_per_species))
-    for _ in range(200):
-        i.run_function_one_year()
-        print(i.num_animals_per_species)
+    #print("start: {0}".format(i.num_animals_per_species))
+    #for _ in range(200):
+     #   i.run_function_one_year()
+      #  print(i.num_animals_per_species)
 
-
+    i = Island(default_maps, default_population)
+    print(i.check_map(default_maps))
 
 
 #        print(len(i.map[11, 10].current_herbivores))
