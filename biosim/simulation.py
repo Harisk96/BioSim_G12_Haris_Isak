@@ -14,7 +14,6 @@ class BioSim:
                  img_base=None, img_fmt="png"):
         self._year = 0
         self._final_year = None
-        # self.island = Island(island_map, ini_pop)
         self.inserted_map = island_map
         self.island = Island(island_map, ini_pop)
 
