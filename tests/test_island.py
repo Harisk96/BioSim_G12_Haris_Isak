@@ -75,8 +75,18 @@ class TestIsland:
             assert len(i) == 21
 
     def test_check_map_exceptions(self):
+        pass
 
+    def test_fitness_list(self):
+        """
+        Method that tests that fitness_list returns the fitness of the current herbivores on the
+        island.
+        """
         i = Island(default_maps, default_population)
-        strings = [['dddddddd'], ['sssss']]
-        with pytest.raises(ValueError):
-            assert i.check_length(strings) is False
+        fit_list = i.fitness_list()
+        h = Herbivore(5, 20)
+        for i in fit_list:
+            assert i == h.fitness
+        assert isinstance(fit_list, list)
+
+    def test_
