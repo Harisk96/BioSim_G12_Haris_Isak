@@ -1,17 +1,30 @@
 import numpy as np
+import random
 np.random.seed(1)
-
 from biosim.animals import Animals, Herbivore, Carnivore
 from operator import attrgetter
 import matplotlib.pyplot as plt
+import random
 
 
 class Cell:
-    params = {}
     """
     Class cell represents a single cell on the island map, the different
     landscape types are subclasses of the Cell superclass.
     """
+    params = {}
+
+    @classmethod
+    def set_params(cls, new_params):
+        """
+        Updates the parameters
+        :param new_params: dict, dictionary with parameters
+        :return: None
+        """
+        if not isinstance(new_params, dict):
+            raise TypeError('Input has to be of type dict')
+
+        cls.params.update(new_params)
 
     def __init__(self):
         """
@@ -20,6 +33,7 @@ class Cell:
         self.fodder = 0
         self.current_herbivores = []
         self.current_carnivores = []
+
 
     @property
     def n_herbivores(self):
@@ -163,15 +177,58 @@ class Cell:
         self.current_carnivores = [carn for carn in self.current_carnivores if
                                    carn not in dead_carnivores]
 
-    def emigrate(self):
-        
-        self.current_herbivores
-        self.current_carnivores
+    def add_immigrants(self, list_animals):
+        if not isinstance(list_animals, list):
+            raise TypeError('input has to be of type list')
 
+        herbs = [anim for anim in list_animals if anim.__class__.__name__ == 'Herbivore']
+        carns = [anim for anim in list_animals if anim.__class__.__name__ == 'Carnivore']
+        self.current_herbivores.extend(herbs)
+        self.current_carnivores.extend(carns)
 
-    def immigrate(self):
-        self.current_herbivores
-        self.current_carnivores
+    def remove_emigrants(self, emigrants):
+        """
+        Removes emigrants from cell (removes them from self.current_herbivores and
+        self.current_carnivores.
+        :return:
+        """
+        if not isinstance(emigrants, list):
+            raise TypeError('Input argument has to be of type dict')
+        self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
+        self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))
+
+    def emigration(self, adj_cells):
+
+        if not isinstance(adj_cells, list):
+            raise TypeError('input have to be of type list')
+        if not len(adj_cells) == 4:
+            raise ValueError('input list has to contain 4 elements')
+        for i in range(4):
+            if not isinstance(adj_cells[i], tuple):
+                raise TypeError('Elements of input list has to be of type tuple')
+            if len(adj_cells[i]) != 2:
+                raise ValueError('Tuple elements have to contain two elements')
+            if not isinstance(adj_cells[i][0], int) and (not isinstance(adj_cells[i][1], int)):
+                raise TypeError('Tuple elements have to be of type integers')
+
+        emigrants = {}
+
+        animal_list = self.current_carnivores + self.current_herbivores
+
+        list_of_emigrants = [emi for emi in animal_list if emi.migrate()
+                             and emi.has_migrated is False]
+        for emi in list_of_emigrants:
+            destination = adj_cells[np.random.randint(0, 4)]
+            if destination in emigrants.keys():
+                emigrants[destination].append(emi)
+            else:
+                emigrants[destination] = [emi]
+
+        for animal in animal_list:
+            animal.set_has_migrated(True)
+
+        return emigrants
+
 
 
 class Highland(Cell):
@@ -205,3 +262,23 @@ class Desert(Cell):
 class Sea(Cell):
     migrate_to = False
 
+if __name__ == "__main__":
+    cell = Cell()
+    adj_cells = [(9, 10), (11, 10), (10, 9), (10, 11)]
+    carn = Carnivore()
+    carn.has_migrated = False
+    cell.current_carnivores.append(carn)
+    herb = Herbivore()
+    herb.has_migrated = False
+    cell.current_herbivores.append(herb)
+    print(cell.emigration(adj_cells))
+
+    """
+    c.current_herbivores = [Herbivore() for _ in range(10)]
+    h_list = [Herbivore() for _ in range(5)]
+    print(len(c.current_herbivores))
+    print((h_list))
+    for i in range(len(c.current_herbivores)):
+        print(c.current_herbivores[i].weight)
+    print(len(c.current_herbivores))
+    """

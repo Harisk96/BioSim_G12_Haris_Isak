@@ -37,9 +37,11 @@ class TestAnimals:
         assert hasattr(s, 'age')
         assert hasattr(s, 'weight')
         assert hasattr(s, 'fitness')
+        assert hasattr(s, 'has_migrated')
         assert s.age == 5
         assert s.weight == 15.0
         assert isinstance(s, Animals)
+        assert isinstance(s.has_migrated, bool)
         with pytest.raises(TypeError, match="'age' must be of type int "):
             assert Animals(age=3.4)
         with pytest.raises(TypeError, match='Weight must be either of type int or type float'):
@@ -48,6 +50,13 @@ class TestAnimals:
             assert Animals(age=-1)
         with pytest.raises(ValueError, match="'weight' must be greater than or equal to zero"):
             assert Animals(weight=-1)
+
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_set_has_migrated(self, Species):
+        s = Species()
+        s.has_migrated = False
+        s.set_has_migrated(True)
+        assert s.has_migrated
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_new_animal(self, Species):
@@ -211,6 +220,13 @@ class TestAnimals:
         }
         h.set_params(new_parameters)
         assert h.params == new_parameters
+        false_parameter = {'nice': 69}
+        with pytest.raises(KeyError):
+            h.set_params(false_parameter)
+        with pytest.raises(TypeError):
+            h.set_params(list(2))
+
+
 
     def test_birth(self, mocker):
         """
@@ -220,10 +236,12 @@ class TestAnimals:
         mocker.patch("numpy.random.uniform", return_value=0)
         h = Herbivore(2, 50.0)
         c = Carnivore(3, 50.0)
+        h2 = Herbivore(0, 0)
         herb = h.birth(30)
         carni = c.birth(50)
         assert isinstance(herb, Herbivore)
         assert isinstance(carni, Carnivore)
+        assert h2.birth(10) is None
 
     def test_death(self, mocker):
         """

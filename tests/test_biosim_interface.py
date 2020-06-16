@@ -19,12 +19,11 @@ __email__ = 'hans.ekkehard.plesser@nmbu.no'
 
 
 import pytest
-import pandas
 import glob
 import os
 import os.path
 
-from biosim.simulation import BioSim
+from examples.simulation_playingaround import BioSim
 
 
 def test_empty_island():

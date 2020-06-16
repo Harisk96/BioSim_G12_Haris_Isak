@@ -1,17 +1,15 @@
 # LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-
+import random
 from biosim.landscape import Highland, Lowland, Desert, Sea
-from biosim.animals import Herbivore, Carnivore
+from biosim.animals import Animals, Herbivore, Carnivore
 import textwrap
 
 import numpy as np
 
 
-def check_length(strings):
-    strings = list(map(len, strings))
-    if strings.count(strings[0]) == len(strings):
-        return True
+
+
 
 
 class Island:
@@ -30,6 +28,16 @@ class Island:
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
         self._year = 0
+
+
+
+    @staticmethod
+    def check_length(strings):
+        strings = list(map(len, strings))
+
+        if strings.count(strings[0]) == len(strings):
+            return True
+
 
     #        y, x = loc
     #        cell_left = (y, x-1)
@@ -79,7 +87,8 @@ class Island:
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
-        if not check_length(strings):
+
+        if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
 
         for elems in str([strings[0] + strings[-1]])[2:-2]:
@@ -99,20 +108,22 @@ class Island:
 
         return strings
 
+
+
     def set_map_coordinates(self, map_input):
 
         #        strings = self.check_map(map)
         #
         #        map_island = {}
-        #        self.len_x_coord = len(strings[0])
-        #        self.len_y_coord = len(strings)
 
         strings_island_map = self.check_map(map_input)
-        coordinates_map = {}
+
+
+        coordinates_map = {}  # []
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
                 cell_instance = self.cell_types[cell]()
-                coordinates_map[(y_index, x_index)] = cell_instance
+                coordinates_map[(y_index+1, x_index+1)] = cell_instance
         return coordinates_map
 
     def procreate_cells_map(self):
@@ -157,7 +168,7 @@ class Island:
         :param init_pop: list of dict, animals to be placed on the island
         :return: None
         """
-        water = self.cell_types['W']
+        # water = self.cell_types['W']
         for position in init_pop:
             loc = position['loc']
             if loc not in self.map.keys():
@@ -167,28 +178,55 @@ class Island:
             pop = position['pop']
             self.map[loc].place_animals(pop)
 
-    def migrate(self):
-        pass
+    def map_size(self):
+        coordinates = self.map.keys()
+        list_of_coordinates = list(coordinates)
+        size = list_of_coordinates[-1]
+        return size
+
+    def get_adj_cells(self, coords):
+        y, x = coords
+        adjacent_cells = [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+        return adjacent_cells
+
+    def migration_island(self):
+
+        for y, coords in enumerate(self.map):
+            self.get_adj_cells(coords)
+            if self.map[coords].migrate_to:
+                adjacent_cells = self.get_adj_cells(coords)
+                migrants_dict = self.map[coords].emigration(adjacent_cells)
+
+                for destination, migrant in migrants_dict.items():
+                    #len migrant > 0
+                    if self.map[destination].migrate_to and migrant:
+                        self.map[destination].add_immigrants(migrant)
+                        self.map[coords].remove_emigrants(migrant)
+
 
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         self.feed_cells_island()
         self.procreate_cells_map()
-        self.migrate()
+        self.migration_island()
         self.age_in_cells()
         self.weightloss_island()
         self.die_island()
         self.year += 1
 
+        for cell in self.map.values():
+            for anim in cell.current_herbivores + cell.current_carnivores:
+                anim.set_has_migrated(False)
+
 
 
 if __name__ == "__main__":
-    ini_herbs = [{'loc': (10, 10),
+    ini_herbs = [{'loc': (10, 9),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 10),
+    ini_carns = [{'loc': (10, 9),
                   'pop': [{'species': 'Carnivore',
                            'age': 5,
                            'weight': 20}
@@ -214,8 +252,22 @@ if __name__ == "__main__":
 
     i = Island(default_maps, default_population)
 
+    #for _ in range(20):
+        #print(i.num_animals_per_species)
+        #i.run_function_one_year()
+        #print(len(i.map[10, 11].current_carnivores))
+
+    #print(i.map)
+    #for cord, cell in i.map.items():
+    #    print(cord, cell)
+    print("start: {0}".format(i.num_animals_per_species))
     for _ in range(200):
         i.run_function_one_year()
         print(i.num_animals_per_species)
-        print(i.year)
-    
+
+
+
+
+#        print(len(i.map[11, 10].current_herbivores))
+#        print(len(i.map[10, 11].current_carnivores))
+

@@ -33,8 +33,8 @@ class Animals:
     def set_params(cls, new_params):
         """
         Updates the parameters
-        :param new_params:
-        :return: dict, updated parameters
+        :param new_params: dict, dictionary over new parameters
+        :return: None
         """
 
         # Taken from bacteria.py from the biolab example folder. Modified to the current project
@@ -72,7 +72,10 @@ class Animals:
             self.weight = weight
 
         self.fitness = self.update_fitness()
+        self.has_migrated = False
 
+    def set_has_migrated(self, boolean):
+        self.has_migrated = boolean
 
     def update_fitness(self):
         """
@@ -268,6 +271,7 @@ class Carnivore(Animals):
 
 
 if __name__ == "__main__":
+    """
     h = Herbivore(age=2, weight=5.0)
     c = Carnivore(age=10, weight=5.0)
     print(h.fitness)
@@ -281,4 +285,5 @@ if __name__ == "__main__":
 
     #more for animals with more weight
     #less for animals with less weight
-
+    """
+    pass

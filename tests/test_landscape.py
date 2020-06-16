@@ -80,8 +80,15 @@ class TestLandscape:
     #@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_place_animals(self):
         c = Cell()
-        h_list = [Herbivore() for _ in range(10)]
-        c_list = [Carnivore() for _ in range(15)]
+        h_list = [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]
+        c_list = [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]
+
         with pytest.raises(TypeError, match='list_of_animals has to be of type list'):
             assert c.place_animals("string")
         assert c.place_animals(h_list) == c.current_herbivores.append(h_list)
@@ -126,7 +133,7 @@ class TestLandscape:
         c = Cell()
         c.current_herbivores = [Herbivore(2, 10.0) for _ in range(10)]
         c.current_carnivores = [Carnivore(2, 10.0) for _ in range(10)]
-        c.weight_loss()
+        c.weight_loss_cell()
         for i in range(10):
             assert c.current_herbivores[i].weight < 10.0
             assert c.current_carnivores[i].weight < 10.0
@@ -148,12 +155,12 @@ class TestLandscape:
     def test_feed_carnivore(self):
         c = Cell()
         c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
-        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 0.1), Herbivore(4, 12.0)]
         c.feed_carnivores()
         assert c.current_carnivores[0].fitness > c.current_carnivores[1].fitness
         assert c.current_carnivores[1].fitness > c.current_carnivores[2].fitness
         assert c.current_herbivores[0].fitness < c.current_herbivores[1].fitness
-        assert c.current_herbivores[1].fitness < c.current_herbivores[2].fitness
+        assert len(c.current_herbivores) < 3
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
@@ -171,9 +178,72 @@ class TestLandscape:
         assert l.current_herbivores[0].age == 10
         assert l.current_herbivores[1].age == 3
 
+    def test_add_immigrants(self):
+        cell = Cell()
+        cell.current_carnivores = [Carnivore() for _ in range(10)]
+        cell.current_herbivores = [Herbivore() for _ in range(10)]
+        immigrants = [Herbivore(), Carnivore()]
+        cell.add_immigrants(immigrants)
+        assert cell.n_carnivores == 11 and cell.n_herbivores == 11
+        with pytest.raises(TypeError):
+            assert cell.add_immigrants(tuple(3, 2))
+
+    def test_remove_emigrants(self):
+        cell = Cell()
+        cell.current_carnivores = [Carnivore() for _ in range(10)]
+        cell.current_herbivores = [Herbivore() for _ in range(10)]
+        emigrants = [cell.current_herbivores[0], cell.current_carnivores[0]]
+        cell.remove_emigrants(emigrants)
+        assert cell.n_carnivores == 9 and cell.n_herbivores == 9
+        with pytest.raises(TypeError):
+            assert cell.remove_emigrants(tuple(2,3))
+
+    def test_emigration(self, mocker):
+        mocker.patch("numpy.random.uniform", return_value=0)
+        cell = Cell()
+        adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
+        carn = Carnivore()
+        carn.has_migrated = False
+        cell.current_carnivores.append(carn)
+        herb = Herbivore()
+        herb.has_migrated = False
+        cell.current_herbivores.append(herb)
+        emigrants = cell.emigration(adj_cells)
+        assert isinstance(emigrants, dict)
+        assert emigrants[(10, 10)] == cell.current_carnivores + cell.current_herbivores
+
+    def test_emigration_exceptions(self):
+        cell = Cell()
+        with pytest.raises(TypeError):
+            assert cell.emigration({'1337': 1337})
+        with pytest.raises(ValueError):
+            assert cell.emigration([(1, 1)])
+        with pytest.raises(TypeError):
+            assert cell.emigration([[1], [2], [3], [4]])
+        with pytest.raises(ValueError):
+            assert cell.emigration([(1, 1, 1), (1, 1, 1), (1, 1, 1), (1, 1, 1)])
+        with pytest.raises(TypeError):
+            assert cell.emigration([(0.5, 0.5), (0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
+
+
+
+    def test_set_params(self):
+        """
+        Testing the set_params method in landscape file
+        """
+        cell = Cell()
+        low = Lowland()
+        new_params = {'f_max': 100}
+        old_params = {'f_max': 800} # parameter for fodder for lowland object
+        assert low.params == old_params
+        low.set_params(new_params)
+        assert low.params == new_params
+        with pytest.raises(TypeError):
+            assert cell.set_params(list(2))
 
 if __name__ == "__main__":
     c = Cell()
-    c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
-    h = c.current_herbivores
-    print(h[2])
+
+    #c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+    #h = c.current_herbivores
+    #print(h[2])
