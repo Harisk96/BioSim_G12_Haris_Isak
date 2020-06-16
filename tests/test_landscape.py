@@ -210,13 +210,18 @@ class TestLandscape:
 
     def test_emigration_exceptions(self):
         cell = Cell()
-        adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
         with pytest.raises(TypeError):
             assert cell.emigration({'1337': 1337})
         with pytest.raises(ValueError):
             assert cell.emigration([(1, 1)])
         with pytest.raises(TypeError):
-            assert cell.emigration([[1]])
+            assert cell.emigration([[1], [2], [3], [4]])
+        with pytest.raises(ValueError):
+            assert cell.emigration((1, 1, 1), (1, 1, 1), (1, 1, 1), (1, 1, 1))
+        with pytest.raises(TypeError):
+            assert cell.emigration((0.5, 0.5), (0.5, 0.5), (0.5, 0.5), (0.5, 0.5))
+
+
 
     def test_set_params(self):
         """
