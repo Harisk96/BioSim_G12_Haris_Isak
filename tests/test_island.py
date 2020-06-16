@@ -89,4 +89,6 @@ class TestIsland:
             assert i == h.fitness
         assert isinstance(fit_list, list)
 
-    def test_
+    def test_set_coordinates_map(self):
+        i = Island(default_maps, default_population)
+        cords_dict =
