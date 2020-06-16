@@ -182,6 +182,7 @@ class Cell:
         self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))
 
     def emigration(self, adj_cells):
+        
 
         emigrants = {}
 
@@ -190,7 +191,7 @@ class Cell:
         list_of_emigrants = [emi for emi in animal_list if emi.migrate()
                              and emi.has_migrated is False]
         for emi in list_of_emigrants:
-            destination = random.choice(adj_cells)
+            destination = adj_cells[np.random.randint(0, 4)]
             if destination in emigrants.keys():
                 emigrants[destination].append(emi)
             else:
