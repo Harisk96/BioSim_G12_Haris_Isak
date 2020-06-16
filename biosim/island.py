@@ -214,12 +214,12 @@ class Island:
 
 
 if __name__ == "__main__":
-    ini_herbs = [{'loc': (10, 10),
+    ini_herbs = [{'loc': (10, 9),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 10),
+    ini_carns = [{'loc': (10, 9),
                   'pop': [{'species': 'Carnivore',
                            'age': 5,
                            'weight': 20}
