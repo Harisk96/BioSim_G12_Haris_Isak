@@ -72,7 +72,10 @@ class Animals:
             self.weight = weight
 
         self.fitness = self.update_fitness()
+        self.has_migrated = False
 
+    def set_has_migrated(self, bool):
+        self.has_migrated = bool
 
     def update_fitness(self):
         """

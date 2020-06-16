@@ -4,6 +4,7 @@ np.random.seed(1)
 from biosim.animals import Animals, Herbivore, Carnivore
 from operator import attrgetter
 import matplotlib.pyplot as plt
+import random
 
 
 class Cell:
@@ -177,7 +178,7 @@ class Cell:
                  if immigrant.__class__.__name__ == 'Carnivore']
 
         self.current_herbivores.extend(herbs)
-        self.current_herbivores.extend(carns)
+        self.current_carnivores.extend(carns)
 
     def remove_emigrants(self, emigrants):
         """
@@ -185,60 +186,29 @@ class Cell:
         :return:
         """
         self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
-        self.current_carnivores = list(set(self.current_herbivores) - set(emigrants))
+        self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))
 
-    def emigrants_list(self, adjacent_cells):
-        dct = {}
-        list_of_emigrants = [emi for emi in self.current_carnivores + self.current_herbivores
-                             if emi.migrate() and emi.has_migrated == False]
-        np.random.shuffle(list_of_emigrants)
-        
+    def emigration(self, adj_cells):
 
-    def chunkIt(seq, num):
-        avg = len(seq) / float(num)
-        out = []
-        last = 0.0
+        emigrants = {}
 
-        while last < len(seq):
-            out.append(seq[int(last):int(last + avg)])
-            last += avg
+        animal_list = self.current_carnivores + self.current_herbivores
 
-        return out
+        list_of_emigrants = [emi for emi in animal_list if emi.migrate()
+                             and emi.has_migrated is False]
+        for emi in list_of_emigrants:
+            destination = random.choice(adj_cells)
+            if destination in emigrants.keys():
+                emigrants[destination].append(emi)
+            else:
+                emigrants[destination] = [emi]
 
-    def herb_migration(self, herb_immigrate=None):
-        """
-        Receives and removes herbivores from cell due to migration.
-        :return:
-        """
-        herb_emigrate = []
-        for herb in self.current_herbivores:  # +self.current_carnivores
-            if herb.migrate():
-                herb_emigrate.append(herb)
-        self.current_herbivores = [herb for herb in self.current_herbivores
-                                   if herb not in herb_emigrate]
+        for animal in animal_list:
+            animal.set_has_migrated(True)
 
-        if herb_immigrate is not None:
-            self.current_herbivores.extend(herb_immigrate)
+        return emigrants
 
-        return herb_emigrate
 
-    def carn_migration(self, carn_immigrate=None):
-        """
-        Receives and removes carnivores from cell due to migration.
-        :param carn_immigrate: list of dicts
-        :return: list of dicts
-        """
-        carn_emigrate = []
-        for carn in self.current_carnivores:
-            if carn.migrate():
-                carn_emigrate.append(carn)
-        self.current_carnivores = [carn for carn in self.current_carnivores if
-                                   carn not in carn_emigrate]
-
-        if carn_immigrate is not None:
-            self.current_carnivores.extend(carn_immigrate)
-
-        return carn_emigrate
 
 class Highland(Cell):
     migrate_to = True

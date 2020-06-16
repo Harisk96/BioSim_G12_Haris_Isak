@@ -6,7 +6,7 @@ from biosim.animals import Herbivore, Carnivore
 import textwrap
 
 import numpy as np
-np.random.seed(1)
+
 
 
 
@@ -35,15 +35,6 @@ class Island:
         if strings.count(strings[0]) == len(strings):
             return True
 
-    def get_adjacent_cells(self, cord):
-        pass
-        # x,y =
-    # return [  self.map[new_cord1] , self.map[new_cord2]
-
-    def migrate_all_cells(self):
-        for cord, cell in self.map:
-            adj_cells = self.get_adjacent_cells(cord)
-            cell.migrate(adj_cells)
 
 
     #        y, x = loc
@@ -188,21 +179,39 @@ class Island:
         size = list_of_coordinates[-1]
         return size
 
+    def get_adj_cells(self, coords):
+        y, x = coords
+        adjacent_cells = [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+        return adjacent_cells
 
-    def migrate(self):
-        pass
+    def migration_island(self):
+
+        for y, coords in enumerate(self.map):
+            self.get_adj_cells(coords)
+            if self.map[coords].migrate_to:
+                adjacent_cells = self.get_adj_cells(coords)
+                migrants_dict = self.map[coords].emigration(adjacent_cells)
+
+                for destination, migrant in migrants_dict.items():
+                    #len migrant > 0
+                    if self.map[destination].migrate_to and migrant:
+                        self.map[destination].add_immigrants(migrant)
+                        self.map[coords].remove_emigrants(migrant)
 
 
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         self.feed_cells_island()
         self.procreate_cells_map()
-#        self.migrate()
+        self.migration_island()
         self.age_in_cells()
         self.weightloss_island()
         self.die_island()
         self.year += 1
 
+        for cell in self.map.values():
+            for anim in cell.current_herbivores + cell.current_carnivores:
+                anim.set_has_migrated(False)
 
 
 if __name__ == "__main__":
@@ -241,13 +250,12 @@ if __name__ == "__main__":
     #for cord, cell in i.map.items():
     #    print(cord, cell)
 
-    for _ in range(3):
+    for _ in range(100):
         i.run_function_one_year()
         print(i.num_animals_per_species)
         print('year is {0}'.format(i.year))
 
-        print(len(i.map[10, 10].current_herbivores))
-        print(len(i.map[10, 10].current_carnivores))
 
-        if i.map[10,10].migrate_to:
-            print('lololol')
+#        print(len(i.map[11, 10].current_herbivores))
+#        print(len(i.map[10, 11].current_carnivores))
+
