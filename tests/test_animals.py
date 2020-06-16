@@ -37,9 +37,11 @@ class TestAnimals:
         assert hasattr(s, 'age')
         assert hasattr(s, 'weight')
         assert hasattr(s, 'fitness')
+        assert hasattr(s, 'has_migrated')
         assert s.age == 5
         assert s.weight == 15.0
         assert isinstance(s, Animals)
+        assert isinstance(s.has_migrated, bool)
         with pytest.raises(TypeError, match="'age' must be of type int "):
             assert Animals(age=3.4)
         with pytest.raises(TypeError, match='Weight must be either of type int or type float'):
@@ -48,6 +50,13 @@ class TestAnimals:
             assert Animals(age=-1)
         with pytest.raises(ValueError, match="'weight' must be greater than or equal to zero"):
             assert Animals(weight=-1)
+
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_set_has_migrated(self, Species):
+        s = Species()
+        s.has_migrated = False
+        s.set_has_migrated(True)
+        assert s.has_migrated
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_new_animal(self, Species):
@@ -224,6 +233,10 @@ class TestAnimals:
         carni = c.birth(50)
         assert isinstance(herb, Herbivore)
         assert isinstance(carni, Carnivore)
+
+    @pytest.mark.fixture('Species', [Herbivore, Carnivore])
+    def test_birth(self, Species, mocker):
+        mocker.patch("numpy.random.uniform", )
 
     def test_death(self, mocker):
         """

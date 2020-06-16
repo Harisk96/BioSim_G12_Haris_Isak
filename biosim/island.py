@@ -254,11 +254,11 @@ if __name__ == "__main__":
     #print(i.map)
     #for cord, cell in i.map.items():
     #    print(cord, cell)
-
-    for _ in range(100):
+    print("start: {0}".format(i.num_animals_per_species))
+    for _ in range(200):
         i.run_function_one_year()
         print(i.num_animals_per_species)
-        print('year is {0}'.format(i.year))
+
 
 
 #        print(len(i.map[11, 10].current_herbivores))
