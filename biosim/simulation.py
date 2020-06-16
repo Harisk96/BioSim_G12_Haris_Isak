@@ -47,6 +47,37 @@ class BioSim:
             self.visualization.update_graphics( self.create_population_heatmap() )
             #call the cycle
 
+    #todo
+    #@staticmethod
+    def set_animal_parameters(self, species, params):
+        """
+        Set parameters for animal species.
+        :param species: String, name of animal species
+        :param params: Dict with valid parameter specification for species
+        """
+
+        if species == 'Herbivore':
+            Herbivore.set_params(params)
+
+        if species == 'Carnivore':
+            Carnivore.set_params(params)
+
+    #todo Fikse set_set parameters i landscape
+    #@staticmethod
+    def set_landscape_parameters(self, landscape, params):
+        """
+        Set parameters for landscape type.
+        :param landscape: String, code letter for landscape
+        :param params: Dict with valid parameter specification for landscape
+        """
+
+        cell_types = {'H': Highland,
+                      'L': Lowland,
+                      'D': Desert,
+                      'W': Sea}
+        cell_types[landscape].set_params(params)
+
+
 
 
     def length_of_map(self):
@@ -54,8 +85,6 @@ class BioSim:
         lines = lines.split('\n')
         lenx_map = len(lines[0])
         leny_map = len(lines)
-        print(leny_map)
-        print(lenx_map)
         return lenx_map, leny_map
 
 
@@ -70,26 +99,7 @@ class BioSim:
                     for row in input_raw_string.splitlines()]
 
         return kart_rgb
-        # colored_map = self.nested_coordinates_list
-        # #map_list returns nested list with strings of the map.
-        # map_list = self.island.check_map(island_map)
-        #
-        # for x, cell_row in enumerate(map_list):
-        #     for y, cell_code in enumerate(cell_row):
-        #
-        #         if cell_code == 'W':
-        #             colored_map[x][y] = (0,0,250)
-        #
-        #         if cell_code == 'L':
-        #             colored_map[x][y] = (0,100,0)
-        #
-        #         if cell_code == 'H':
-        #             colored_map[x][y] = (51,255,51)
-        #
-        #         if cell_code == 'D':
-        #             colored_map[x][y] = (255,255,51)
 
-        # return colored_map
 
     @property
     def animal_distribution(self):
@@ -103,6 +113,9 @@ class BioSim:
         df = pd.DataFrame.from_dict(data_dict)
         return df
 
+    def add_population(self, population):
+        self.island.place_population(population)
+
     def create_population_heatmap(self):
 
         x_len, y_len = self.length_of_map()
@@ -111,8 +124,8 @@ class BioSim:
         df.set_index(['Row', 'Col'], inplace=True)
         herb_array = np.asarray(df['Herbivore']).reshape(y_len, x_len)  # gjøre om df til array der jeg bare tar med herbivores, samme med carn
         carn_array = np.asarray(df['Carnivore']).reshape(y_len, x_len)
-        print(herb_array)
-        print(carn_array)
+        # print(herb_array)
+        # print(carn_array)
 
         return herb_array, carn_array
 

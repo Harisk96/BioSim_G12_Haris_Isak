@@ -192,7 +192,7 @@ class Cell:
         self.current_carnivores.
         :return:
         """
-        if not isinstance(emigrants, dict):
+        if not isinstance(emigrants, list):
             raise TypeError('Input argument has to be of type dict')
         self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
         self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))

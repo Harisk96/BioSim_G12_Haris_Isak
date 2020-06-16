@@ -9,7 +9,7 @@ class Visualization:
         self.steps = 0
 
     def graphics_setup(self, rgb_map=None, herb_hist=None, carn_hist=None):
-        self.fig_win = plt.figure(figsize=(30, 15))
+        self.fig_win = plt.figure(figsize=(16, 10))
         plt.axis('off')
 
         # self.fitness_ax = self.fig_win.add_subplot(6, 3, 16)
