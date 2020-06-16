@@ -2,11 +2,14 @@ import matplotlib.pyplot as plt
 from biosim.island import Island
 from biosim.landscape import Lowland, Sea, Highland, Desert
 from biosim.animals import Herbivore, Carnivore
+import numpy as np
 
 class Visualization:
 
     def __init__(self):
         self.steps = 0
+        self.current_herbivore_data = []
+        self.current_carnivore_data = []
 
     def graphics_setup(self, rgb_map=None, herb_hist=None, carn_hist=None):
         self.fig_win = plt.figure(figsize=(16, 10))
@@ -45,9 +48,10 @@ class Visualization:
         self.linegraph_ax = self.fig_win.add_axes([0.5, 0.55, 0.4, 0.3])
 
 
+
         plt.pause(1)
 
-    def update_graphics(self, distribution=None, total_anim=None):
+    def update_graphics(self, distribution=None, num_species_dict=None):
         self.steps += 1
 
     #Heatmap update
@@ -73,6 +77,20 @@ class Visualization:
                                                     fraction=0.07, pad=0.04)
         else:
             self.carnies_axis.set_data(distribution[1])
+
+        #line graph plot update:
+        self.current_herbivore_data.append(num_species_dict['n_herbs'])
+        self.current_carnivore_data.append(num_species_dict['n_carns'])
+        length = len(self.current_carnivore_data)
+        x_value = list(np.arange(length))
+        self.linegraph_ax.set_ylim(0, max(self.current_herbivore_data)+10)
+        # Remember to set title and stuff here
+
+        self.linegraph_ax.plot(x_value, self.current_herbivore_data, '-', color='g', linewidth=0.5)
+        self.linegraph_ax.plot(x_value, self.current_carnivore_data, '-', color='r', linewidth=0.5)
+
+
+
         plt.pause(1e-6)
 
 
