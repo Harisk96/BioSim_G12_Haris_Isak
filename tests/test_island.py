@@ -75,8 +75,8 @@ class TestIsland:
             assert len(i) == 21
 
     def test_check_map_exceptions(self):
-        i = Island(default_maps, default_population)
-        strings = ['dddddddd', 'sssss']
-        with pytest.raises(ValueError):
-            assert i.check_length(strings) 
 
+        i = Island(default_maps, default_population)
+        strings = [['dddddddd'], ['sssss']]
+        with pytest.raises(ValueError):
+            assert i.check_length(strings) is False
