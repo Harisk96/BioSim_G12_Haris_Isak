@@ -15,29 +15,29 @@ class Visualization:
         self.fig_win = plt.figure(figsize=(16, 10))
         plt.axis('off')
 
-        # self.fitness_ax = self.fig_win.add_subplot(6, 3, 16)
-        # self.fitness_ax.title.set_text('Histogram fitness')
-        # self.fitness_axis = None
-        # self.age_ax = self.fig_win.add_subplot(6, 3, 17)
-        # self.age_ax.title.set_text('Histogram age')
-        # self.weight_ax = self.fig_win.add_subplot(6, 3, 18)
-        # self.weight_ax.title.set_text('Histogram weight')
+        self.fitness_ax = self.fig_win.add_subplot(6, 3, 16)
+        self.fitness_ax.title.set_text('Histogram fitness')
+        self.fitness_axis = None
+        self.age_ax = self.fig_win.add_subplot(6, 3, 17)
+        self.age_ax.title.set_text('Histogram age')
+        self.weight_ax = self.fig_win.add_subplot(6, 3, 18)
+        self.weight_ax.title.set_text('Histogram weight')
 
         #Setting up heatmap
-        self.heatmap_herbies_ax = self.fig_win.add_axes([0.1, 0.1, 0.3, 0.3])
+        self.heatmap_herbies_ax = self.fig_win.add_axes([0.1, 0.3, 0.3, 0.3])
         self.herbies_axis = None
         self.heatmap_herbies_ax.title.set_text('Heatmap of Herbivores')
         self.heatmap_herbies_ax.set_yticklabels([])
         self.heatmap_herbies_ax.set_xticklabels([])
 
-        self.heatmap_carnies_ax = self.fig_win.add_axes([0.5, 0.1, 0.3, 0.3])
+        self.heatmap_carnies_ax = self.fig_win.add_axes([0.5, 0.3, 0.3, 0.3])
         self.carnies_axis = None
         self.heatmap_carnies_ax.title.set_text('Heatmap of Herbivores')
         self.heatmap_carnies_ax.set_yticklabels([])
         self.heatmap_carnies_ax.set_xticklabels([])
 
         # The island map
-        self.island_map_ax = self.fig_win.add_axes([0.1, 0.55, 0.4, 0.3])  # llx, lly, w, h
+        self.island_map_ax = self.fig_win.add_axes([0.1, 0.65, 0.4, 0.3])  # llx, lly, w, h
         self.island_map_ax.title.set_text('Island Map')
         self.island_map_ax.set_yticklabels([])
         self.island_map_ax.set_xticklabels([])
@@ -45,7 +45,7 @@ class Visualization:
         self.island_map_ax.imshow(rgb_map)
 
         #Line graphs
-        self.linegraph_ax = self.fig_win.add_axes([0.5, 0.55, 0.4, 0.3])
+        self.linegraph_ax = self.fig_win.add_axes([0.5, 0.65, 0.4, 0.3])
 
 
 
@@ -92,6 +92,13 @@ class Visualization:
 
 
         plt.pause(1e-6)
+
+    def histogram_updates(self, fitness_list=None):
+
+        self.fitness_ax.clear()
+        self.fitness_ax.title.set_text('Histogram of fitness')
+        self.fitness_ax.hist(fitness_list['Herbivore'], bins=10, histtype='step')
+
 
 
 

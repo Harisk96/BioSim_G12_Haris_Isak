@@ -38,6 +38,7 @@ class BioSim:
         #set up graphics
         self.visualization = Visualization()
         self.visualization.graphics_setup(rgb_map=self.create_rgb_map(island_map))
+        #self.visualization.histogram_updates()
 
     def simulate(self, num_years, vis_years=1, img_years=None):
 
