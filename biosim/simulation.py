@@ -45,10 +45,14 @@ class BioSim:
 
         for i in range(num_years):
             self.island.run_function_one_year()
-            self.visualization.update_graphics( self.create_population_heatmap() , self.island.num_animals_per_species)
-            self.visualization.histogram_updates(self.island.fitness_list())
-            #call the cycle
-
+            self.visualization.update_graphics(self.create_population_heatmap(),
+                                               self.island.num_animals_per_species)
+            self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
+                                                         self.island.fitness_list()[1])
+            self.visualization.histogram_age_updates(self.island.age_list()[0],
+                                                     self.island.age_list()[1])
+            self.visualization.histogram_weight_updates(self.island.weight_list()[0],
+                                                     self.island.weight_list()[1])
 
     #todo
     #@staticmethod

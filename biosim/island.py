@@ -77,8 +77,41 @@ class Island:
         for cell in self.map.values():
             for herb in cell.current_herbivores:
                 herbfit_list.append(herb.fitness)
-        print(herbfit_list)
-        return herbfit_list
+
+        carnfit_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnfit_list.append(carn.fitness)
+
+        return herbfit_list, carnfit_list
+
+    def age_list(self):
+
+        herbage_list = []
+        for cell in self.map.values():
+            for herb in cell.current_herbivores:
+                herbage_list.append(herb.age)
+
+        carnage_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnage_list.append(carn.age)
+
+        return herbage_list, carnage_list
+
+    def weight_list(self):
+
+        herbweight_list = []
+        for cell in self.map.values():
+            for herb in cell.current_herbivores:
+                herbweight_list.append(herb.weight)
+
+        carnweight_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnweight_list.append(carn.weight)
+
+        return herbweight_list, carnweight_list
 
     def check_map(self, map_input):
         stringmap = map_input.strip()
@@ -198,6 +231,8 @@ class Island:
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         self.fitness_list()
+        self.age_list()
+        self.weight_list()
         self.feed_cells_island()
         self.procreate_cells_map()
         self.migration_island()
@@ -258,7 +293,7 @@ if __name__ == "__main__":
       #  print(i.num_animals_per_species)
 
     i = Island(default_maps, default_population)
-    i.fitness_list
+
 
 #        print(len(i.map[11, 10].current_herbivores))
 #        print(len(i.map[10, 11].current_carnivores))

@@ -93,11 +93,24 @@ class Visualization:
 
         plt.pause(1e-6)
 
-    def histogram_updates(self, fitness_list=None):
+    def histogram_fitness_updates(self, fitness_list_herb=None, fitness_list_carn=None):
 
         self.fitness_ax.clear()
         self.fitness_ax.title.set_text('Histogram of fitness')
-        self.fitness_ax.hist(fitness_list, bins=10, histtype='step')
+        self.fitness_ax.hist(fitness_list_herb, bins=10, histtype='step', color='g')
+        self.fitness_ax.hist(fitness_list_carn, bins=10, histtype='step', color='r')
+
+    def histogram_age_updates(self, age_list_herb=None, age_list_carn=None):
+        self.age_ax.clear()
+        self.age_ax.title.set_text('Histogram of age')
+        self.age_ax.hist(age_list_herb, bins=10, histtype='step', color='g')
+        self.age_ax.hist(age_list_carn, bins=10, histtype='step', color='r')
+
+    def histogram_weight_updates(self, weight_list_herb=None, weight_list_carn=None):
+        self.weight_ax.clear()
+        self.weight_ax.title.set_text('Histogram of age')
+        self.weight_ax.hist(weight_list_herb, bins=10, histtype='step', color='g')
+        self.weight_ax.hist(weight_list_carn, bins=10, histtype='step', color='r')
 
 
 
