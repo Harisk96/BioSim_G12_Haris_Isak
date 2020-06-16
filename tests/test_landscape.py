@@ -185,6 +185,8 @@ class TestLandscape:
         immigrants = [Herbivore(), Carnivore()]
         cell.add_immigrants(immigrants)
         assert cell.n_carnivores == 11 and cell.n_herbivores == 11
+        with pytest.raises(TypeError):
+            assert cell.add_immigrants(tuple(3, 2))
 
     def test_remove_emigrants(self):
         cell = Cell()
@@ -193,6 +195,8 @@ class TestLandscape:
         emigrants = [cell.current_herbivores[0], cell.current_carnivores[0]]
         cell.remove_emigrants(emigrants)
         assert cell.n_carnivores == 9 and cell.n_herbivores == 9
+        with pytest.raises(TypeError):
+            assert cell.remove_emigrants(tuple(2,3))
 
     def test_emigration(self, mocker):
         mocker.patch("numpy.random.uniform", return_value=0)
@@ -210,13 +214,18 @@ class TestLandscape:
 
     def test_emigration_exceptions(self):
         cell = Cell()
-        adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
         with pytest.raises(TypeError):
             assert cell.emigration({'1337': 1337})
         with pytest.raises(ValueError):
             assert cell.emigration([(1, 1)])
         with pytest.raises(TypeError):
-            assert cell.emigration([[1]])
+            assert cell.emigration([[1], [2], [3], [4]])
+        with pytest.raises(ValueError):
+            assert cell.emigration([(1, 1, 1), (1, 1, 1), (1, 1, 1), (1, 1, 1)])
+        with pytest.raises(TypeError):
+            assert cell.emigration([(0.5, 0.5), (0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
+
+
 
     def test_set_params(self):
         """

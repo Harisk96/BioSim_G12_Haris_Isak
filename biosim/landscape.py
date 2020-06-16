@@ -206,7 +206,7 @@ class Cell:
         for i in range(4):
             if not isinstance(adj_cells[i], tuple):
                 raise TypeError('Elements of input list has to be of type tuple')
-            if not len(adj_cells[i]) == 2:
+            if len(adj_cells[i]) != 2:
                 raise ValueError('Tuple elements have to contain two elements')
             if not isinstance(adj_cells[i][0], int) and (not isinstance(adj_cells[i][1], int)):
                 raise TypeError('Tuple elements have to be of type integers')
