@@ -74,8 +74,8 @@ class Animals:
         self.fitness = self.update_fitness()
         self.has_migrated = False
 
-    def set_has_migrated(self, bool):
-        self.has_migrated = bool
+    def set_has_migrated(self, boolean):
+        self.has_migrated = boolean
 
     def update_fitness(self):
         """

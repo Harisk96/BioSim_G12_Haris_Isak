@@ -1,6 +1,6 @@
 import numpy as np
+import random
 np.random.seed(1)
-
 from biosim.animals import Animals, Herbivore, Carnivore
 from operator import attrgetter
 import matplotlib.pyplot as plt
@@ -22,6 +22,7 @@ class Cell:
         self.fodder = 0
         self.current_herbivores = []
         self.current_carnivores = []
+
 
     @property
     def n_herbivores(self):
@@ -165,18 +166,9 @@ class Cell:
         self.current_carnivores = [carn for carn in self.current_carnivores if
                                    carn not in dead_carnivores]
 
-    def add_immigrants(self, list_of_immigrants):
-        """
-        Adds migrating animals to cell.
-        :param list_of_immigrants: List of animals to immigrate to cell
-        :return: None
-        """
-        herbs = [immigrant for immigrant in list_of_immigrants
-                 if immigrant.__class__.__name__ == 'Herbivore']
-
-        carns = [immigrant for immigrant in list_of_immigrants
-                 if immigrant.__class__.__name__ == 'Carnivore']
-
+    def add_immigrants(self, list_animals):
+        herbs = [anim for anim in list_animals if anim.__class__.__name__ == 'Herbivore']
+        carns = [anim for anim in list_animals if anim.__class__.__name__ == 'Carnivore']
         self.current_herbivores.extend(herbs)
         self.current_carnivores.extend(carns)
 
@@ -246,7 +238,7 @@ if __name__ == "__main__":
     c.current_herbivores = [Herbivore() for _ in range(10)]
     h_list = [Herbivore() for _ in range(5)]
     print(len(c.current_herbivores))
-    print(c.herb_migration(h_list))
+    print((h_list))
     for i in range(len(c.current_herbivores)):
         print(c.current_herbivores[i].weight)
     print(len(c.current_herbivores))

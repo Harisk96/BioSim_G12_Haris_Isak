@@ -1,8 +1,8 @@
 # LEGGER MAPPET MIDLERTIDIG INN I DENNE FILEN:
 
-
+import random
 from biosim.landscape import Highland, Lowland, Desert, Sea
-from biosim.animals import Herbivore, Carnivore
+from biosim.animals import Animals, Herbivore, Carnivore
 import textwrap
 
 import numpy as np
@@ -34,7 +34,6 @@ class Island:
         strings = list(map(len, strings))
         if strings.count(strings[0]) == len(strings):
             return True
-
 
 
     #        y, x = loc
@@ -163,7 +162,7 @@ class Island:
         :param init_pop: list of dict, animals to be placed on the island
         :return: None
         """
-        water = self.cell_types['W']
+        # water = self.cell_types['W']
         for position in init_pop:
             loc = position['loc']
             if loc not in self.map.keys():
@@ -245,6 +244,12 @@ if __name__ == "__main__":
     default_maps = textwrap.dedent(default_maps)
 
     i = Island(default_maps, default_population)
+    print(default_population)
+    print(i.place_population(default_population))
+    #for _ in range(20):
+        #print(i.num_animals_per_species)
+        #i.run_function_one_year()
+        #print(len(i.map[10, 11].current_carnivores))
 
     #print(i.map)
     #for cord, cell in i.map.items():
