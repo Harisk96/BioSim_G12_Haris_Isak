@@ -178,9 +178,39 @@ class TestLandscape:
         assert l.current_herbivores[0].age == 10
         assert l.current_herbivores[1].age == 3
 
+    def test_add_immigrants(self):
+        cell = Cell()
+        cell.current_carnivores = [Carnivore() for _ in range(10)]
+        cell.current_herbivores = [Herbivore() for _ in range(10)]
+        immigrants = [Herbivore(), Carnivore()]
+        cell.add_immigrants(immigrants)
+        assert cell.n_carnivores == 11 and cell.n_herbivores == 11
+
+    def test_remove_emigrants(self):
+        cell = Cell()
+        cell.current_carnivores = [Carnivore() for _ in range(10)]
+        cell.current_herbivores = [Herbivore() for _ in range(10)]
+        emigrants = [cell.current_herbivores[0], cell.current_carnivores[0]]
+        cell.remove_emigrants(emigrants)
+        assert cell.n_carnivores == 9 and cell.n_herbivores == 9
+
+    def test_emigration(self, mocker):
+        mocker.patch("numpy.random.uniform", return_value=0)
+        cell = Cell()
+        adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
+        carn = Carnivore()
+        carn.has_migrated = False
+        cell.current_carnivores.append(carn)
+        herb = Herbivore()
+        herb.has_migrated = False
+        cell.current_herbivores.append(herb)
+        emigrants = cell.emigration(adj_cells)
+        assert isinstance(emigrants, dict)
+        assert emigrants[(10, 10)] == cell.current_carnivores + cell.current_herbivores
 
 if __name__ == "__main__":
     c = Cell()
-    c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
-    h = c.current_herbivores
-    print(h[2])
+
+    #c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
+    #h = c.current_herbivores
+    #print(h[2])

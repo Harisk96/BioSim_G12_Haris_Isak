@@ -174,7 +174,8 @@ class Cell:
 
     def remove_emigrants(self, emigrants):
         """
-        Removes emigrants from cell
+        Removes emigrants from cell (removes them from self.current_herbivores and
+        self.current_carnivores.
         :return:
         """
         self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
@@ -234,7 +235,17 @@ class Sea(Cell):
     migrate_to = False
 
 if __name__ == "__main__":
-    c = Cell()
+    cell = Cell()
+    adj_cells = [(9, 10), (11, 10), (10, 9), (10, 11)]
+    carn = Carnivore()
+    carn.has_migrated = False
+    cell.current_carnivores.append(carn)
+    herb = Herbivore()
+    herb.has_migrated = False
+    cell.current_herbivores.append(herb)
+    print(cell.emigration(adj_cells))
+
+    """
     c.current_herbivores = [Herbivore() for _ in range(10)]
     h_list = [Herbivore() for _ in range(5)]
     print(len(c.current_herbivores))
@@ -242,3 +253,4 @@ if __name__ == "__main__":
     for i in range(len(c.current_herbivores)):
         print(c.current_herbivores[i].weight)
     print(len(c.current_herbivores))
+    """

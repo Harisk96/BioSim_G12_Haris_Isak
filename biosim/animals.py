@@ -271,6 +271,7 @@ class Carnivore(Animals):
 
 
 if __name__ == "__main__":
+    """
     h = Herbivore(age=2, weight=5.0)
     c = Carnivore(age=10, weight=5.0)
     print(h.fitness)
@@ -284,4 +285,5 @@ if __name__ == "__main__":
 
     #more for animals with more weight
     #less for animals with less weight
-
+    """
+    pass

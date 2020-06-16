@@ -220,6 +220,13 @@ class TestAnimals:
         }
         h.set_params(new_parameters)
         assert h.params == new_parameters
+        false_parameter = {'nice': 69}
+        with pytest.raises(KeyError):
+            h.set_params(false_parameter)
+        with pytest.raises(TypeError):
+            h.set_params(list(2))
+
+
 
     def test_birth(self, mocker):
         """
@@ -229,14 +236,12 @@ class TestAnimals:
         mocker.patch("numpy.random.uniform", return_value=0)
         h = Herbivore(2, 50.0)
         c = Carnivore(3, 50.0)
+        h2 = Herbivore(0, 0)
         herb = h.birth(30)
         carni = c.birth(50)
         assert isinstance(herb, Herbivore)
         assert isinstance(carni, Carnivore)
-
-    @pytest.mark.fixture('Species', [Herbivore, Carnivore])
-    def test_birth(self, Species, mocker):
-        mocker.patch("numpy.random.uniform", )
+        assert h2.birth(10) is None
 
     def test_death(self, mocker):
         """
