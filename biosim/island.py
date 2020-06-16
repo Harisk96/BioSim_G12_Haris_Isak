@@ -29,9 +29,12 @@ class Island:
         self.place_population(init_animals)
         self._year = 0
 
+
+
     @staticmethod
     def check_length(strings):
         strings = list(map(len, strings))
+
         if strings.count(strings[0]) == len(strings):
             return True
 
@@ -84,6 +87,7 @@ class Island:
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
+
         if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
 
@@ -104,15 +108,17 @@ class Island:
 
         return strings
 
+
+
     def set_map_coordinates(self, map_input):
 
         #        strings = self.check_map(map)
         #
         #        map_island = {}
-        #        self.len_x_coord = len(strings[0])
-        #        self.len_y_coord = len(strings)
 
         strings_island_map = self.check_map(map_input)
+
+
         coordinates_map = {}  # []
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
@@ -213,6 +219,7 @@ class Island:
                 anim.set_has_migrated(False)
 
 
+
 if __name__ == "__main__":
     ini_herbs = [{'loc': (10, 9),
                   'pop': [{'species': 'Herbivore',
@@ -244,8 +251,7 @@ if __name__ == "__main__":
     default_maps = textwrap.dedent(default_maps)
 
     i = Island(default_maps, default_population)
-    print(default_population)
-    print(i.place_population(default_population))
+
     #for _ in range(20):
         #print(i.num_animals_per_species)
         #i.run_function_one_year()
@@ -258,6 +264,7 @@ if __name__ == "__main__":
     for _ in range(200):
         i.run_function_one_year()
         print(i.num_animals_per_species)
+
 
 
 

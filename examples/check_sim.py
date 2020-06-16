@@ -3,7 +3,7 @@
 import textwrap
 import matplotlib.pyplot as plt
 
-from examples.simulation_playingaround import BioSim
+from biosim.simulation import BioSim
 
 """
 Compatibility check for BioSim simulations.
@@ -53,17 +53,17 @@ if __name__ == '__main__':
                                'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
-    sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
-                                            'omega': 0.3, 'F': 65,
-                                            'DeltaPhiMax': 9.})
-#    sim.set_landscape_parameters('L', {'f_max': 700})
-
+#     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
+#     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
+#                                             'omega': 0.3, 'F': 65,
+#                                             'DeltaPhiMax': 9.})
+# #    sim.set_landscape_parameters('L', {'f_max': 700})
+#
     sim.simulate(num_years=100, vis_years=1, img_years=2000)
-
+#
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
-
-#    plt.savefig('check_sim.pdf')
-
-    input('Press ENTER')
+#     sim.simulate(num_years=100, vis_years=1, img_years=2000)
+#
+# #    plt.savefig('check_sim.pdf')
+#
+#     input('Press ENTER')
