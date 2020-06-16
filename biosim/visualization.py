@@ -97,7 +97,7 @@ class Visualization:
 
         self.fitness_ax.clear()
         self.fitness_ax.title.set_text('Histogram of fitness')
-        self.fitness_ax.hist(fitness_list['Herbivore'], bins=10, histtype='step')
+        self.fitness_ax.hist(fitness_list, bins=10, histtype='step')
 
 
 

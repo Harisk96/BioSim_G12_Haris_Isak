@@ -38,7 +38,7 @@ class BioSim:
         #set up graphics
         self.visualization = Visualization()
         self.visualization.graphics_setup(rgb_map=self.create_rgb_map(island_map))
-        #self.visualization.histogram_updates()
+        #self.visualization.histogram_updates(self.island.fitness_list())
 
     def simulate(self, num_years, vis_years=1, img_years=None):
 
@@ -46,7 +46,9 @@ class BioSim:
         for i in range(num_years):
             self.island.run_function_one_year()
             self.visualization.update_graphics( self.create_population_heatmap() , self.island.num_animals_per_species)
+            self.visualization.histogram_updates(self.island.fitness_list())
             #call the cycle
+
 
     #todo
     #@staticmethod
