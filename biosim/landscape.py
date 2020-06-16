@@ -8,12 +8,23 @@ import random
 
 
 class Cell:
-    params = {}
     """
     Class cell represents a single cell on the island map, the different
     landscape types are subclasses of the Cell superclass.
     """
+    params = {}
 
+    @classmethod
+    def set_params(cls, new_params):
+        """
+        Updates the parameters
+        :param new_params: dict, dictionary with parameters
+        :return: None
+        """
+        if not isinstance(new_params, dict):
+            raise TypeError('Input has to be of type dict')
+
+        cls.params.update(new_params)
 
     def __init__(self):
         """
@@ -167,6 +178,9 @@ class Cell:
                                    carn not in dead_carnivores]
 
     def add_immigrants(self, list_animals):
+        if not isinstance(list_animals, list):
+            raise TypeError('input has to be of type list')
+
         herbs = [anim for anim in list_animals if anim.__class__.__name__ == 'Herbivore']
         carns = [anim for anim in list_animals if anim.__class__.__name__ == 'Carnivore']
         self.current_herbivores.extend(herbs)
@@ -178,11 +192,24 @@ class Cell:
         self.current_carnivores.
         :return:
         """
+        if not isinstance(emigrants, dict):
+            raise TypeError('Input argument has to be of type dict')
         self.current_herbivores = list(set(self.current_herbivores)-set(emigrants))
         self.current_carnivores = list(set(self.current_carnivores) - set(emigrants))
 
     def emigration(self, adj_cells):
 
+        if not isinstance(adj_cells, list):
+            raise TypeError('input have to be of type list')
+        if not len(adj_cells) == 4:
+            raise ValueError('input list has to contain 4 elements')
+        for i in range(4):
+            if not isinstance(adj_cells[i], tuple):
+                raise TypeError('Elements of input list has to be of type tuple')
+            if not len(adj_cells[i]) == 2:
+                raise ValueError('Tuple elements have to contain two elements')
+            if not isinstance(adj_cells[i][0], int) and (not isinstance(adj_cells[i][1], int)):
+                raise TypeError('Tuple elements have to be of type integers')
 
         emigrants = {}
 
