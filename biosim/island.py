@@ -293,7 +293,9 @@ if __name__ == "__main__":
       #  print(i.num_animals_per_species)
 
     i = Island(default_maps, default_population)
-
+    fit_list = i.fitness_list()
+    print(fit_list[0])
+    print(fit_list[1])
 
 #        print(len(i.map[11, 10].current_herbivores))
 #        print(len(i.map[10, 11].current_carnivores))

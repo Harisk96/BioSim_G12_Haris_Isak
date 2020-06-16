@@ -1,9 +1,7 @@
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
-import numpy as np
-from unittest import mock
-import random
-
+from scipy.stats import kstest
+ALPHA = 0.01
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
@@ -348,7 +346,19 @@ class TestAnimals:
         c.eat_carn(h_list)
         assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_initial_weight_gaussian_dist(self, Species):
+        """
+        Testing if the initial weight of the animals is normally distributed. We are using an
+        critical value of 0.01
+        """
 
+        list_of_initial_weights = []
+        for _ in range(1000):
+            s = Species()
+            list_of_initial_weights.append(s.weight)
+            ks_statistic, p_value = kstest(list_of_initial_weights, 'norm')
+            assert p_value < ALPHA
 
 
 
