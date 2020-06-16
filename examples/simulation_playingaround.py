@@ -50,7 +50,7 @@ default_population = [
 ]
 
 
-class BioSim:
+class BBioSim:
 
     def __init__(self, island_map, ini_pop, seed=1,
     ymax_animals=None, cmax_animals=None, hist_specs=None,
