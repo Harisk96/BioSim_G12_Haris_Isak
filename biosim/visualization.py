@@ -41,12 +41,14 @@ class Visualization:
         # Let us create island at the beginning since it is constant
         self.island_map_ax.imshow(rgb_map)
 
+        #Line graphs
+        self.linegraph_ax = self.fig_win.add_axes([0.5, 0.55, 0.4, 0.3])
+
+
         plt.pause(1)
 
     def update_graphics(self, distribution=None, total_anim=None):
         self.steps += 1
-
-
 
     #Heatmap update
         if self.herbies_axis is None:
