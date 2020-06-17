@@ -16,7 +16,7 @@ class Island:
     def __init__(self, insert_map, init_animals):
         """
         Constructor for Island class
-        :param maps: List, nested list as a matrix describing the layout of the island geography
+        :param insert_map:  
         :param init_animals: ,
         """
 
@@ -242,58 +242,6 @@ class Island:
             for anim in cell.current_herbivores + cell.current_carnivores:
                 anim.set_has_migrated(False)
 
-if __name__ == "__main__":
-    ini_herbs = [{'loc': (10, 9),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 9),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]}]
-    default_population = ini_herbs + ini_carns
-
-    default_maps = """
-    WWWWWWWWWWWWWWWWWWWWW
-    WWWWWWWWHWWWWLLLLLLLW
-    WHHHHHLLLLWWLLLLLLLWW
-    WHHHHHHHHHWWLLLLLLWWW
-    WHHHHHLLLLLLLLLLLLWWW
-    WHHHHHLLLDDLLLHLLLWWW
-    WHHLLLLLDDDLLLHHHHWWW
-    WWHHHHLLLDDLLLHWWWWWW
-    WHHHLLLLLDDLLLLLLLWWW
-    WHHHHLLLLDDLLLLWWWWWW
-    WWHHHHLLLLLLLLWWWWWWW
-    WWWHHHHLLLLLLLWWWWWWW
-    WWWWWWWWWWWWWWWWWWWWW"""
-
-    default_maps = textwrap.dedent(default_maps)
-
-    #i = Island(default_maps, default_population)
-
-    #for _ in range(20):
-        #print(i.num_animals_per_species)
-        #i.run_function_one_year()
-        #print(len(i.map[10, 11].current_carnivores))
-
-    #print(i.map)
-    #for cord, cell in i.map.items():
-    #    print(cord, cell)
-    #print("start: {0}".format(i.num_animals_per_species))
-    #for _ in range(200):
-     #   i.run_function_one_year()
-      #  print(i.num_animals_per_species)
-
-    i = Island(default_maps, default_population)
-    print(i.map[(6, 10)])
-
-
-
-#        print(len(i.map[11, 10].current_herbivores))
-#        print(len(i.map[10, 11].current_carnivores))
 
 
 
