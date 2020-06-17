@@ -138,7 +138,7 @@ class Island:
         """
         Method that checks that the input map has the necessary properties, and that they are valid.
         :param map_input: str, arranged in a matrix.
-        :return: str
+        :return: list
         """
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
@@ -169,18 +169,28 @@ class Island:
         return strings
 
     def set_map_coordinates(self, map_input):
-
+        """
+        Takes a string arranged as a matrix, representing the island. Sets coordinates in a tuple,
+        and attaches it to its respective letter in the letter matrix in a dictionary.
+        :param map_input: str, arranged like a matrix representing the island
+        :return: dict, dictionary with location and cell type as a key-value pair
+        """
         strings_island_map = self.check_map(map_input)
 
+        coordinates_map = {}
 
-        coordinates_map = {}  # []
         for y_index, line in enumerate(strings_island_map):
             for x_index, cell in enumerate(line):
                 cell_instance = self.cell_types[cell]()
                 coordinates_map[(y_index+1, x_index+1)] = cell_instance
+
         return coordinates_map
 
     def procreate_cells_map(self):
+        """
+        Method that lets animals in a cell procreate and instantiates newborns.
+        :return: None
+        """
         for cell in self.map.values():
             cell.birth_cycle()
 
@@ -188,8 +198,8 @@ class Island:
     def feed_cells_island(self):
         """
         Method that updates the fodder in the cell,
-        and makes all the animals it contains eat.
-        :return:
+        and makes all the animals in it contains eat.
+        :return: None
         """
         for landscape in self.map.values():
             landscape.feed_all()
@@ -197,22 +207,26 @@ class Island:
     def age_in_cells(self):
         """
         Method that ages the animals in the cell by one year.
-        :return:
+        :return: None
         """
         for cell in self.map.values():
             cell.age_animals()
 
     def weightloss_island(self):
         """
-        Method that makes it so that animals in the cell loses
-        weight.
+        Method that itereates over all the cells on the island, and makes the animals in the cells
+        lose weight.
         :return: None
         """
         for cell in self.map.values():
             cell.weight_loss_cell()
 
     def die_island(self):
-
+        """
+        Method that iterates over all cells and implements the death method in them, enabling
+        animals in them to die.
+        :return: None
+        """
         for cell in self.map.values():
             cell.death_in_cell()
 
@@ -232,17 +246,34 @@ class Island:
             self.map[loc].place_animals(pop)
 
     def map_size(self):
+        """
+        Determines the size of the island, by giving the length of the island.
+        :return:
+        """
         coordinates = self.map.keys()
         list_of_coordinates = list(coordinates)
         size = list_of_coordinates[-1]
         return size
 
     def get_adj_cells(self, coords):
+        """
+        Method that gets the adjacent cells relative to the current cells that are not diagonally
+        placed in respect to it
+        :param coords: tuple, tuple consisting of two integers, yielding the location of the
+                        current cell.
+        :return: List, list of tuples of cells adjacent to the current.
+        """
         y, x = coords
         adjacent_cells = [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
         return adjacent_cells
 
     def migration_island(self):
+        """
+        Method that implements migration of animals between the cells in the matrix that represents
+        the island. It iterates through all the cells of the island, gets the adjacent cells,
+        colle
+        :return: None
+        """
 
         for y, coords in enumerate(self.map):
             self.get_adj_cells(coords)
@@ -276,5 +307,4 @@ class Island:
 
 
 
-if __name__ == "__main__":
-    i = Island
+
