@@ -6,17 +6,34 @@ from biosim.animals import Herbivore, Carnivore
 from biosim.visualization import Visualization
 import textwrap
 import pandas as pd
+import os
+import subprocess
+
+_FFMPEG_BINARY = 'ffmpeg'
+_CONERT_BINARY = 'magick'
+
+_DEFAULT_GRAPHICS_DIR = os.path.join('results/')
+_DEFAULT_GRAPHICS_NAME = 'bs'
+_DEFAULT_MOVIE_FORMAT = 'mp4'
+
 
 class BioSim:
 
     def __init__(self, island_map, ini_pop, seed=1,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt="png"):
+
+        np.random.seed(seed)
         self._year = 0
         self._final_year = None
-        # self.island = Island(island_map, ini_pop)
         self.inserted_map = island_map
         self.island = Island(island_map, ini_pop)
+        self.img_base = img_base
+        self.img_fmt = img_fmt
+        self.img_ctr = 0
+
+        if img_base is None:
+            self.img_base = _DEFAULT_GRAPHICS_DIR+_DEFAULT_GRAPHICS_NAME
 
 
         if ymax_animals is None:
@@ -38,14 +55,23 @@ class BioSim:
         #set up graphics
         self.visualization = Visualization()
         self.visualization.graphics_setup(rgb_map=self.create_rgb_map(island_map))
+        #self.visualization.histogram_updates(self.island.fitness_list())
 
     def simulate(self, num_years, vis_years=1, img_years=None):
 
 
         for i in range(num_years):
+            self._year += 1
             self.island.run_function_one_year()
-            self.visualization.update_graphics( self.create_population_heatmap() )
-            #call the cycle
+            self.visualization.update_graphics(self.create_population_heatmap(),
+                                               self.island.num_animals_per_species)
+            self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
+                                                         self.island.fitness_list()[1])
+            self.visualization.histogram_age_updates(self.island.age_list()[0],
+                                                     self.island.age_list()[1])
+            self.visualization.histogram_weight_updates(self.island.weight_list()[0],
+                                                     self.island.weight_list()[1])
+            self.save_graphics()
 
     #todo
     #@staticmethod
@@ -78,7 +104,16 @@ class BioSim:
         cell_types[landscape].set_params(params)
 
 
-
+    @property
+    def year(self):
+        """last year simulated"""
+        return self._year
+    @property
+    def num_animals(self):
+        return self.island.num_animals
+    @property
+    def num_animals_per_species(self):
+        return self.island.num_animals_per_species
 
     def length_of_map(self):
         lines = self.inserted_map.strip()
@@ -129,6 +164,34 @@ class BioSim:
 
         return herb_array, carn_array
 
+    def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
+
+        if self.img_base is None:
+            raise RuntimeError('No filename is defined')
+
+        if movie_fmt == 'mp4':
+            try:
+                subprocess.check_call([_FFMPEG_BINARY,
+                                       '-i', '{_%05d.png'.format(self.img_base),
+                                       '-y', 'profile:v', 'baseline',
+                                       '-level', 'yuv420p',
+                                       '{}-{}'.format(self.img_base, movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError('ERROR: ffmpeg failed with: {}'. format(err))
+
+
+
+    def save_graphics(self):
+
+        if self.img_base is None:
+            return
+
+        if self._year % 1 == 0:   # send 5 as varaibale i nbiosim, img_years
+
+            plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
+                                                         num=self.img_ctr,
+                                                         type=self.img_fmt))
+            self.img_ctr += 1
 
 
 if __name__ == '__main__':

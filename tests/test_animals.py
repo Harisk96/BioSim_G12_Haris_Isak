@@ -1,34 +1,15 @@
 from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
-import numpy as np
-from unittest import mock
-import random
+from scipy.stats import kstest
+ALPHA = 0.01
 
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
 
-def set_params():
-    """
-    Sets the testing environment up
-    """
-    herb_params= {
-        'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
-        'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
-        'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0
-    }
-
-    carn_params= {
-        'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
-        'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
-        'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
-    }
-    Herbivore.set_params(**herb_params)
-    Carnivore.set_params(**carn_params)
-
 class TestAnimals:
     """
-    Test animals module
+    Testing methods of animal file.
     """
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
@@ -222,9 +203,9 @@ class TestAnimals:
         assert h.params == new_parameters
         false_parameter = {'nice': 69}
         with pytest.raises(KeyError):
-            h.set_params(false_parameter)
-        with pytest.raises(TypeError):
-            h.set_params(list(2))
+            assert h.set_params(false_parameter)
+        with pytest.raises(TypeError, match='params must be of type dict'):
+            assert h.set_params([1])
 
 
 
@@ -262,8 +243,7 @@ class TestAnimals:
         :return: Boolean (True = dead)
         """
         h = Herbivore(0,0)
-        assert h.death() == True
-
+        assert h.death() is True
 
     def test_migrate(self, mocker):
         """
@@ -302,10 +282,10 @@ class TestAnimals:
     def test_eat_carn(self):
         herb_list = [Herbivore(5, 20) for _ in range(10)]
         for herbivore in herb_list:
-            herbivore.fitness = 100
+            herbivore.fitness = 1
         carn_list = [Carnivore(5, 20) for _ in range(10)]
         for carnivore in carn_list:
-            carnivore.fitness = 10
+            carnivore.fitness = 0.5
             dead_herbs = carnivore.eat_carn(herb_list)
 
             assert len(dead_herbs) == 0
@@ -348,7 +328,30 @@ class TestAnimals:
         c.eat_carn(h_list)
         assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
 
+    def test_slay_fitness(self):
+        """
+        Asserts that Carnivores with a lower fitness than
+        """
+        c = Carnivore()
+        h = Herbivore()
+        c.fitness = 0.5
+        h.fitness = 0.75
+        assert c.slay(h) is False
 
+    @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
+    def test_initial_weight_gaussian_dist(self, Species):
+        """
+        Testing if the initial weight of the animals is normally distributed. Inital weight is
+        initialised using numpy.random.normal with respective birth parameters as input. We are
+        testing against an critical value of 0.01 to validate for a confidence level of 99%.
+        """
+
+        list_of_initial_weights = []
+        for _ in range(5000):
+            s = Species()
+            list_of_initial_weights.append(s.weight)
+            ks_stat, p_val = kstest(list_of_initial_weights, 'norm')
+            assert p_val < ALPHA
 
 
 

@@ -8,20 +8,6 @@ from unittest import mock
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
 
-def set_params():
-    """
-    Sets the testing environment up.
-    """
-    low_params = {'f': 800, 'migrate_to': True}
-    high_params = {'f': 300, 'migrate_to': True}
-    desert_params = {'migrate_to': True}
-    sea_params = {'migrate_to': False}
-
-    Highland.set_params(**high_params)
-    Lowland.set_params(**low_params)
-    Desert.set_params(**desert_params)
-    Sea.set_params(**sea_params)
-
 class TestLandscape:
     """
     Class for testing the methods of landscape-file.
@@ -96,12 +82,7 @@ class TestLandscape:
 
     def test_birth_cycle(self, mocker):
         """
-        c = Cell()
-        mocker.patch("", return_value=Herbivore)
-        c.n_herbivores = 10
-        c.current_herbivores = [Herbivore() for _ in range(c.n_herbivores)]
-        h_list = [Herbivore.birth() for _ in range(c.n_herbivores)]
-        assert c.birth_cycle() == c.current_herbivores.append(h_list)
+
         """
         mocker.patch('numpy.random.uniform', return_value=0)
         l = Lowland()

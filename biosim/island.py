@@ -7,11 +7,6 @@ import textwrap
 
 import numpy as np
 
-
-
-
-
-
 class Island:
     cell_types = {'H': Highland,
                   'L': Lowland,
@@ -21,7 +16,7 @@ class Island:
     def __init__(self, insert_map, init_animals):
         """
         Constructor for Island class
-        :param maps: List, nested list as a matrix describing the layout of the island geography
+        :param insert_map:  
         :param init_animals: ,
         """
 
@@ -37,19 +32,6 @@ class Island:
 
         if strings.count(strings[0]) == len(strings):
             return True
-
-
-    #        y, x = loc
-    #        cell_left = (y, x-1)
-    #        cell_right = (y, x+1)
-    #        cell_up = (y+1, x)
-    #        cell_down = (y-1, x)
-    #        destination_cells = [cell_left, cell_right, cell_up, cell_down]
-
-    #        self.destinations = destination_cells
-
-    #        self.len_x_coord = None
-    #        self.len_y_coord = None
 
     @property
     def year(self):
@@ -77,19 +59,66 @@ class Island:
         :return:
         """
 
-        num_animals_per_species = {'n_herbs': 0, 'n_carns': 0}
+        num_animals_per_species = {'Herbivore': 0, 'Carnivore': 0}
         for cell in self.map.values():
-            num_animals_per_species['n_herbs'] += cell.n_herbivores
-            num_animals_per_species['n_carns'] += cell.n_carnivores
+            num_animals_per_species['Herbivore'] += cell.n_herbivores
+            num_animals_per_species['Carnivore'] += cell.n_carnivores
         return num_animals_per_species
+
+
+    def fitness_list(self):
+
+        herbfit_list = []
+        for cell in self.map.values():
+            for herb in cell.current_herbivores:
+                herbfit_list.append(herb.fitness)
+
+        carnfit_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnfit_list.append(carn.fitness)
+
+        return herbfit_list, carnfit_list
+
+    def age_list(self):
+
+        herbage_list = []
+        for cell in self.map.values():
+            for herb in cell.current_herbivores:
+                herbage_list.append(herb.age)
+
+        carnage_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnage_list.append(carn.age)
+
+        return herbage_list, carnage_list
+
+    def weight_list(self):
+
+        herbweight_list = []
+        for cell in self.map.values():
+            for herb in cell.current_herbivores:
+                herbweight_list.append(herb.weight)
+
+        carnweight_list = []
+        for cell in self.map.values():
+            for carn in cell.current_carnivores:
+                carnweight_list.append(carn.weight)
+
+        return herbweight_list, carnweight_list
 
     def check_map(self, map_input):
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
-
         if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
+
+        for row in strings:
+            for cell in row:
+                if cell not in Island.cell_types:
+                    raise ValueError("Invalid code for landscape type.")
 
         for elems in str([strings[0] + strings[-1]])[2:-2]:
             if elems != 'W':
@@ -108,13 +137,7 @@ class Island:
 
         return strings
 
-
-
     def set_map_coordinates(self, map_input):
-
-        #        strings = self.check_map(map)
-        #
-        #        map_island = {}
 
         strings_island_map = self.check_map(map_input)
 
@@ -168,11 +191,10 @@ class Island:
         :param init_pop: list of dict, animals to be placed on the island
         :return: None
         """
-        # water = self.cell_types['W']
         for position in init_pop:
             loc = position['loc']
             if loc not in self.map.keys():
-                raise ValueError('nonexistent loc in the map provided')
+                raise KeyError('nonexistent loc in the map provided')
             if not self.map[loc].migrate_to:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
@@ -198,7 +220,6 @@ class Island:
                 migrants_dict = self.map[coords].emigration(adjacent_cells)
 
                 for destination, migrant in migrants_dict.items():
-                    #len migrant > 0
                     if self.map[destination].migrate_to and migrant:
                         self.map[destination].add_immigrants(migrant)
                         self.map[coords].remove_emigrants(migrant)
@@ -206,6 +227,9 @@ class Island:
 
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
+        self.fitness_list()
+        self.age_list()
+        self.weight_list()
         self.feed_cells_island()
         self.procreate_cells_map()
         self.migration_island()
@@ -220,54 +244,4 @@ class Island:
 
 
 
-if __name__ == "__main__":
-    ini_herbs = [{'loc': (10, 9),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 9),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]}]
-    default_population = ini_herbs + ini_carns
-
-    default_maps = """
-    WWWWWWWWWWWWWWWWWWWWW
-    WWWWWWWWHWWWWLLLLLLLW
-    WHHHHHLLLLWWLLLLLLLWW
-    WHHHHHHHHHWWLLLLLLWWW
-    WHHHHHLLLLLLLLLLLLWWW
-    WHHHHHLLLDDLLLHLLLWWW
-    WHHLLLLLDDDLLLHHHHWWW
-    WWHHHHLLLDDLLLHWWWWWW
-    WHHHLLLLLDDLLLLLLLWWW
-    WHHHHLLLLDDLLLLWWWWWW
-    WWHHHHLLLLLLLLWWWWWWW
-    WWWHHHHLLLLLLLWWWWWWW
-    WWWWWWWWWWWWWWWWWWWWW"""
-
-    default_maps = textwrap.dedent(default_maps)
-
-    i = Island(default_maps, default_population)
-
-    #for _ in range(20):
-        #print(i.num_animals_per_species)
-        #i.run_function_one_year()
-        #print(len(i.map[10, 11].current_carnivores))
-
-    #print(i.map)
-    #for cord, cell in i.map.items():
-    #    print(cord, cell)
-    print("start: {0}".format(i.num_animals_per_species))
-    for _ in range(200):
-        i.run_function_one_year()
-        print(i.num_animals_per_species)
-
-
-
-
-#        print(len(i.map[11, 10].current_herbivores))
-#        print(len(i.map[10, 11].current_carnivores))
 
