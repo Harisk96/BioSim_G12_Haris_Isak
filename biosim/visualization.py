@@ -85,8 +85,8 @@ class Visualization:
             self.carnies_axis.set_data(distribution[1])
 
         #line graph plot update:
-        self.current_herbivore_data.append(num_species_dict['n_herbs'])
-        self.current_carnivore_data.append(num_species_dict['n_carns'])
+        self.current_herbivore_data.append(num_species_dict['Herbivore'])
+        self.current_carnivore_data.append(num_species_dict['Carnivore'])
         length = len(self.current_carnivore_data)
         x_value = list(np.arange(length))
         self.linegraph_ax.set_ylim(0, max(self.current_herbivore_data)+10)

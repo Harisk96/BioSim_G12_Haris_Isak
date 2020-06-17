@@ -64,10 +64,10 @@ class Island:
         :return:
         """
 
-        num_animals_per_species = {'n_herbs': 0, 'n_carns': 0}
+        num_animals_per_species = {'Herbivore': 0, 'Carnivore': 0}
         for cell in self.map.values():
-            num_animals_per_species['n_herbs'] += cell.n_herbivores
-            num_animals_per_species['n_carns'] += cell.n_carnivores
+            num_animals_per_species['Herbivore'] += cell.n_herbivores
+            num_animals_per_species['Carnivore'] += cell.n_carnivores
         return num_animals_per_species
 
 

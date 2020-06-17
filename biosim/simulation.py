@@ -180,8 +180,9 @@ class BioSim:
 
     def save_graphics(self):
 
-        # if self.img_base is None:
-        #     return
+        if self.img_base is None:
+            return
+
         if self._year % 1 == 0:   # send 5 as varaibale i nbiosim, img_years
 
             plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
