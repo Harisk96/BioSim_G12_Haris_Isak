@@ -265,20 +265,25 @@ class TestIsland:
                               for _ in range(40)]}]
         population = ini_herbs + ini_carns
         i = Island(default_maps, population)
-        i.year = 0
-        old_herb_weight_list = i.weight_list()[0]
-        old_carn_weight_list = i.weight_list()[1]
-        old_herb_fitness_list = i.fitness_list()[0]
-        old_carn_fitness_list = i.fitness_list()[1]
+        i.year = 0 # initializes the current year as 0
+        old_herb_weight_list = i.weight_list()[0] # list of weights original herbivores
+        old_carn_weight_list = i.weight_list()[1] # list of weights original carnivores
+        old_herb_fitness_list = i.fitness_list()[0] # list of fitness of original herbivores
+        old_carn_fitness_list = i.fitness_list()[1] # list of fitness of original carnivores
         i.run_function_one_year()
-        assert i.year == 1
-        herb_age_list = i.age_list()[0]
-        carn_age_list = i.age_list()[1]
+        assert i.year == 1 # asserts that the year has been updated by one year
+        herb_age_list = i.age_list()[0] # list of age of herbivores after one year
+        carn_age_list = i.age_list()[1] # list of age of carnivores after one year
         for herb_age in herb_age_list:
-            assert herb_age == 6 or herb_age == 1
+            assert herb_age == 6 or herb_age == 1 # asserts that herbivores have aged by one year,
+                                                  # surviving original herbivores with age 6 and
+                                                  # surviving new_borns with age 1
         for carn_age in carn_age_list:
-            assert carn_age == 6 or carn_age == 1
-        assert i.weight_list()[0] != old_herb_weight_list
+            assert carn_age == 6 or carn_age == 1 # asserts that herbivores have aged by one year,
+                                                  # surviving original herbivores with age 6 and
+                                                  # surviving new_borns with age 1
+
+        assert i.weight_list()[0] != old_herb_weight_list 
         assert i.weight_list()[1] != old_carn_weight_list
         assert i.fitness_list()[0] != old_herb_fitness_list
         assert i.fitness_list()[1] != old_carn_fitness_list
