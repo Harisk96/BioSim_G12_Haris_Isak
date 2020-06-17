@@ -191,11 +191,10 @@ class Island:
         :param init_pop: list of dict, animals to be placed on the island
         :return: None
         """
-        # water = self.cell_types['W']
         for position in init_pop:
             loc = position['loc']
             if loc not in self.map.keys():
-                raise ValueError('nonexistent loc in the map provided')
+                raise KeyError('nonexistent loc in the map provided')
             if not self.map[loc].migrate_to:  # IKKE SIKKERT DENNE FUNGERER
                 raise ValueError('Animal can not live in water')
             pop = position['pop']
@@ -221,7 +220,6 @@ class Island:
                 migrants_dict = self.map[coords].emigration(adjacent_cells)
 
                 for destination, migrant in migrants_dict.items():
-                    #len migrant > 0
                     if self.map[destination].migrate_to and migrant:
                         self.map[destination].add_immigrants(migrant)
                         self.map[coords].remove_emigrants(migrant)
@@ -293,9 +291,7 @@ if __name__ == "__main__":
       #  print(i.num_animals_per_species)
 
     i = Island(default_maps, default_population)
-    fit_list = i.fitness_list()
-    print(fit_list[0])
-    print(fit_list[1])
+    print(default_population[1]['pop'])
 
 #        print(len(i.map[11, 10].current_herbivores))
 #        print(len(i.map[10, 11].current_carnivores))

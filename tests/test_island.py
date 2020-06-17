@@ -153,6 +153,83 @@ class TestIsland:
 
     def test_feed_cells(self):
         i = Island(default_maps, default_population)
-        old_weight_herb = i.weight_list()
+        old_weights_herb = i.weight_list()[0]
+        old_weights_carn = i.weight_list()[1]
         i.feed_cells_island()
+        new_weights_herb = i.weight_list()[0]
+        new_weights_carn = i.weight_list()[1]
+        assert sum(new_weights_carn) > sum(old_weights_carn)
+        assert sum(new_weights_herb)/len(new_weights_herb) > \
+               sum(old_weights_herb)/len(old_weights_herb)
+
+    def test_age_in_cells(self):
+        i = Island(default_maps, default_population)
+        i.age_in_cells()
+
+        for cell in i.map.values():
+            if cell.migrate_to:
+                for herb in cell.current_herbivores:
+                    assert herb.age == 6
+                for carn in cell.current_carnivores:
+                    assert carn.age == 6
+
+    def test_weight_loss(self):
+        i = Island(default_maps, default_population)
+        old_weights_herb = i.weight_list()[0]
+        old_weights_carn = i.weight_list()[1]
+        i.weightloss_island()
+        new_weights_herb = i.weight_list()[0]
+        new_weights_carn = i.weight_list()[1]
+        assert sum(new_weights_carn) < sum(old_weights_carn)
+        assert sum(new_weights_herb) < sum(old_weights_herb)
+
+    def test_die_island(self, mocker):
+        mocker.patch("numpy.random.uniform", return_value=0)
+        i = Island(default_maps, default_population)
+        old_n_herbs = i.num_animals_per_species['n_herbs']
+        old_n_carns = i.num_animals_per_species['n_carns']
+        i.die_island()
+        for cell in i.map.values():
+            assert len(cell.current_herbivores) < old_n_herbs
+            assert len(cell.current_carnivores) < old_n_carns
+
+    def test_place_animals(self):
+        i = Island(default_maps, default_population)
+        hlist = [{'loc': (10, 9),
+                      'pop': [{'species': 'Herbivore',
+                               'age': 5,
+                               'weight': 40}
+                              for _ in range(10)]}]
+        i.place_population(hlist)
+        assert i.num_animals == 200
+        badlist = [{'loc': (-1, -1),
+                      'pop': [{'species': 'Herbivore',
+                               'age': 5,
+                               'weight': 40}
+                              ]}]
+        with pytest.raises(KeyError):
+            assert i.place_population(badlist)
+        badlist2 = [{'loc': (1, 1),
+                    'pop': [{'species': 'Herbivore',
+                             'age': 5,
+                             'weight': 40}
+                            ]}]
+        with pytest.raises(ValueError):
+            assert i.place_population(badlist2)
+
+    def test_map_size(self):
+        i = Island(default_maps, default_population)
+        assert i.map_size() == (13, 21)
+
+    def test_get_adj_cells(self):
+        i = Island(default_maps, default_population)
+        adjacent_cells = [(11, 10), (9, 10), (10, 11), (10, 9)]
+        assert i.get_adj_cells((10, 10)) == adjacent_cells
+
+    def test_migration_island(self, mocker):
+        mocker.patch("numpy.random.randint", return_value=0)
+        i = Island(default_maps, default_population)
+        i.migration_island()
+        i.map[]
+
 
