@@ -7,11 +7,6 @@ import textwrap
 
 import numpy as np
 
-
-
-
-
-
 class Island:
     cell_types = {'H': Highland,
                   'L': Lowland,

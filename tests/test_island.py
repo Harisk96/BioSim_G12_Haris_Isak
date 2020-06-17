@@ -63,7 +63,7 @@ class TestIsland:
 
     def test_num_per_species(self):
         i = Island(default_maps, default_population)
-        exp_dict = {'n_herbs': 150, 'n_carns': 40}
+        exp_dict = {'Herbivore': 150, 'Carnivore': 40}
         assert i.num_animals_per_species == exp_dict
 
     def test_check_map(self):
@@ -147,8 +147,8 @@ class TestIsland:
         fertile_population = ini_herbs + ini_carns
         i = Island(default_maps, fertile_population)
         i.procreate_cells_map()
-        assert i.num_animals_per_species['n_herbs'] > 20
-        assert i.num_animals_per_species['n_carns'] > 20
+        assert i.num_animals_per_species['Herbivore'] > 20
+        assert i.num_animals_per_species['Carnivore'] > 20
         assert i.num_animals > 40
 
     def test_feed_cells(self):
@@ -197,8 +197,8 @@ class TestIsland:
     def test_die_island(self, mocker):
         mocker.patch("numpy.random.uniform", return_value=0)
         i = Island(default_maps, default_population)
-        old_n_herbs = i.num_animals_per_species['n_herbs']
-        old_n_carns = i.num_animals_per_species['n_carns']
+        old_n_herbs = i.num_animals_per_species['Herbivore']
+        old_n_carns = i.num_animals_per_species['Carnivore']
         i.die_island()
         for cell in i.map.values():
             assert len(cell.current_herbivores) < old_n_herbs
@@ -300,10 +300,12 @@ class TestIsland:
         assert i.weight_list()[1] != old_carn_weight_list # asserts that list of weights changed
         assert i.fitness_list()[0] != old_herb_fitness_list # asserts that list of fitness changed
         assert i.fitness_list()[1] != old_carn_fitness_list # asserts that list of fitness changed
-        assert i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores > 0 \ # asserts that
-              or i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores > 0 \ # animals migrate
-              or i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores > 0\ # to one of the
-              or i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores > 0 # adjacent cells
+        c1 = i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores # population adjacent cell
+        c2 = i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores # population adjacent cell
+        c3 = i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores # population adjacent cell
+        c4 = i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores # population adjacent cell
+        assert c1 > 0 or c2 > 0 or c3 > 0 or c4 > 0 # checking if at least one originally empty
+                                                    # cells have received migrating animals
         for cell in i.map.values():
             for animal in cell.current_herbivores + cell.current_carnivores:
                 assert animal.has_migrated is False # asserts that the animal's has_migrated
