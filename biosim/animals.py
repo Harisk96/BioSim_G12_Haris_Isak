@@ -37,13 +37,13 @@ class Animals:
         :return: None
         """
 
+        if not isinstance(new_params, dict):
+            raise TypeError('params must be of type dict')
+
         # Taken from bacteria.py from the biolab example folder. Modified to the current project
         for key in new_params:
             if key not in cls.params.keys():
                 raise KeyError('Invalid parameter name: ' + key)
-
-        if not isinstance(new_params, dict):
-            raise TypeError('params must be of type dict')
 
         cls.params.update(new_params)
 
