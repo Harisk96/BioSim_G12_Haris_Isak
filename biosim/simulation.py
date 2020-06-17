@@ -12,8 +12,8 @@ import subprocess
 _FFMPEG_BINARY = 'ffmpeg'
 _CONERT_BINARY = 'magick'
 
-_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
-_DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_GRAPHICS_DIR = os.path.join('results/')
+_DEFAULT_GRAPHICS_NAME = 'bs'
 _DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
@@ -31,6 +31,9 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.img_ctr = 0
+
+        if img_base is None:
+            self.img_base = _DEFAULT_GRAPHICS_DIR+_DEFAULT_GRAPHICS_NAME
 
 
         if ymax_animals is None:

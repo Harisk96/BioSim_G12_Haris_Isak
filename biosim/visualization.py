@@ -30,6 +30,7 @@ class Visualization:
         self.heatmap_herbies_ax.set_yticklabels([])
         self.heatmap_herbies_ax.set_xticklabels([])
 
+
         self.heatmap_carnies_ax = self.fig_win.add_axes([0.5, 0.28, 0.3, 0.3])
         self.carnies_axis = None
         self.heatmap_carnies_ax.title.set_text('Heatmap: Carnivore distribution')
