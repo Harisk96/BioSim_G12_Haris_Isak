@@ -16,8 +16,8 @@ class Island:
     def __init__(self, insert_map, init_animals):
         """
         Constructor for Island class
-        :param insert_map:  
-        :param init_animals: ,
+        :param insert_map: str, strings ordered in a square pattern
+        :param init_animals: list, list of dictionary, places herbivores and carnivores on the map
         """
 
         self.map = self.set_map_coordinates(insert_map)
@@ -28,6 +28,11 @@ class Island:
 
     @staticmethod
     def check_length(strings):
+        """
+        Determines whether the strings that are passed to it have the same length.
+        :param strings: Str, strings that constitute the map of the island.
+        :return: Bool, according to whether the input strings have the same length or not
+        """
         strings = list(map(len, strings))
 
         if strings.count(strings[0]) == len(strings):
@@ -35,17 +40,26 @@ class Island:
 
     @property
     def year(self):
+        """
+        Property that returns the current year of the simulation
+        :return: int
+        """
         return self._year
 
     @year.setter
     def year(self, current_year):
+        """
+        Setter that sets the year property to its current value.
+        :param current_year: int, positive integer that is the current year of the simulation.
+        :return: int
+        """
         self._year = current_year
 
     @property
     def num_animals(self):
         """
-        Returns the total number of animals on the island.
-        :return: int >= 0
+        Returns the total number of animals currently on the island.
+        :return: int, positive integer, number of animals currently on the island.
         """
         num_animals = 0
         for cell in self.map.values():
@@ -56,7 +70,7 @@ class Island:
     def num_animals_per_species(self):
         """
         Returns a dictionary with number of herbivores and carnivores.
-        :return:
+        :return: dict
         """
 
         num_animals_per_species = {'Herbivore': 0, 'Carnivore': 0}
@@ -67,6 +81,10 @@ class Island:
 
 
     def fitness_list(self):
+        """
+        Returns lists of the fitness of the carnivores and herbivores currently on the island.
+        :return: list, two lists
+        """
 
         herbfit_list = []
         for cell in self.map.values():
@@ -81,6 +99,10 @@ class Island:
         return herbfit_list, carnfit_list
 
     def age_list(self):
+        """
+        Returns lists of the ages of the herbivores and carnivores currently on the island
+        :return: list, two lists
+        """
 
         herbage_list = []
         for cell in self.map.values():
@@ -95,6 +117,10 @@ class Island:
         return herbage_list, carnage_list
 
     def weight_list(self):
+        """
+        List of the weights of the herbivores and carnivores currently on the island.
+        :return: list, two lists
+        """
 
         herbweight_list = []
         for cell in self.map.values():
@@ -109,6 +135,11 @@ class Island:
         return herbweight_list, carnweight_list
 
     def check_map(self, map_input):
+        """
+        Method that checks that the input map has the necessary properties, and that they are valid.
+        :param map_input: str, arranged in a matrix.
+        :return: str
+        """
         stringmap = map_input.strip()
         strings = stringmap.split('\n')
 
@@ -245,3 +276,5 @@ class Island:
 
 
 
+if __name__ == "__main__":
+    i = Island
