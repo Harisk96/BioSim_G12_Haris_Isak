@@ -119,6 +119,8 @@ class Cell:
     def weight_loss_cell(self):
         """
         Makes it so that the animals in the cell loses weight on an annual basis.
+        The function iterates through all animals and activates the yearly_weight_loss
+        function on each of them.
         :return: None
         """
         for herbivore in self.current_herbivores:
@@ -128,11 +130,28 @@ class Cell:
             carnivore.yearly_weight_loss()
 
     def feed_all(self):
+        """
+        Function that calls the grow_fodder and feeding functions for both animals.
+        Makes it easier to call upon one function than three seperate ones later on.
+
+        :return: None
+        """
         self.grow_fodder()
         self.feed_herbivores()
         self.feed_carnivores()
 
     def feed_herbivores(self):
+        """
+        Function that makes the Herbivores eat fodder in the cell.
+        All animals are shuffled randomly,
+        then we use a for loop to iterate though the list of animals, this will make
+        the Herbivores eat in random order. The eating is done by activating the eat function
+        from the animals superclass on each Herbivore. Function breaks if there is no fodder left.
+        self.fodder is the f_max parameter in Lowland and Highland, otherwise it is set
+        as 0 in the constructor.
+
+        :return: None
+        """
         np.random.shuffle(self.current_herbivores)
         for herbivore in self.current_herbivores:
             remaining_fodder = self.fodder
@@ -143,9 +162,22 @@ class Cell:
 
     def feed_carnivores(self):
 
-        self.current_herbivores.sort(key=attrgetter('fitness')) #= sorted(self.current_herbivores, key=attrgetter('fitness'))
-        self.current_carnivores.sort(key=attrgetter('fitness'), reverse=True)  #= sorted(self.current_carnivores, key=attrgetter('fitness'),
-                                         #reverse=True)
+        """
+        This function feeds the carnivores in the cell. As the Herbivores with least fitness is
+        preyed upon first the list containing Herbivores are sorted by fitness in increasing order.
+        As the Carnivores with the highest fitness are preying upon Herbivores first they are sorted
+        by fitness in decreasing order. The sorting is done with the sort function and attrgetter.
+
+        We then iterate though each Carnivore in the list of carnivores. The eat_carn function
+        from the animals file is the called upon each Carnivore with the list of Herbivores as
+        input. The dead Herbivores are then appended to a dead_herbivores list. After that we use
+        a list comprehension to remove all the dead Herbivores from the cell.
+        :return:
+        """
+
+        self.current_herbivores.sort(key=attrgetter('fitness'))
+        self.current_carnivores.sort(key=attrgetter('fitness'), reverse=True)
+
 
         for carnivore in self.current_carnivores:
             dead_herbivores = carnivore.eat_carn(self.current_herbivores)
@@ -153,6 +185,15 @@ class Cell:
                                        herb not in dead_herbivores]
 
     def age_animals(self):
+
+        """
+        This function iterates through all the animals in the cell, by using two for loops.
+        Each for loop iterates for a species, then the update_age function is called
+        upon each animal. This will make each every animal in the cell age by one year.
+
+        :return: None
+        """
+
         for herbivore in self.current_herbivores:
             herbivore.update_age()
 
@@ -160,7 +201,13 @@ class Cell:
             carnivore.update_age()
 
     def death_in_cell(self):
-        # Ta en titt på forelesning 08.06.2020, for remove er veldig ueffektivt.
+
+        """
+        This function iterates through all animals in the cell. Then the death function is called
+        upon each animal
+        :return:
+        """
+
         dead_herbivores = []
         for herbivore in self.current_herbivores:
             if herbivore.death():
