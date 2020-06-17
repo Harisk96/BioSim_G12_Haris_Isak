@@ -1,14 +1,33 @@
 import numpy as np
-import random
-np.random.seed(1)
-from biosim.animals import Animals, Herbivore, Carnivore
+from biosim.animals import Herbivore, Carnivore
 from operator import attrgetter
-import matplotlib.pyplot as plt
+np.random.seed(1)
+
+__author__ = "Haris Karovic", "Isak Finnøy"
+__email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
+
 
 class Cell:
     """
     Class cell represents a single cell on the island map, the different
     landscape types are subclasses of the Cell superclass.
+
+    Methods:
+    ---------------
+    grow_fodder
+    place_animals
+    birth_cycle
+    weight_loss_cell
+    feed_all
+    feed_herbivores
+    feed_carnivores
+    age_animals
+    death_in_cell
+    add_immigrants
+    remove_emigrants
+    emigratiom
+    ---------------
+
     """
     params = {}
 
@@ -31,7 +50,6 @@ class Cell:
         self.fodder = 0
         self.current_herbivores = []
         self.current_carnivores = []
-
 
     @property
     def n_herbivores(self):
@@ -99,8 +117,8 @@ class Cell:
         if nr_herbivores > 1:
             for herbivore in self.current_herbivores:
                 newborn_herbivore = herbivore.birth(nr_herbivores)
-                if newborn_herbivore is not None:  # Newborn_Herbivore is not a bool value, this creates some problems. You should do it differently, see comments on birth, perhaps return a boolean value?
-                    # If you still want to use your method with the ''None'' you should change the if test to if newborn_herbivore is not None, this should work better and you can avoid problems in this manner.
+                if newborn_herbivore is not None:
+
                     newborn_herbivores.append(newborn_herbivore)
 
         self.current_herbivores.extend(newborn_herbivores)
@@ -178,7 +196,6 @@ class Cell:
         self.current_herbivores.sort(key=attrgetter('fitness'))
         self.current_carnivores.sort(key=attrgetter('fitness'), reverse=True)
 
-
         for carnivore in self.current_carnivores:
             dead_herbivores = carnivore.eat_carn(self.current_herbivores)
             self.current_herbivores = [herb for herb in self.current_herbivores if
@@ -204,8 +221,10 @@ class Cell:
 
         """
         This function iterates through all animals in the cell. Then the death function is called
-        upon each animal
-        :return:
+        upon each animal. The death function determines wheter the animal dies. The dead animals
+        get appended into a list. Then a list comprehension will remove the dead animals from
+        the list of animals by using the dead animal list.
+        :return: None
         """
 
         dead_herbivores = []
@@ -275,8 +294,12 @@ class Cell:
         return emigrants
 
 
-
 class Highland(Cell):
+    """
+    Landscape type which is a subclass of cell
+    migrate_to specifies whether the landscape is liveable and and an animal can migrate to it.
+    """
+
     migrate_to = True
     params = {'f_max': 300.0}
 
@@ -289,6 +312,11 @@ class Highland(Cell):
 
 
 class Lowland(Cell):
+    """
+    Landscape type which is a subclass of cell
+    migrate_to specifies whether the landscape is liveable and and an animal can migrate to it.
+    """
+
     migrate_to = True
     params = {'f_max': 800.0}
 
@@ -301,29 +329,18 @@ class Lowland(Cell):
 
 
 class Desert(Cell):
+    """
+    Landscape type which is a subclass of cell
+    migrate_to specifies whether the landscape is liveable and and an animal can migrate to it.
+    """
+
     migrate_to = True
 
 
 class Sea(Cell):
+    """
+    Landscape type which is a subclass of cell
+    migrate_to specifies whether the landscape is liveable and and an animal can migrate to it.
+    """
+
     migrate_to = False
-
-if __name__ == "__main__":
-    cell = Cell()
-    adj_cells = [(9, 10), (11, 10), (10, 9), (10, 11)]
-    carn = Carnivore()
-    carn.has_migrated = False
-    cell.current_carnivores.append(carn)
-    herb = Herbivore()
-    herb.has_migrated = False
-    cell.current_herbivores.append(herb)
-    print(cell.emigration(adj_cells))
-
-    """
-    c.current_herbivores = [Herbivore() for _ in range(10)]
-    h_list = [Herbivore() for _ in range(5)]
-    print(len(c.current_herbivores))
-    print((h_list))
-    for i in range(len(c.current_herbivores)):
-        print(c.current_herbivores[i].weight)
-    print(len(c.current_herbivores))
-    """
