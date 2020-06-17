@@ -7,12 +7,12 @@ import textwrap
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
-ini_herbs = [{'loc': (10, 9),
+ini_herbs = [{'loc': (10, 10),
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-ini_carns = [{'loc': (10, 9),
+ini_carns = [{'loc': (10, 10),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
                        'weight': 20}
@@ -152,7 +152,18 @@ class TestIsland:
         assert i.num_animals > 40
 
     def test_feed_cells(self):
-        i = Island(default_maps, default_population)
+        ini_herbs = [{'loc': (10, 9),
+                      'pop': [{'species': 'Herbivore',
+                               'age': 5,
+                               'weight': 20}
+                              for _ in range(150)]}]
+        ini_carns = [{'loc': (10, 9),
+                      'pop': [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 20}
+                              for _ in range(40)]}]
+        feeding_population = ini_carns + ini_herbs
+        i = Island(default_maps, feeding_population)
         old_weights_herb = i.weight_list()[0]
         old_weights_carn = i.weight_list()[1]
         i.feed_cells_island()
@@ -229,7 +240,29 @@ class TestIsland:
     def test_migration_island(self, mocker):
         mocker.patch("numpy.random.randint", return_value=0)
         i = Island(default_maps, default_population)
+        old_pop_destination = i.map[11, 10].n_herbivores + i.map[(11, 10)].n_carnivores
         i.migration_island()
-        i.map[]
+        new_pop_destination = i.map[11, 10].n_herbivores + i.map[(11, 10)].n_carnivores
+        assert old_pop_destination == 0
+        assert new_pop_destination > 0
 
+    def test_run_function_one_year(self, mocker):
+        ini_herbs = [{'loc': (10, 9),
+                      'pop': [{'species': 'Herbivore',
+                               'age': 5,
+                               'weight': 50}
+                              for _ in range(150)]}]
+        ini_carns = [{'loc': (10, 9),
+                      'pop': [{'species': 'Carnivore',
+                               'age': 5,
+                               'weight': 50}
+                              for _ in range(40)]}]
+        population = ini_herbs + ini_carns
+        i = Island(default_maps, population)
+        i.year = 0
+        i.run_function_one_year()
+        assert i.year == 1
+        for ind in i.age_list():
+            if i.age_list[ind] > 1:
+                i.age_list[ind] == 6
 

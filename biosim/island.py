@@ -225,7 +225,6 @@ class Island:
                         self.map[coords].remove_emigrants(migrant)
 
 
-
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         self.fitness_list()
@@ -242,8 +241,6 @@ class Island:
         for cell in self.map.values():
             for anim in cell.current_herbivores + cell.current_carnivores:
                 anim.set_has_migrated(False)
-
-
 
 if __name__ == "__main__":
     ini_herbs = [{'loc': (10, 9),
@@ -291,8 +288,12 @@ if __name__ == "__main__":
       #  print(i.num_animals_per_species)
 
     i = Island(default_maps, default_population)
-    print(default_population[1]['pop'])
+    print(i.age_list())
+
+
 
 #        print(len(i.map[11, 10].current_herbivores))
 #        print(len(i.map[10, 11].current_carnivores))
+
+
 

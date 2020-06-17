@@ -300,10 +300,10 @@ class TestAnimals:
     def test_eat_carn(self):
         herb_list = [Herbivore(5, 20) for _ in range(10)]
         for herbivore in herb_list:
-            herbivore.fitness = 100
+            herbivore.fitness = 1
         carn_list = [Carnivore(5, 20) for _ in range(10)]
         for carnivore in carn_list:
-            carnivore.fitness = 10
+            carnivore.fitness = 0.5
             dead_herbs = carnivore.eat_carn(herb_list)
 
             assert len(dead_herbs) == 0
@@ -345,6 +345,13 @@ class TestAnimals:
         c.set_params({'DeltaPhiMax': 10.0})
         c.eat_carn(h_list)
         assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
+
+    def test_slay_fitness(self):
+        c = Carnivore()
+        h = Herbivore()
+        c.fitness = 0.5
+        h.fitness = 0.75
+        assert c.slay(h) is False
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_initial_weight_gaussian_dist(self, Species):
