@@ -3,6 +3,7 @@
 
 #ignoring results folders:
 biosim/examples/results
+biosim/tests/results
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
