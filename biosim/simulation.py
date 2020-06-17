@@ -6,16 +6,31 @@ from biosim.animals import Herbivore, Carnivore
 from biosim.visualization import Visualization
 import textwrap
 import pandas as pd
+import os
+import subprocess
+
+_FFMPEG_BINARY = 'ffmpeg'
+_CONERT_BINARY = 'magick'
+
+_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
+_DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_MOVIE_FORMAT = 'mp4'
+
 
 class BioSim:
 
     def __init__(self, island_map, ini_pop, seed=1,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt="png"):
+
+        np.random.seed(seed)
         self._year = 0
         self._final_year = None
         self.inserted_map = island_map
         self.island = Island(island_map, ini_pop)
+        self.img_base = img_base
+        self.img_fmt = img_fmt
+        self.img_ctr = 0
 
 
         if ymax_animals is None:
@@ -43,6 +58,7 @@ class BioSim:
 
 
         for i in range(num_years):
+            self._year += 1
             self.island.run_function_one_year()
             self.visualization.update_graphics(self.create_population_heatmap(),
                                                self.island.num_animals_per_species)
@@ -52,6 +68,7 @@ class BioSim:
                                                      self.island.age_list()[1])
             self.visualization.histogram_weight_updates(self.island.weight_list()[0],
                                                      self.island.weight_list()[1])
+            self.save_graphics()
 
     #todo
     #@staticmethod
@@ -135,6 +152,33 @@ class BioSim:
 
         return herb_array, carn_array
 
+    def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
+
+        if self.img_base is None:
+            raise RuntimeError('No filename is defined')
+
+        if movie_fmt == 'mp4':
+            try:
+                subprocess.check_call([_FFMPEG_BINARY,
+                                       '-i', '{_%05d.png'.format(self.img_base),
+                                       '-y', 'profile:v', 'baseline',
+                                       '-level', 'yuv420p',
+                                       '{}-{}'.format(self.img_base, movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError('ERROR: ffmpeg failed with: {}'. format(err))
+
+
+
+    def save_graphics(self):
+
+        # if self.img_base is None:
+        #     return
+        if self._year % 1 == 0:   # send 5 as varaibale i nbiosim, img_years
+
+            plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
+                                                         num=self.img_ctr,
+                                                         type=self.img_fmt))
+            self.img_ctr += 1
 
 
 if __name__ == '__main__':
