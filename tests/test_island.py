@@ -229,15 +229,28 @@ class TestIsland:
             assert i.place_population(badlist2)
 
     def test_map_size(self):
+        """
+        Asserts that the map_size method returns the length of the sides.
+        """
         i = Island(default_maps, default_population)
         assert i.map_size() == (13, 21)
 
     def test_get_adj_cells(self):
+        """
+        Asserts that the get_adj_cells method returns the adjacent cells, and which are not
+        diagonally placed relatively to the current cell.
+        """
         i = Island(default_maps, default_population)
         adjacent_cells = [(11, 10), (9, 10), (10, 11), (10, 9)]
         assert i.get_adj_cells((10, 10)) == adjacent_cells
 
     def test_migration_island(self, mocker):
+        """
+        Asserts that the Island method migration_island migrates animals to an adjacent cell.
+        For the sake of simplicity, we mock out the numpy.random.randint to always return the same
+        adjacent cell, in this case (11, 10). Asserts that number of animals present in the cell
+        increases from zero to a number larger than zero.
+        """
         mocker.patch("numpy.random.randint", return_value=0)
         i = Island(default_maps, default_population)
         old_pop_destination = i.map[11, 10].n_herbivores + i.map[(11, 10)].n_carnivores
@@ -283,16 +296,16 @@ class TestIsland:
                                                   # surviving original herbivores with age 6 and
                                                   # surviving new_borns with age 1
 
-        assert i.weight_list()[0] != old_herb_weight_list 
-        assert i.weight_list()[1] != old_carn_weight_list
-        assert i.fitness_list()[0] != old_herb_fitness_list
-        assert i.fitness_list()[1] != old_carn_fitness_list
-        assert i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores > 0 \
-              or i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores > 0 \
-              or i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores > 0\
-              or i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores > 0
+        assert i.weight_list()[0] != old_herb_weight_list # asserts that list of weights changed
+        assert i.weight_list()[1] != old_carn_weight_list # asserts that list of weights changed
+        assert i.fitness_list()[0] != old_herb_fitness_list # asserts that list of fitness changed
+        assert i.fitness_list()[1] != old_carn_fitness_list # asserts that list of fitness changed
+        assert i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores > 0 \ # asserts that
+              or i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores > 0 \ # animals migrate
+              or i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores > 0\ # to one of the
+              or i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores > 0 # adjacent cells
         for cell in i.map.values():
             for animal in cell.current_herbivores + cell.current_carnivores:
-                assert animal.has_migrated is False
-
+                assert animal.has_migrated is False # asserts that the animal's has_migrated
+                                                    # status is reset to false after each cyclus
 

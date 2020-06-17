@@ -120,6 +120,11 @@ class Island:
         if not self.check_length(strings):
             raise ValueError('Every line in stringmap must be of equal length')
 
+        for row in strings:
+            for cell in row:
+                if cell not in Island.cell_types:
+                    raise ValueError("Invalid code for landscape type.")
+
         for elems in str([strings[0] + strings[-1]])[2:-2]:
             if elems != 'W':
                 raise ValueError('Not island, island must be surrounded by water'

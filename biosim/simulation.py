@@ -101,7 +101,16 @@ class BioSim:
         cell_types[landscape].set_params(params)
 
 
-
+    @property
+    def year(self):
+        """last year simulated"""
+        return self._year
+    @property
+    def num_animals(self):
+        return self.island.num_animals
+    @property
+    def num_animals_per_species(self):
+        return self.island.num_animals_per_species
 
     def length_of_map(self):
         lines = self.inserted_map.strip()
