@@ -230,7 +230,7 @@ class TestIsland:
 
     def test_map_size(self):
         """
-        Asserts that the map_size method returns the length of the sides.
+        Asserts that the map_size method returns the dimensions.
         """
         i = Island(default_maps, default_population)
         assert i.map_size() == (13, 21)

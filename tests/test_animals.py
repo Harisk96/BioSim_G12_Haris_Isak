@@ -7,27 +7,9 @@ __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
 
-def set_params():
-    """
-    Sets the testing environment up
-    """
-    herb_params= {
-        'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05, 'a_half': 40.0,
-        'phi_age': 0.6, 'w_half': 10.0, 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2,
-        'zeta': 3.5, 'xi': 1.2, 'omega': 0.4, 'F': 10.0
-    }
-
-    carn_params= {
-        'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
-        'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
-        'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
-    }
-    Herbivore.set_params(**herb_params)
-    Carnivore.set_params(**carn_params)
-
 class TestAnimals:
     """
-    Test animals module
+    Testing methods of animal file.
     """
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
@@ -261,8 +243,7 @@ class TestAnimals:
         :return: Boolean (True = dead)
         """
         h = Herbivore(0,0)
-        assert h.death() == True
-
+        assert h.death() is True
 
     def test_migrate(self, mocker):
         """
@@ -369,8 +350,8 @@ class TestAnimals:
         for _ in range(5000):
             s = Species()
             list_of_initial_weights.append(s.weight)
-            ks_statistic, p_value = kstest(list_of_initial_weights, 'norm')
-            assert p_value < ALPHA
+            ks_stat, p_val = kstest(list_of_initial_weights, 'norm')
+            assert p_val < ALPHA
 
 
 
