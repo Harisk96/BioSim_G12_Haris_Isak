@@ -288,7 +288,7 @@ if __name__ == "__main__":
       #  print(i.num_animals_per_species)
 
     i = Island(default_maps, default_population)
-    print(i.age_list())
+    print(i.map[(6, 10)])
 
 
 

@@ -2,6 +2,7 @@ from biosim.animals import Herbivore, Carnivore, Animals
 import pytest
 from scipy.stats import kstest
 ALPHA = 0.01
+
 __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
@@ -220,9 +221,9 @@ class TestAnimals:
         assert h.params == new_parameters
         false_parameter = {'nice': 69}
         with pytest.raises(KeyError):
-            h.set_params(false_parameter)
-        with pytest.raises(TypeError):
-            h.set_params(list(2))
+            assert h.set_params(false_parameter)
+        with pytest.raises(TypeError, match='params must be of type dict'):
+            assert h.set_params([1])
 
 
 

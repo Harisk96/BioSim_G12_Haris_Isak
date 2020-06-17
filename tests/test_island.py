@@ -246,7 +246,7 @@ class TestIsland:
         assert old_pop_destination == 0
         assert new_pop_destination > 0
 
-    def test_run_function_one_year(self, mocker):
+    def test_run_function_one_year(self):
         ini_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
@@ -260,9 +260,28 @@ class TestIsland:
         population = ini_herbs + ini_carns
         i = Island(default_maps, population)
         i.year = 0
+        old_herb_weight_list = i.weight_list()[0]
+        old_carn_weight_list = i.weight_list()[1]
+        old_herb_fitness_list = i.fitness_list()[0]
+        old_carn_fitness_list = i.fitness_list()[1]
         i.run_function_one_year()
         assert i.year == 1
-        for ind in i.age_list():
-            if i.age_list[ind] > 1:
-                i.age_list[ind] == 6
+        herb_age_list = i.age_list()[0]
+        carn_age_list = i.age_list()[1]
+        for herb_age in herb_age_list:
+            assert herb_age == 6 or herb_age == 1
+        for carn_age in carn_age_list:
+            assert carn_age == 6 or carn_age == 1
+        assert i.weight_list()[0] != old_herb_weight_list
+        assert i.weight_list()[1] != old_carn_weight_list
+        assert i.fitness_list()[0] != old_herb_fitness_list
+        assert i.fitness_list()[1] != old_carn_fitness_list
+        assert i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores > 0 \
+              or i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores > 0 \
+              or i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores > 0\
+              or i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores > 0
+        for cell in i.map.values():
+            for animal in cell.current_herbivores + cell.current_carnivores:
+                assert animal.has_migrated is False
+
 
