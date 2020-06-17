@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/osx,linux,latex,python,pycharm,windows,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=osx,linux,latex,python,pycharm,windows,jupyternotebooks
 
+#ignoring results folders:
+biosim/examples/results
+biosim/tests/results
+
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
