@@ -348,6 +348,9 @@ class TestAnimals:
         assert c.weight == old_weight + c.params['beta'] * (h.weight-10)
 
     def test_slay_fitness(self):
+        """
+        Asserts that Carnivores with a lower fitness than
+        """
         c = Carnivore()
         h = Herbivore()
         c.fitness = 0.5
@@ -357,12 +360,13 @@ class TestAnimals:
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_initial_weight_gaussian_dist(self, Species):
         """
-        Testing if the initial weight of the animals is normally distributed. We are using an
-        critical value of 0.01
+        Testing if the initial weight of the animals is normally distributed. Inital weight is
+        initialised using numpy.random.normal with respective birth parameters as input. We are
+        testing against an critical value of 0.01 to validate for a confidence level of 99%.
         """
 
         list_of_initial_weights = []
-        for _ in range(1000):
+        for _ in range(5000):
             s = Species()
             list_of_initial_weights.append(s.weight)
             ks_statistic, p_value = kstest(list_of_initial_weights, 'norm')

@@ -247,6 +247,12 @@ class TestIsland:
         assert new_pop_destination > 0
 
     def test_run_function_one_year(self):
+        """
+        Asserts that run_function_one_year causes the changes which are to be expected with the
+        methods that it calls. This test is a bit superfluous, but we wanted to see that it managed
+        to implement the expected changes during the course over a year.
+        """
+        # Places the default_population in a lowland cell
         ini_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,

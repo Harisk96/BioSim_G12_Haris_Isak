@@ -4,8 +4,6 @@ np.random.seed(1)
 from biosim.animals import Animals, Herbivore, Carnivore
 from operator import attrgetter
 import matplotlib.pyplot as plt
-import random
-
 
 class Cell:
     """
