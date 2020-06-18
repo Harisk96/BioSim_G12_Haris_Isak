@@ -13,6 +13,25 @@ class Animals:
     """
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
+
+    Methods:
+    ---------------
+    _q
+    set_params
+    set_has_migrated
+    update_fitness
+    eat
+    yearly_weight loss
+    update_age
+    birth
+    migrate
+    death
+
+    ---------------
+    Carnivore subclass:
+    slay
+    eat_carn
+    ---------------
     """
     params = {}
 
