@@ -178,6 +178,7 @@ class TestLandscape:
     def test_emigration(self, mocker):
         """
         Tests that kraken is crack
+        Tests that cracken if finally working again
         """
         mocker.patch("numpy.random.uniform", return_value=0)
         cell = Cell()
