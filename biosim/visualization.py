@@ -77,13 +77,19 @@ class Visualization:
 
         plt.pause(0.01)
 
-    def update_graphics(self, distribution=None, num_species_dict=None):
+    def update_graphics(self, distribution_array=None, num_species_dict=None):
+        """
+        Updates the heatmaps and graphs
+        :param distribution_array:
+        :param num_species_dict: a dict containing the total number of animals per species
+        :return: None
+        """
         self.steps += 1
         self.changing_text.set_text('Year:' + str(self.steps))
 
         # Heatmap update
         if self.herbies_axis is None:
-            self.herbies_axis = self.heatmap_herbies_ax.imshow(distribution[0],
+            self.herbies_axis = self.heatmap_herbies_ax.imshow(distribution_array[0],
                                                                interpolation='nearest',
                                                                cmap='Greens',
                                                                vmin=0, vmax=50)
@@ -92,10 +98,10 @@ class Visualization:
                                                     orientation='horizontal',
                                                     fraction=0.07, pad=0.04)
         else:
-            self.herbies_axis.set_data(distribution[0])
+            self.herbies_axis.set_data(distribution_array[0])
 
         if self.carnies_axis is None:
-            self.carnies_axis = self.heatmap_carnies_ax.imshow(distribution[1],
+            self.carnies_axis = self.heatmap_carnies_ax.imshow(distribution_array[1],
                                                                interpolation='nearest',
                                                                cmap='OrRd', vmin=0, vmax=50)
             self.heatmap_carnies_ax.figure.colorbar(self.carnies_axis,
@@ -103,7 +109,7 @@ class Visualization:
                                                     orientation='horizontal',
                                                     fraction=0.07, pad=0.04)
         else:
-            self.carnies_axis.set_data(distribution[1])
+            self.carnies_axis.set_data(distribution_array[1])
 
         # line graph plot update:
         self.current_herbivore_data.append(num_species_dict['Herbivore'])

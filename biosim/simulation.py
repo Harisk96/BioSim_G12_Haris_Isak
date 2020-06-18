@@ -242,7 +242,7 @@ class BioSim:
         if self.img_base is None:
             return
 
-        if self._year % img_years == 0:   # send 5 as varaibale i nbiosim, img_years
+        if self._year % img_years == 0:
 
             plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
                                                          num=self.img_ctr,
