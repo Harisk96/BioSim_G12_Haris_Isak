@@ -1,8 +1,6 @@
-from biosim.animals import Herbivore, Carnivore, Animals
-from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
+from biosim.animals import Herbivore, Carnivore
+from biosim.landscape import Cell, Lowland, Highland, Sea
 import pytest
-from operator import attrgetter
-
 
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
@@ -76,11 +74,11 @@ class TestLandscape:
         h_list = [{'species': 'Herbivore',
                               'age': 5,
                               'weight': 20}
-                              for _ in range(40)]
+                  for _ in range(40)]
         c_list = [{'species': 'Carnivore',
                               'age': 5,
                               'weight': 20}
-                               for _ in range(40)]
+                  for _ in range(40)]
 
         with pytest.raises(TypeError, match='list_of_animals has to be of type list'):
             assert c.place_animals("string")
