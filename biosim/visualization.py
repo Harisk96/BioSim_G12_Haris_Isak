@@ -80,8 +80,10 @@ class Visualization:
     def update_graphics(self, years, distribution_array=None, num_species_dict=None):
         """
         Updates the heatmaps and graphs
-        :param distribution_array:
+        :param distribution_array: 2D numpy array that resembles the heatmap,
+        number of specific animal in each cell.
         :param num_species_dict: a dict containing the total number of animals per species
+        :param  years is the vis_years which is used to scale the axes on the line plot.
         :return: None
         """
         self.steps +=1
@@ -137,6 +139,13 @@ class Visualization:
     def histogram_fitness_updates(self, fitness_list_herb=None,
                                   fitness_list_carn=None,
                                   hist_spec_dict=None):
+        """
+        Updates the histogram for fitness continously as we run the simulation.
+        :param fitness_list_herb: list of fitness for current_herbivores in map
+        :param fitness_list_carn: list of fitness for current_carnivores in map
+        :param hist_spec_dict: dict containing parameters in order to plot axes.
+        :return: None
+        """
 
         if hist_spec_dict is None:
             self.fitness_ax.clear()
@@ -157,6 +166,13 @@ class Visualization:
     def histogram_age_updates(self, age_list_herb=None,
                               age_list_carn=None,
                               hist_spec_dict=None):
+        """
+        Updates the histogram for age continously as we run the simulation.
+        :param age_list_herb: list of age for current_herbivores in map
+        :param age_list_carn: list of age for current_carnivores in map
+        :param hist_spec_dict: hist_spec_dict: dict containing parameters in order to plot axes.
+        :return: None
+        """
 
         if hist_spec_dict is None:
             self.age_ax.clear()
@@ -177,6 +193,13 @@ class Visualization:
     def histogram_weight_updates(self, weight_list_herb=None,
                                  weight_list_carn=None,
                                  hist_spec_dict=None):
+        """
+         Updates the histogram for weight continously as we run the simulation.
+        :param weight_list_herb: list of weight for current_herbivores in map
+        :param weight_list_carn: list of weight for current_carnivores in map
+        :param hist_spec_dict: hist_spec_dict: dict containing parameters in order to plot axes.
+        :return: None
+        """
 
         if hist_spec_dict is None:
             self.weight_ax.clear()
@@ -193,9 +216,3 @@ class Visualization:
                                 range=(0, hist_spec_dict['weight']['max']))
             self.weight_ax.hist(weight_list_carn, bins=fit_bins, histtype='step', color='r',
                                 range=(0, hist_spec_dict['weight']['max']))
-
-
-if __name__ == "__main__":
-    v = Visualization()
-    v.graphics_setup()
-    plt.show()
