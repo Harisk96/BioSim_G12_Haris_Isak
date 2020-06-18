@@ -1,4 +1,4 @@
-from biosim.animals import Herbivore, Carnivore, Animals
+from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 from biosim.island import Island
 import pytest
@@ -42,7 +42,8 @@ class TestIsland:
     """
     def test_constructor(self):
         """
-        Tests the constructor of the island class
+        Tests the constructor of the island class, asserts it has the attributes that it has
+        defined.
         """
         i = Island(default_maps, default_population)
         assert hasattr(i, 'map')
@@ -51,7 +52,7 @@ class TestIsland:
 
     def test_year_property(self):
         """
-        Tests if year-property returns the value of the year-attribute
+        Tests if year-property returns the value of the year-attribute.
         """
         i = Island(default_maps, default_population)
         i._year = 3
@@ -205,6 +206,9 @@ class TestIsland:
             assert len(cell.current_carnivores) < old_n_carns
 
     def test_place_animals(self):
+        """
+
+        """
         i = Island(default_maps, default_population)
         hlist = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
