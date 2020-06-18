@@ -88,7 +88,7 @@ class Visualization:
         Updates the heatmaps and graphs
         :param distribution_array: 2D numpy array that resembles the heatmap,
         number of specific animal in each cell.
-        :param num_species_dict: a dict containing the total number of animals per species
+        :param num_species_dict: a dict containing the total number of animals per species.
         :param  years is the vis_years which is used to scale the axes on the line plot.
         :return: None
         """
