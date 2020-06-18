@@ -17,10 +17,24 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
 class BioSim:
+    """
+    This is the main interface class
+    """
 
     def __init__(self, island_map, ini_pop, seed=1,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt="png"):
+        """
+        Init for biosim class.
+        :param island_map:
+        :param ini_pop:
+        :param seed:
+        :param ymax_animals:
+        :param cmax_animals:
+        :param hist_specs:
+        :param img_base:
+        :param img_fmt:
+        """
 
         np.random.seed(seed)
         self._year = 0

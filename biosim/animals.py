@@ -69,7 +69,9 @@ class Animals:
 
     def __init__(self, age=0, weight=None):
         """
-        Constructor for animal class.
+        This is init
+        :param age:
+        :param weight:
         """
 
         if age != int(age):
