@@ -3,8 +3,14 @@ import numpy as np
 
 
 class Visualization:
+    """
+    This class sets up the visualization and updates of plots.
+    """
 
     def __init__(self):
+        """
+        This is the constructor of the class.
+        """
         self.steps = 0
         self.current_herbivore_data = []
         self.current_carnivore_data = []
@@ -86,10 +92,7 @@ class Visualization:
         :param  years is the vis_years which is used to scale the axes on the line plot.
         :return: None
         """
-        self.steps +=1
-
-
-
+        self.steps += 1
 
         # Heatmap update
         if self.herbies_axis is None:

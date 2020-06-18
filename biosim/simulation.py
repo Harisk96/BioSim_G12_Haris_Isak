@@ -17,10 +17,22 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
 class BioSim:
-
+    """
+    This is the BioSim class, which simulates rossumøya
+    """
     def __init__(self, island_map, ini_pop, seed=1,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt="png"):
+        """
+        :param island_map: Multi-line string specifying island geography
+        :param ini_pop: List of dictionaries specifying initial population
+        :param seed: Integer used as random number seed
+        :param ymax_animals: Number specifying y-axis limit for graph showing animal numbers
+        :param cmax_animals: Dict specifying color-code limits for animal densities
+        :param hist_specs: Specifications for histograms, see below
+        :param img_base: String with beginning of file name for figures, including path
+        :param img_fmt: String with file type for figures, e.g. ’png’
+        """
 
         np.random.seed(seed)
         self._year = 0
