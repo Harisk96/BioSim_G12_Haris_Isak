@@ -65,21 +65,35 @@ class BioSim:
         :return: None
         """
 
-        for i in range(num_years):
-            self._year += 1
+        if img_years is None:
+            img_years = vis_years
+
+        self._final_year = self._year + num_years
+
+
+        while self._year < self._final_year:
             self.island.run_function_one_year()
-            self.visualization.update_graphics(self.create_population_heatmap(),
-                                               self.island.num_animals_per_species)
-            self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
-                                                         self.island.fitness_list()[1],
+
+            if self._year % vis_years == 0:
+                self.visualization.changing_text.set_text('Year:' + str(self._year))
+                self.visualization.update_graphics(vis_years, self.create_population_heatmap(),
+                                                   self.island.num_animals_per_species)
+
+                self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
+                                                             self.island.fitness_list()[1],
+                                                             self.hist_specs)
+                self.visualization.histogram_age_updates(self.island.age_list()[0],
+                                                         self.island.age_list()[1],
                                                          self.hist_specs)
-            self.visualization.histogram_age_updates(self.island.age_list()[0],
-                                                     self.island.age_list()[1],
-                                                     self.hist_specs)
-            self.visualization.histogram_weight_updates(self.island.weight_list()[0],
-                                                        self.island.weight_list()[1],
-                                                        self.hist_specs)
-            self.save_graphics(img_years)
+                self.visualization.histogram_weight_updates(self.island.weight_list()[0],
+                                                            self.island.weight_list()[1],
+                                                            self.hist_specs)
+
+            if self._year % img_years == 0:
+                self.save_graphics(img_years)
+
+            self._year += 1
+
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -236,8 +250,6 @@ class BioSim:
         Function used to make photos of the plot.
         :return: None
         """
-        if img_years is None:
-            return
 
         if self.img_base is None:
             return
