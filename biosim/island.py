@@ -8,6 +8,27 @@ import textwrap
 import numpy as np
 
 class Island:
+
+    """
+    Methods:
+    ---------------
+    check length
+    fitness_list
+    age_list
+    weight_list
+    check_map
+    set_map_coordinates
+    procreate_cells_map
+    feed_cells_island
+    age_in_cells
+    weightloss_island
+    die_island
+    place_population
+    get_adj_cells
+    migration_island
+    run_function_one_year
+    ---------------
+    """
     cell_types = {'H': Highland,
                   'L': Lowland,
                   'D': Desert,
@@ -23,8 +44,6 @@ class Island:
         self.map = self.set_map_coordinates(insert_map)
         self.place_population(init_animals)
         self._year = 0
-
-
 
     @staticmethod
     def check_length(strings):
@@ -194,7 +213,6 @@ class Island:
         for cell in self.map.values():
             cell.birth_cycle()
 
-
     def feed_cells_island(self):
         """
         Method that updates the fodder in the cell,
@@ -245,16 +263,6 @@ class Island:
             pop = position['pop']
             self.map[loc].place_animals(pop)
 
-    def map_size(self):
-        """
-        Determines the size of the island, by giving the length of the island.
-        :return: tuple, 
-        """
-        coordinates = self.map.keys()
-        list_of_coordinates = list(coordinates)
-        size = list_of_coordinates[-1]
-        return size
-
     def get_adj_cells(self, coords):
         """
         Method that gets the adjacent cells relative to the current cells that are not diagonally
@@ -289,8 +297,6 @@ class Island:
                         self.map[destination].add_immigrants(migrant)
                         self.map[coords].remove_emigrants(migrant)
 
-
-    # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
         """
         Function that calls the methods in order to simulate one cycle of the island.

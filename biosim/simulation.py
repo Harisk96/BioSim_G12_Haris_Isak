@@ -59,10 +59,10 @@ class BioSim:
         """
         The simulate function runs through the whole simulation for num_years,
         and calls all the methods necessary in order to simulate and plot.
-        :param num_years:
-        :param vis_years:
-        :param img_years:
-        :return:
+        :param num_years: Number of years we want to simulate
+        :param vis_years: Interval plot updates
+        :param img_years: Interval save photos
+        :return: None
         """
 
         for i in range(num_years):
