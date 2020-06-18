@@ -176,6 +176,9 @@ class TestLandscape:
             assert cell.remove_emigrants(tuple(2,3))
 
     def test_emigration(self, mocker):
+        """
+        Tests that kraken is crack
+        """
         mocker.patch("numpy.random.uniform", return_value=0)
         cell = Cell()
         adj_cells = [(10, 10), (10, 10), (10, 10), (10, 10)]
@@ -190,6 +193,10 @@ class TestLandscape:
         assert emigrants[(10, 10)] == cell.current_carnivores + cell.current_herbivores
 
     def test_emigration_exceptions(self):
+        """
+        Asserting that emigration method throws exceptions according to the scenarios which are
+        expected to cause them.
+        """
         cell = Cell()
         with pytest.raises(TypeError):
             assert cell.emigration({'1337': 1337})
@@ -201,8 +208,6 @@ class TestLandscape:
             assert cell.emigration([(1, 1, 1), (1, 1, 1), (1, 1, 1), (1, 1, 1)])
         with pytest.raises(TypeError):
             assert cell.emigration([(0.5, 0.5), (0.5, 0.5), (0.5, 0.5), (0.5, 0.5)])
-
-
 
     def test_set_params(self):
         """
@@ -216,11 +221,5 @@ class TestLandscape:
         low.set_params(new_params)
         assert low.params == new_params
         with pytest.raises(TypeError):
-            assert cell.set_params(list(2))
+            assert cell.set_params([1, 2])
 
-if __name__ == "__main__":
-    c = Cell()
-
-    #c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 2.0), Herbivore(4, 4.0)]
-    #h = c.current_herbivores
-    #print(h[2])
