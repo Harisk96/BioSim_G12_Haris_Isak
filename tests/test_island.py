@@ -1,5 +1,4 @@
 from biosim.animals import Herbivore, Carnivore
-from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 from biosim.island import Island
 import pytest
 import textwrap
@@ -137,17 +136,17 @@ class TestIsland:
 
     def test_procreation_cells_map(self, mocker):
         mocker.patch("numpy.random.uniform", return_value=0)
-        ini_herbs = [{'loc': (10, 9),
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 40}
                               for _ in range(20)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 40}
                               for _ in range(20)]}]
-        fertile_population = ini_herbs + ini_carns
+        fertile_population = init_herbs + init_carns
         i = Island(default_maps, fertile_population)
         i.procreate_cells_map()
         assert i.num_animals_per_species['Herbivore'] > 20
@@ -155,17 +154,17 @@ class TestIsland:
         assert i.num_animals > 40
 
     def test_feed_cells(self):
-        ini_herbs = [{'loc': (10, 9),
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 20}
                               for _ in range(150)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 20}
                               for _ in range(40)]}]
-        feeding_population = ini_carns + ini_herbs
+        feeding_population = init_carns + init_herbs
         i = Island(default_maps, feeding_population)
         old_weights_herb = i.weight_list()[0]
         old_weights_carn = i.weight_list()[1]
@@ -174,7 +173,7 @@ class TestIsland:
         new_weights_carn = i.weight_list()[1]
         assert sum(new_weights_carn) > sum(old_weights_carn)
         assert sum(new_weights_herb) / len(new_weights_herb) > \
-               sum(old_weights_herb) / len(old_weights_herb)
+            sum(old_weights_herb) / len(old_weights_herb)
 
     def test_age_in_cells(self):
         i = Island(default_maps, default_population)
@@ -272,17 +271,17 @@ class TestIsland:
         to implement the expected changes during the course over a year.
         """
         # Places the default_population in a lowland cell
-        ini_herbs = [{'loc': (10, 9),
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 50}
                               for _ in range(150)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 50}
                               for _ in range(40)]}]
-        population = ini_herbs + ini_carns
+        population = init_herbs + init_carns
         i = Island(default_maps, population)
         i.year = 0  # initializes the current year as 0
         old_herb_weight_list = i.weight_list()[0]  # list of weights original herbivores
