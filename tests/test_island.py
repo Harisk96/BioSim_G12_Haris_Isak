@@ -60,15 +60,26 @@ class TestIsland:
         assert i.year == 3
 
     def test_num_animals(self):
+        """
+        Tests that the num_animals returns the current number of animals on the island.
+        """
         i = Island(default_maps, default_population)
         assert i.num_animals == 190
 
     def test_num_per_species(self):
+        """
+        Tests that num_animals_per_species returns a dictionary with the correct number of
+        herbivores and carnivores on the island.
+        """
         i = Island(default_maps, default_population)
         exp_dict = {'Herbivore': 150, 'Carnivore': 40}
         assert i.num_animals_per_species == exp_dict
 
     def test_check_map(self):
+        """
+        Tests that the check_map method determines the properties of the map of the island, and
+        whether the properties are valid or not.
+        """
         i = Island(default_maps, default_population)
         checked_map = i.check_map(default_maps)
         assert isinstance(checked_map, list)
@@ -76,13 +87,10 @@ class TestIsland:
             assert isinstance(i, str)
             assert len(i) == 21
 
-    def test_check_map_exceptions(self):
-        pass
-
     def test_fitness_list(self):
         """
-        Method that tests that fitness_list returns the fitness of the current herbivores on the
-        island.
+        Method that tests that fitness_list returns the fitness of the current herbivores and
+        current carnivores on the island.
         """
         i = Island(default_maps, default_population)
         fit_list = i.fitness_list()
@@ -98,6 +106,9 @@ class TestIsland:
         assert isinstance(c_fit_list, list)
 
     def test_age_list(self):
+        """
+        Testing that the method age_list returns the age of the current animals on the island.
+        """
         i = Island(default_maps, default_population)
         age_list = i.age_list()
         h_age_list = age_list[0]
@@ -114,6 +125,10 @@ class TestIsland:
         assert (c_age_list, list)
 
     def test_weight_list(self):
+        """
+        Testing that the method weight_list returns the weights of the current animals on the
+        island.
+        """
         i = Island(default_maps, default_population)
         weight_list = i.weight_list()
         h_weight_list = weight_list[0]
@@ -130,11 +145,19 @@ class TestIsland:
         assert isinstance(c_weight_list, list)
 
     def test_set_coordinates_map(self):
+        """
+        Asserts that the set_coordinates_map attaches coordinates as tuples to the cell types on
+        the island in the dictionary.
+        """
         i = Island(default_maps, default_population)
         cords_dict = i.set_map_coordinates(default_maps)
         assert isinstance(cords_dict, dict)
 
     def test_procreation_cells_map(self, mocker):
+        """
+        Asserts that the method procreation_cells_map makes animals in the various cells they
+        populate procreate.
+        """
         mocker.patch("numpy.random.uniform", return_value=0)
         init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
@@ -154,6 +177,9 @@ class TestIsland:
         assert i.num_animals > 40
 
     def test_feed_cells(self):
+        """
+        Asserts that feed_cells method makes animals that populate the various cells eat.
+        """
         init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
@@ -176,6 +202,9 @@ class TestIsland:
             sum(old_weights_herb) / len(old_weights_herb)
 
     def test_age_in_cells(self):
+        """
+        Asserts that the age_in_cells method updates the age of all animals across all cells.
+        """
         i = Island(default_maps, default_population)
         i.age_in_cells()
 
@@ -187,6 +216,9 @@ class TestIsland:
                     assert carn.age == 6
 
     def test_weight_loss(self):
+        """
+        Asserts that the weightloss_island method does make animals across all cells lose weight.
+        """
         i = Island(default_maps, default_population)
         old_weights_herb = i.weight_list()[0]
         old_weights_carn = i.weight_list()[1]
@@ -197,6 +229,9 @@ class TestIsland:
         assert sum(new_weights_herb) < sum(old_weights_herb)
 
     def test_die_island(self, mocker):
+        """
+         
+        """
         mocker.patch("numpy.random.uniform", return_value=0)
         i = Island(default_maps, default_population)
         old_n_herbs = i.num_animals_per_species['Herbivore']
@@ -232,13 +267,6 @@ class TestIsland:
                              ]}]
         with pytest.raises(ValueError):
             assert i.place_population(badlist2)
-
-    def test_map_size(self):
-        """
-        Asserts that the map_size method returns the dimensions.
-        """
-        i = Island(default_maps, default_population)
-        assert i.map_size() == (13, 21)
 
     def test_get_adj_cells(self):
         """
