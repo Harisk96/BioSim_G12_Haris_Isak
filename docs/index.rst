@@ -13,7 +13,7 @@ Welcome to BioSim - Simulation of Ecosystem's documentation!
    simulation
    visualization
    island
-
+   landscape
 
 Indices and tables
 ==================
