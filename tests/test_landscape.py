@@ -1,19 +1,17 @@
 from biosim.animals import Herbivore, Carnivore, Animals
 from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
 import pytest
-import numpy as np
 from operator import attrgetter
-from unittest import mock
+
 
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
+
 
 class TestLandscape:
     """
     Class for testing the methods of landscape-file.
     """
-    #@pytest.mark.parametrize('FerCells', [Lowland, Highland])
-    #@pytest.mark.parametrize('InferCells', [Desert, Sea])
     def test_constructor(self):
         """
         Test that constructor instantiates the objects with the correct parameters.
@@ -59,11 +57,10 @@ class TestLandscape:
         c.grow_fodder()
         assert c.fodder == c.params['f_max']
 
-    def test_grow_fodder_Sea(self):
+    def test_grow_fodder_sea(self):
         w = Sea()
         assert w.grow_fodder() is None
 
-    #@pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_place_animals(self):
         c = Cell()
         h_list = [{'species': 'Herbivore',
@@ -108,7 +105,6 @@ class TestLandscape:
 
         assert len(c.current_herbivores) == 1
         assert len(c.current_carnivores) == 2
-
 
     def test_weight_loss(self):
         c = Cell()
