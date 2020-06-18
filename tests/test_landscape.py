@@ -53,15 +53,25 @@ class TestLandscape:
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_grow_fodder(self, FerCells):
+        """
+        Tests that grow_fodder sets the level of fodder for the fertile cells, i.e lowland and
+        highland, to its f_max parameters.
+        """
         c = FerCells()
         c.grow_fodder()
         assert c.fodder == c.params['f_max']
 
     def test_grow_fodder_sea(self):
+        """
+        Tests if the grow_fodder is None for the Sea subclass.
+        """
         w = Sea()
         assert w.grow_fodder() is None
 
     def test_place_animals(self):
+        """
+        Tests if the place_animals method places animals in the cell.
+        """
         c = Cell()
         h_list = [{'species': 'Herbivore',
                            'age': 5,
@@ -79,22 +89,29 @@ class TestLandscape:
 
     def test_birth_cycle(self, mocker):
         """
-
+        Tests if birth_cycle method results in increase of Herbivores. Mocks out the random
+        function, numpy.random.uniform, with return_value 0, which implies birth_cycle always
+        returns new herbivore and carnivore objects, which should yield larger number of animals
+        in the cell.
         """
         mocker.patch('numpy.random.uniform', return_value=0)
         l = Lowland()
-        l.current_herbivores = [Herbivore(5,100), Herbivore(5,100)]
-        l.current_carnivores = [Carnivore(5,100), Carnivore(5,100)]
+        l.current_herbivores = [Herbivore(5, 100), Herbivore(5, 100)]
+        l.current_carnivores = [Carnivore(5, 100), Carnivore(5, 100)]
         l.birth_cycle()
 
         assert len(l.current_herbivores) >= 3
         assert len(l.current_carnivores) >= 3
 
     def test_death_in_cell(self):
-
+        """
+        Asserts that setting the fitness and weight of animals to 0 results in death. Which is
+        accomplished by setting the weight and fitness to zero, and assert that those animals are
+        not included in the animals currently residing in that cell.
+        """
         c = Cell()
-        c.current_herbivores = [Herbivore(5,0), Herbivore(5,100), Herbivore(3,0)]
-        c.current_carnivores = [Carnivore(2,0), Carnivore(5,100), Carnivore(5,100)]
+        c.current_herbivores = [Herbivore(5, 0), Herbivore(5, 100), Herbivore(3, 0)]
+        c.current_carnivores = [Carnivore(2, 0), Carnivore(5, 100), Carnivore(5, 100)]
         c.current_herbivores[0].fitness = 0
         c.current_herbivores[1].fitness = 1
         c.current_herbivores[2].fitness = 0
@@ -107,6 +124,11 @@ class TestLandscape:
         assert len(c.current_carnivores) == 2
 
     def test_weight_loss(self):
+        """
+        Testing if the weight_loss_cell method results in loss of weight. Does this by creating a
+        list of herbivores and carnivores, then iterate through them, asserting element wise that
+        their weight has decreased.
+        """
         c = Cell()
         c.current_herbivores = [Herbivore(2, 10.0) for _ in range(10)]
         c.current_carnivores = [Carnivore(2, 10.0) for _ in range(10)]
@@ -116,6 +138,11 @@ class TestLandscape:
             assert c.current_carnivores[i].weight < 10.0
 
     def test_feed_herbivore(self):
+        """
+        Asserting that feed_herbivore method only increases the weight of the herbivore if there is
+        fodder in the cell for the herbivore to eat. Compares how the method impacts the weight of
+        the herbivore for no fodder vs fodder.
+        """
         c = Cell()
         weight = 5.0
         c.current_herbivores = [Herbivore(2, weight) for _ in range(10)]
@@ -130,6 +157,9 @@ class TestLandscape:
             assert herb.weight - weight > 0
 
     def test_feed_carnivore(self):
+        """
+        Checks if the feed_carnivores result in the expected sorting of the herbivores and  
+        """
         c = Cell()
         c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
         c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 0.1), Herbivore(4, 12.0)]
@@ -177,8 +207,9 @@ class TestLandscape:
 
     def test_emigration(self, mocker):
         """
-        Tests that kraken is crack
-        Tests that cracken if finally working again
+        Testing that emigration method moves animals from one cell to another if the probability
+        test numpy.random.uniform is lower than the probability of moving, which should imply that
+        the emigration method should return True.
         """
         mocker.patch("numpy.random.uniform", return_value=0)
         cell = Cell()
