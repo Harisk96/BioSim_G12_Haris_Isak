@@ -103,24 +103,67 @@ class Visualization:
 
         plt.pause(1e-6)
 
-    def histogram_fitness_updates(self, fitness_list_herb=None, fitness_list_carn=None):
 
-        self.fitness_ax.clear()
-        self.fitness_ax.title.set_text('Histogram of fitness')
-        self.fitness_ax.hist(fitness_list_herb, bins=10, histtype='step', color='g')
-        self.fitness_ax.hist(fitness_list_carn, bins=10, histtype='step', color='r')
+    def histogram_fitness_updates(self, fitness_list_herb=None,
+                                 fitness_list_carn=None,
+                                 hist_spec_dict=None):
 
-    def histogram_age_updates(self, age_list_herb=None, age_list_carn=None):
-        self.age_ax.clear()
-        self.age_ax.title.set_text('Histogram of age')
-        self.age_ax.hist(age_list_herb, bins=10, histtype='step', color='g')
-        self.age_ax.hist(age_list_carn, bins=10, histtype='step', color='r')
+        if hist_spec_dict is None:
+            self.fitness_ax.clear()
+            self.fitness_ax.title.set_text('Histogram of fitness')
+            self.fitness_ax.hist(fitness_list_herb, bins=10, histtype='step', color='g')
+            self.fitness_ax.hist(fitness_list_carn, bins=10, histtype='step', color='r')
 
-    def histogram_weight_updates(self, weight_list_herb=None, weight_list_carn=None):
-        self.weight_ax.clear()
-        self.weight_ax.title.set_text('Histogram of weight')
-        self.weight_ax.hist(weight_list_herb, bins=10, histtype='step', color='g')
-        self.weight_ax.hist(weight_list_carn, bins=10, histtype='step', color='r')
+        else:
+
+            fit_bins = (int(hist_spec_dict['fitness']['max']/hist_spec_dict['fitness']['delta']))
+            self.fitness_ax.clear()
+            self.fitness_ax.title.set_text('Histogram of fitness')
+            self.fitness_ax.hist(fitness_list_herb, bins=fit_bins, histtype='step', color='g',
+                                range=(0, hist_spec_dict['fitness']['max']))
+            self.fitness_ax.hist(fitness_list_carn, bins=fit_bins, histtype='step', color='r',
+                                range=(0, hist_spec_dict['fitness']['max']))
+
+
+    def histogram_age_updates(self, age_list_herb=None,
+                                 age_list_carn=None,
+                                 hist_spec_dict=None):
+
+        if hist_spec_dict is None:
+            self.age_ax.clear()
+            self.age_ax.title.set_text('Histogram of age')
+            self.age_ax.hist(age_list_herb, bins=10, histtype='step', color='g')
+            self.age_ax.hist(age_list_carn, bins=10, histtype='step', color='r')
+
+        else:
+
+            fit_bins = (int(hist_spec_dict['age']['max']/hist_spec_dict['age']['delta']))
+            self.age_ax.clear()
+            self.age_ax.title.set_text('Histogram of age')
+            self.age_ax.hist(age_list_herb, bins=fit_bins, histtype='step', color='g',
+                                range=(0, hist_spec_dict['age']['max']))
+            self.age_ax.hist(age_list_carn, bins=fit_bins, histtype='step', color='r',
+                                range=(0, hist_spec_dict['age']['max']))
+
+    def histogram_weight_updates(self, weight_list_herb=None,
+                                 weight_list_carn=None,
+                                 hist_spec_dict=None):
+
+        if hist_spec_dict is None:
+            self.weight_ax.clear()
+            self.weight_ax.title.set_text('Histogram of weight')
+            self.weight_ax.hist(weight_list_herb, bins=10, histtype='step', color='g')
+            self.weight_ax.hist(weight_list_carn, bins=10, histtype='step', color='r')
+
+        else:
+
+            fit_bins = (int(hist_spec_dict['weight']['max']/hist_spec_dict['weight']['delta']))
+            self.weight_ax.clear()
+            self.weight_ax.title.set_text('Histogram of weight')
+            self.weight_ax.hist(weight_list_herb, bins=fit_bins, histtype='step', color='g',
+                                range=(0, hist_spec_dict['weight']['max']))
+            self.weight_ax.hist(weight_list_carn, bins=fit_bins, histtype='step', color='r',
+                                range=(0, hist_spec_dict['weight']['max']))
 
 
 

@@ -30,6 +30,7 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.img_ctr = 0
+        self.hist_specs = hist_specs
 
         if img_base is None:
             self.img_base = _DEFAULT_GRAPHICS_DIR+_DEFAULT_GRAPHICS_NAME
@@ -70,11 +71,14 @@ class BioSim:
             self.visualization.update_graphics(self.create_population_heatmap(),
                                                self.island.num_animals_per_species)
             self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
-                                                         self.island.fitness_list()[1])
+                                                         self.island.fitness_list()[1],
+                                                         self.hist_specs)
             self.visualization.histogram_age_updates(self.island.age_list()[0],
-                                                     self.island.age_list()[1])
+                                                     self.island.age_list()[1],
+                                                     self.hist_specs)
             self.visualization.histogram_weight_updates(self.island.weight_list()[0],
-                                                        self.island.weight_list()[1])
+                                                        self.island.weight_list()[1],
+                                                        self.hist_specs)
             self.save_graphics(img_years)
 
     @staticmethod
