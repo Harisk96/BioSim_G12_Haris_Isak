@@ -4,13 +4,12 @@ from biosim.island import Island
 from biosim.landscape import Lowland, Sea, Highland, Desert
 from biosim.animals import Herbivore, Carnivore
 from biosim.visualization import Visualization
-import textwrap
 import pandas as pd
 import os
 import subprocess
 
 _FFMPEG_BINARY = 'ffmpeg'
-_CONERT_BINARY = 'magick'
+_CONVERT_BINARY = 'magick'
 
 _DEFAULT_GRAPHICS_DIR = os.path.join('results/')
 _DEFAULT_GRAPHICS_NAME = 'bs'
@@ -18,10 +17,22 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'
 
 
 class BioSim:
-
+    """
+    This is the BioSim class, which simulates rossumøya
+    """
     def __init__(self, island_map, ini_pop, seed=1,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt="png"):
+        """
+        :param island_map: Multi-line string specifying island geography
+        :param ini_pop: List of dictionaries specifying initial population
+        :param seed: Integer used as random number seed
+        :param ymax_animals: Number specifying y-axis limit for graph showing animal numbers
+        :param cmax_animals: Dict specifying color-code limits for animal densities
+        :param hist_specs: Specifications for histograms, see below
+        :param img_base: String with beginning of file name for figures, including path
+        :param img_fmt: String with file type for figures, e.g. ’png’
+        """
 
         np.random.seed(seed)
         self._year = 0
@@ -31,10 +42,10 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.img_ctr = 0
+        self.hist_specs = hist_specs
 
         if img_base is None:
             self.img_base = _DEFAULT_GRAPHICS_DIR+_DEFAULT_GRAPHICS_NAME
-
 
         if ymax_animals is None:
             ymax_animals = 20000
@@ -51,31 +62,53 @@ class BioSim:
         self._cmax_carn = cmax_carn
     #    self.vis_years = None
 
-
-        #set up graphics
+        # set up graphics
         self.visualization = Visualization()
         self.visualization.graphics_setup(rgb_map=self.create_rgb_map(island_map))
-        #self.visualization.histogram_updates(self.island.fitness_list())
+        # self.visualization.histogram_updates(self.island.fitness_list())
 
     def simulate(self, num_years, vis_years=1, img_years=None):
+        """
+        The simulate function runs through the whole simulation for num_years,
+        and calls all the methods necessary in order to simulate and plot.
+        :param num_years: Number of years we want to simulate
+        :param vis_years: Interval plot updates
+        :param img_years: Interval save photos
+        :return: None
+        """
+
+        if img_years is None:
+            img_years = vis_years
+
+        self._final_year = self._year + num_years
 
 
-        for i in range(num_years):
-            self._year += 1
+        while self._year < self._final_year:
             self.island.run_function_one_year()
-            self.visualization.update_graphics(self.create_population_heatmap(),
-                                               self.island.num_animals_per_species)
-            self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
-                                                         self.island.fitness_list()[1])
-            self.visualization.histogram_age_updates(self.island.age_list()[0],
-                                                     self.island.age_list()[1])
-            self.visualization.histogram_weight_updates(self.island.weight_list()[0],
-                                                     self.island.weight_list()[1])
-            self.save_graphics()
 
-    #todo
-    #@staticmethod
-    def set_animal_parameters(self, species, params):
+            if self._year % vis_years == 0:
+                self.visualization.changing_text.set_text('Year:' + str(self._year))
+                self.visualization.update_graphics(vis_years, self.create_population_heatmap(),
+                                                   self.island.num_animals_per_species)
+
+                self.visualization.histogram_fitness_updates(self.island.fitness_list()[0],
+                                                             self.island.fitness_list()[1],
+                                                             self.hist_specs)
+                self.visualization.histogram_age_updates(self.island.age_list()[0],
+                                                         self.island.age_list()[1],
+                                                         self.hist_specs)
+                self.visualization.histogram_weight_updates(self.island.weight_list()[0],
+                                                            self.island.weight_list()[1],
+                                                            self.hist_specs)
+
+            if self._year % img_years == 0:
+                self.save_graphics(img_years)
+
+            self._year += 1
+
+
+    @staticmethod
+    def set_animal_parameters(species, params):
         """
         Set parameters for animal species.
         :param species: String, name of animal species
@@ -88,9 +121,8 @@ class BioSim:
         if species == 'Carnivore':
             Carnivore.set_params(params)
 
-    #todo Fikse set_set parameters i landscape
-    #@staticmethod
-    def set_landscape_parameters(self, landscape, params):
+    @staticmethod
+    def set_landscape_parameters(landscape, params):
         """
         Set parameters for landscape type.
         :param landscape: String, code letter for landscape
@@ -103,28 +135,50 @@ class BioSim:
                       'W': Sea}
         cell_types[landscape].set_params(params)
 
-
     @property
     def year(self):
-        """last year simulated"""
+        """
+        last year simulated
+        :return: int
+        """
         return self._year
+
     @property
     def num_animals(self):
+        """
+        umber og total animals in map
+        :return: int, positive integer, number of animals currently on the island.
+        """
         return self.island.num_animals
+
     @property
     def num_animals_per_species(self):
+        """
+        Returns a dictionary with number of herbivores and carnivores.
+        :return: dict
+        """
         return self.island.num_animals_per_species
 
     def length_of_map(self):
+        """
+        This function takes the island simulated and finds the width and height of the map.
+        The width and height being the number of cells
+        horizontally and vertically of the map simulated.
+        :returns: int, positive integers, width and height of map.
+        """
         lines = self.inserted_map.strip()
         lines = lines.split('\n')
         lenx_map = len(lines[0])
         leny_map = len(lines)
         return lenx_map, leny_map
 
-
-
-    def create_rgb_map(self, input_raw_string):
+    @staticmethod
+    def create_rgb_map(input_raw_string):
+        """
+        Creates the rgb map that will be used to plot the island map on the final plot.
+        :param input_raw_string:
+        :return: rgb map
+        """
         rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
                      'L': (0.0, 0.6, 0.0),  # dark green
                      'H': (0.5, 1.0, 0.5),  # light green
@@ -135,9 +189,13 @@ class BioSim:
 
         return kart_rgb
 
-
     @property
     def animal_distribution(self):
+        """
+        Used pandas to make a dataframe with the size 4x273.
+        The 4 columns contain Row, Column, number of herbivores, number of carnivores.
+        :return: pandas dataframe
+        """
         data_dict = {'Row': [], 'Col': [], 'Herbivore': [], 'Carnivore': []}
         for loc, cell in self.island.map.items():
             x, y = loc
@@ -149,22 +207,42 @@ class BioSim:
         return df
 
     def add_population(self, population):
+        """
+        This function places the initial population on to the island.
+        :param population:
+        :return: None
+        """
         self.island.place_population(population)
 
     def create_population_heatmap(self):
+        """
+        This function creates a two dimensional array that will be used further to plot the
+        concentration on the heatmaps for herbivores and carnivores.
+
+        The dataframe from animal distribution is used. The Herbivore and Carnivore columns are
+        extracted and converted into a 1x273 one dimensional numpy array, the array is then
+        reshaped into a two dimensional numpy array which tells us how many animals are in each
+        cell. The two dimensional array resembles the map.
+
+        x_len and y_len are the length and width of the map, which is used to reshape the arrays.
+        :returns: 2D numpy arrays
+        """
 
         x_len, y_len = self.length_of_map()
 
         df = self.animal_distribution
         df.set_index(['Row', 'Col'], inplace=True)
-        herb_array = np.asarray(df['Herbivore']).reshape(y_len, x_len)  # gjøre om df til array der jeg bare tar med herbivores, samme med carn
+        herb_array = np.asarray(df['Herbivore']).reshape(y_len, x_len)
         carn_array = np.asarray(df['Carnivore']).reshape(y_len, x_len)
-        # print(herb_array)
-        # print(carn_array)
 
         return herb_array, carn_array
 
     def make_movie(self, movie_fmt=_DEFAULT_MOVIE_FORMAT):
+        """
+        Make movie function in case we want to try to make a video automatically withh ffmpeg.
+        :param movie_fmt:
+        :return: None
+        """
 
         if self.img_base is None:
             raise RuntimeError('No filename is defined')
@@ -179,52 +257,18 @@ class BioSim:
             except subprocess.CalledProcessError as err:
                 raise RuntimeError('ERROR: ffmpeg failed with: {}'. format(err))
 
-
-
-    def save_graphics(self):
+    def save_graphics(self, img_years):
+        """
+        Function used to make photos of the plot.
+        :return: None
+        """
 
         if self.img_base is None:
             return
 
-        if self._year % 1 == 0:   # send 5 as varaibale i nbiosim, img_years
+        if self._year % img_years == 0:
 
             plt.savefig('{base}_{num:05d}.{type}'.format(base=self.img_base,
                                                          num=self.img_ctr,
                                                          type=self.img_fmt))
             self.img_ctr += 1
-
-
-if __name__ == '__main__':
-    plt.ion()
-    ini_herbs = [{'loc': (10, 10),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 10),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]}]
-    default_population = ini_herbs + ini_carns
-
-    default_maps = """
-    WWWWWWWWWWWWWWWWWWWWW
-    WWWWWWWWHWWWWLLLLLLLW
-    WHHHHHLLLLWWLLLLLLLWW
-    WHHHHHHHHHWWLLLLLLWWW
-    WHHHHHLLLLLLLLLLLLWWW
-    WHHHHHLLLDDLLLHLLLWWW
-    WHHLLLLLDDDLLLHHHHWWW
-    WWHHHHLLLDDLLLHWWWWWW
-    WHHHLLLLLDDLLLLLLLWWW
-    WHHHHLLLLDDLLLLWWWWWW
-    WWHHHHLLLLLLLLWWWWWWW
-    WWWHHHHLLLLLLLWWWWWWW
-    WWWWWWWWWWWWWWWWWWWWW"""
-
-    default_maps = textwrap.dedent(default_maps)
-
-    bio = BioSim(default_maps, default_population)
-    bio.length_of_map()
-    bio.create_population_heatmap()

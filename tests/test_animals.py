@@ -34,15 +34,20 @@ class TestAnimals:
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_set_has_migrated(self, Species):
+        """
+        Asserts that the set_has_migrated method updates the boolean value.
+        """
         s = Species()
         s.has_migrated = False
         s.set_has_migrated(True)
         assert s.has_migrated
+        with pytest.raises(TypeError):
+            assert s.set_has_migrated([3, 2])
 
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_new_animal(self, Species):
         """
-        Tests that a new herbivore has age 0
+        asserts that a new herbivore has age 0.
         """
         s = Species()
         assert s.age == 0
@@ -174,7 +179,7 @@ class TestAnimals:
     @pytest.mark.parametrize('Species', [Herbivore, Carnivore])
     def test_eat_fodder(self, Species):
         """
-        Asserts that animal eat the whole of an amount.
+        Asserts that animal eat all of the fodder if it is less than its appetite.
         """
         s = Species(2, 5.0)
         fodder = s.params['F'] - 5
@@ -206,8 +211,6 @@ class TestAnimals:
             assert h.set_params(false_parameter)
         with pytest.raises(TypeError, match='params must be of type dict'):
             assert h.set_params([1])
-
-
 
     def test_birth(self, mocker):
         """
@@ -242,13 +245,14 @@ class TestAnimals:
         Testing that an animal with zero weight will return True, which means the animal is dead
         :return: Boolean (True = dead)
         """
-        h = Herbivore(0,0)
+        h = Herbivore(0, 0)
         assert h.death() is True
 
     def test_migrate(self, mocker):
         """
         Testing the migration function. Mocks out the random function with 0, guaranteeing that the
-        probability for migration exceeds the random function, which will then yield the boolean True.
+        probability for migration exceeds the random function, which will then yield the boolean
+        True.
         """
         mocker.patch('numpy.random.uniform', return_value=0)
         h = Herbivore(2, 5.0)
@@ -303,25 +307,23 @@ class TestAnimals:
 
     def test_eat_carn2(self):
 
-        h = Herbivore(2,10)
+        h = Herbivore(2, 10)
         h.fitness = 10
         h_list = [h]
 
-        c = Carnivore(5,20)
+        c = Carnivore(5, 20)
         c.fitness = 20
         c.set_params({'DeltaPhiMax': 10.0})
         c.eat_carn(h_list)
         assert c.weight == 20 + 0.75 * h.weight
 
-
     def test_eat_carn3(self):
-
 
         h = Herbivore(2, 60)
         h.fitness = 10
         h_list = [h]
 
-        c = Carnivore(5,20)
+        c = Carnivore(5, 20)
         c.fitness = 20
         old_weight = c.weight
         c.set_params({'DeltaPhiMax': 10.0})
@@ -352,8 +354,3 @@ class TestAnimals:
             list_of_initial_weights.append(s.weight)
             ks_stat, p_val = kstest(list_of_initial_weights, 'norm')
             assert p_val < ALPHA
-
-
-
-
-

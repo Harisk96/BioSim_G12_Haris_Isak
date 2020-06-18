@@ -1,5 +1,4 @@
-from biosim.animals import Herbivore, Carnivore, Animals
-from biosim.landscape import Cell, Lowland, Highland, Desert, Sea
+from biosim.animals import Herbivore, Carnivore
 from biosim.island import Island
 import pytest
 import textwrap
@@ -8,10 +7,10 @@ __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
 ini_herbs = [{'loc': (10, 10),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(150)]}]
 ini_carns = [{'loc': (10, 10),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
@@ -36,13 +35,16 @@ default_maps = """
 
 default_maps = textwrap.dedent(default_maps)
 
+
 class TestIsland:
     """
     Class that tests island class.
     """
+
     def test_constructor(self):
         """
-        Tests the constructor of the island class
+        Tests the constructor of the island class, asserts it has the attributes that it has
+        defined.
         """
         i = Island(default_maps, default_population)
         assert hasattr(i, 'map')
@@ -51,22 +53,33 @@ class TestIsland:
 
     def test_year_property(self):
         """
-        Tests if year-property returns the value of the year-attribute
+        Tests if year-property returns the value of the year-attribute.
         """
         i = Island(default_maps, default_population)
         i._year = 3
         assert i.year == 3
 
     def test_num_animals(self):
+        """
+        Tests that the num_animals returns the current number of animals on the island.
+        """
         i = Island(default_maps, default_population)
         assert i.num_animals == 190
 
     def test_num_per_species(self):
+        """
+        Tests that num_animals_per_species returns a dictionary with the correct number of
+        herbivores and carnivores on the island.
+        """
         i = Island(default_maps, default_population)
         exp_dict = {'Herbivore': 150, 'Carnivore': 40}
         assert i.num_animals_per_species == exp_dict
 
     def test_check_map(self):
+        """
+        Tests that the check_map method determines the properties of the map of the island, and
+        whether the properties are valid or not.
+        """
         i = Island(default_maps, default_population)
         checked_map = i.check_map(default_maps)
         assert isinstance(checked_map, list)
@@ -74,13 +87,10 @@ class TestIsland:
             assert isinstance(i, str)
             assert len(i) == 21
 
-    def test_check_map_exceptions(self):
-        pass
-
     def test_fitness_list(self):
         """
-        Method that tests that fitness_list returns the fitness of the current herbivores on the
-        island.
+        Method that tests that fitness_list returns the fitness of the current herbivores and
+        current carnivores on the island.
         """
         i = Island(default_maps, default_population)
         fit_list = i.fitness_list()
@@ -96,6 +106,9 @@ class TestIsland:
         assert isinstance(c_fit_list, list)
 
     def test_age_list(self):
+        """
+        Testing that the method age_list returns the age of the current animals on the island.
+        """
         i = Island(default_maps, default_population)
         age_list = i.age_list()
         h_age_list = age_list[0]
@@ -108,10 +121,14 @@ class TestIsland:
             assert i == h.age
         for i in c_age_list:
             assert i == c.age
-        assert(h_age_list, list)
-        assert(c_age_list, list)
+        assert (h_age_list, list)
+        assert (c_age_list, list)
 
     def test_weight_list(self):
+        """
+        Testing that the method weight_list returns the weights of the current animals on the
+        island.
+        """
         i = Island(default_maps, default_population)
         weight_list = i.weight_list()
         h_weight_list = weight_list[0]
@@ -128,23 +145,31 @@ class TestIsland:
         assert isinstance(c_weight_list, list)
 
     def test_set_coordinates_map(self):
+        """
+        Asserts that the set_coordinates_map attaches coordinates as tuples to the cell types on
+        the island in the dictionary.
+        """
         i = Island(default_maps, default_population)
         cords_dict = i.set_map_coordinates(default_maps)
         assert isinstance(cords_dict, dict)
 
     def test_procreation_cells_map(self, mocker):
+        """
+        Asserts that the method procreation_cells_map makes animals in the various cells they
+        populate procreate.
+        """
         mocker.patch("numpy.random.uniform", return_value=0)
-        ini_herbs = [{'loc': (10, 9),
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 40}
                               for _ in range(20)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 40}
                               for _ in range(20)]}]
-        fertile_population = ini_herbs + ini_carns
+        fertile_population = init_herbs + init_carns
         i = Island(default_maps, fertile_population)
         i.procreate_cells_map()
         assert i.num_animals_per_species['Herbivore'] > 20
@@ -152,17 +177,20 @@ class TestIsland:
         assert i.num_animals > 40
 
     def test_feed_cells(self):
-        ini_herbs = [{'loc': (10, 9),
+        """
+        Asserts that feed_cells method makes animals that populate the various cells eat.
+        """
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 20}
                               for _ in range(150)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 20}
                               for _ in range(40)]}]
-        feeding_population = ini_carns + ini_herbs
+        feeding_population = init_carns + init_herbs
         i = Island(default_maps, feeding_population)
         old_weights_herb = i.weight_list()[0]
         old_weights_carn = i.weight_list()[1]
@@ -170,10 +198,13 @@ class TestIsland:
         new_weights_herb = i.weight_list()[0]
         new_weights_carn = i.weight_list()[1]
         assert sum(new_weights_carn) > sum(old_weights_carn)
-        assert sum(new_weights_herb)/len(new_weights_herb) > \
-               sum(old_weights_herb)/len(old_weights_herb)
+        assert sum(new_weights_herb) / len(new_weights_herb) > \
+            sum(old_weights_herb) / len(old_weights_herb)
 
     def test_age_in_cells(self):
+        """
+        Asserts that the age_in_cells method updates the age of all animals across all cells.
+        """
         i = Island(default_maps, default_population)
         i.age_in_cells()
 
@@ -185,6 +216,9 @@ class TestIsland:
                     assert carn.age == 6
 
     def test_weight_loss(self):
+        """
+        Asserts that the weightloss_island method does make animals across all cells lose weight.
+        """
         i = Island(default_maps, default_population)
         old_weights_herb = i.weight_list()[0]
         old_weights_carn = i.weight_list()[1]
@@ -195,6 +229,9 @@ class TestIsland:
         assert sum(new_weights_herb) < sum(old_weights_herb)
 
     def test_die_island(self, mocker):
+        """
+        Asserts that the die_island function makes sure that the animals die across all the cells.
+        """
         mocker.patch("numpy.random.uniform", return_value=0)
         i = Island(default_maps, default_population)
         old_n_herbs = i.num_animals_per_species['Herbivore']
@@ -205,35 +242,32 @@ class TestIsland:
             assert len(cell.current_carnivores) < old_n_carns
 
     def test_place_animals(self):
+        """
+        Asserting that the place_population method places animals in valid cells, i.e cells that
+        corresponds to keys in the dictionary and that are not of type water.
+        """
         i = Island(default_maps, default_population)
         hlist = [{'loc': (10, 9),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 40}
-                              for _ in range(10)]}]
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 40}
+                          for _ in range(10)]}]
         i.place_population(hlist)
         assert i.num_animals == 200
         badlist = [{'loc': (-1, -1),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 40}
-                              ]}]
-        with pytest.raises(KeyError):
-            assert i.place_population(badlist)
-        badlist2 = [{'loc': (1, 1),
                     'pop': [{'species': 'Herbivore',
                              'age': 5,
                              'weight': 40}
                             ]}]
+        with pytest.raises(KeyError):
+            assert i.place_population(badlist)
+        badlist2 = [{'loc': (1, 1),
+                     'pop': [{'species': 'Herbivore',
+                              'age': 5,
+                              'weight': 40}
+                             ]}]
         with pytest.raises(ValueError):
             assert i.place_population(badlist2)
-
-    def test_map_size(self):
-        """
-        Asserts that the map_size method returns the dimensions.
-        """
-        i = Island(default_maps, default_population)
-        assert i.map_size() == (13, 21)
 
     def test_get_adj_cells(self):
         """
@@ -266,48 +300,47 @@ class TestIsland:
         to implement the expected changes during the course over a year.
         """
         # Places the default_population in a lowland cell
-        ini_herbs = [{'loc': (10, 9),
+        init_herbs = [{'loc': (10, 9),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
                                'weight': 50}
                               for _ in range(150)]}]
-        ini_carns = [{'loc': (10, 9),
+        init_carns = [{'loc': (10, 9),
                       'pop': [{'species': 'Carnivore',
                                'age': 5,
                                'weight': 50}
                               for _ in range(40)]}]
-        population = ini_herbs + ini_carns
+        population = init_herbs + init_carns
         i = Island(default_maps, population)
-        i.year = 0 # initializes the current year as 0
-        old_herb_weight_list = i.weight_list()[0] # list of weights original herbivores
-        old_carn_weight_list = i.weight_list()[1] # list of weights original carnivores
-        old_herb_fitness_list = i.fitness_list()[0] # list of fitness of original herbivores
-        old_carn_fitness_list = i.fitness_list()[1] # list of fitness of original carnivores
+        i.year = 0  # initializes the current year as 0
+        old_herb_weight_list = i.weight_list()[0]  # list of weights original herbivores
+        old_carn_weight_list = i.weight_list()[1]  # list of weights original carnivores
+        old_herb_fitness_list = i.fitness_list()[0]  # list of fitness of original herbivores
+        old_carn_fitness_list = i.fitness_list()[1]  # list of fitness of original carnivores
         i.run_function_one_year()
-        assert i.year == 1 # asserts that the year has been updated by one year
-        herb_age_list = i.age_list()[0] # list of age of herbivores after one year
-        carn_age_list = i.age_list()[1] # list of age of carnivores after one year
+        assert i.year == 1  # asserts that the year has been updated by one year
+        herb_age_list = i.age_list()[0]  # list of age of herbivores after one year
+        carn_age_list = i.age_list()[1]  # list of age of carnivores after one year
         for herb_age in herb_age_list:
-            assert herb_age == 6 or herb_age == 1 # asserts that herbivores have aged by one year,
-                                                  # surviving original herbivores with age 6 and
-                                                  # surviving new_borns with age 1
+            assert herb_age == 6 or herb_age == 1  # asserts that herbivores have aged by one year,
+            # surviving original herbivores with age 6 and
+            # surviving new_borns with age 1
         for carn_age in carn_age_list:
-            assert carn_age == 6 or carn_age == 1 # asserts that herbivores have aged by one year,
-                                                  # surviving original herbivores with age 6 and
-                                                  # surviving new_borns with age 1
+            assert carn_age == 6 or carn_age == 1  # asserts that herbivores have aged by one year,
+            # surviving original herbivores with age 6 and
+        # surviving new_borns with age 1
 
-        assert i.weight_list()[0] != old_herb_weight_list # asserts that list of weights changed
-        assert i.weight_list()[1] != old_carn_weight_list # asserts that list of weights changed
-        assert i.fitness_list()[0] != old_herb_fitness_list # asserts that list of fitness changed
-        assert i.fitness_list()[1] != old_carn_fitness_list # asserts that list of fitness changed
-        c1 = i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores # population adjacent cell
-        c2 = i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores # population adjacent cell
-        c3 = i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores # population adjacent cell
-        c4 = i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores # population adjacent cell
-        assert c1 > 0 or c2 > 0 or c3 > 0 or c4 > 0 # checking if at least one originally empty
-                                                    # cells have received migrating animals
+        assert i.weight_list()[0] != old_herb_weight_list  # asserts that list of weights changed
+        assert i.weight_list()[1] != old_carn_weight_list  # asserts that list of weights changed
+        assert i.fitness_list()[0] != old_herb_fitness_list  # asserts that list of fitness changed
+        assert i.fitness_list()[1] != old_carn_fitness_list  # asserts that list of fitness changed
+        c1 = i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores  # population adjacent cell
+        c2 = i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores  # population adjacent cell
+        c3 = i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores  # population adjacent cell
+        c4 = i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores  # population adjacent cell
+        assert c1 > 0 or c2 > 0 or c3 > 0 or c4 > 0  # checking if at least one originally empty
+        # cells have received migrating animals
         for cell in i.map.values():
             for animal in cell.current_herbivores + cell.current_carnivores:
-                assert animal.has_migrated is False # asserts that the animal's has_migrated
-                                                    # status is reset to false after each cyclus
-
+                assert animal.has_migrated is False  # asserts that the animal's has_migrated
+        # status is reset to false after each cyclus

@@ -7,11 +7,31 @@ np.random.seed(1)
 __author__ = "Haris Karovic", "Isak Finnøy"
 __email__ = "harkarov@nmbu.no", "isfi@nmbu.no"
 
+
 class Animals:
 
     """
     Superclass that represents an animal. Contains all the features for for creating the animals.
     herbivores and carnivores are subclasses of this superclass.
+
+    Methods:
+    ---------------
+    _q
+    set_params
+    set_has_migrated
+    update_fitness
+    eat
+    yearly_weight loss
+    update_age
+    birth
+    migrate
+    death
+
+    ---------------
+    Carnivore subclass:
+    slay
+    eat_carn
+    ---------------
     """
     params = {}
 
@@ -49,7 +69,9 @@ class Animals:
 
     def __init__(self, age=0, weight=None):
         """
-        Constructor for animal class.
+        This is init
+        :param age:
+        :param weight:
         """
 
         if age != int(age):
@@ -75,6 +97,14 @@ class Animals:
         self.has_migrated = False
 
     def set_has_migrated(self, boolean):
+        """
+        Sets new values for the has_migrated status of the animal.
+        :param boolean: bool
+        :return: None
+        """
+        if not isinstance(boolean, bool):
+            raise TypeError('Input argument has to be of type bool')
+
         self.has_migrated = boolean
 
     def update_fitness(self):
@@ -89,7 +119,6 @@ class Animals:
             q_negative = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
             self.fitness = q_positive * q_negative
         return self.fitness
-
 
     def eat(self, fodder):
         """
@@ -111,7 +140,6 @@ class Animals:
 
         return food_eaten
 
-
     def yearly_weight_loss(self):
         """
         Every year, the weight of the animal decreases by ηw.
@@ -120,7 +148,6 @@ class Animals:
         subtracted_weight = self.weight * self.params['eta']
         self.weight -= subtracted_weight
         self.update_fitness()
-
 
     def update_age(self):
         """
@@ -139,23 +166,24 @@ class Animals:
         g = self.params['gamma']
         xi = self.params['xi']
         zeta = self.params['zeta']
+
         if self.weight < zeta * (self.params['w_birth'] + self.params['sigma_birth']):
-            return None # Returns ''None'', see comments in landscape
+            return None
+
         p_birth = min(1, g * self.fitness * (num_animals-1))
 
         if np.random.uniform(0, 1) < p_birth:
             birth_weight = np.random.normal(self.params['w_birth'], self.params['sigma_birth'])
 
             if xi*birth_weight < self.weight:
-            # You are missing a check for whether xi*birth_weight > self.weight
                 self.weight -= xi * birth_weight
                 self.update_fitness()
-            if isinstance(self, Herbivore):
-                return Herbivore(0, birth_weight) #endret
 
-            elif isinstance(self, Carnivore):
-                return Carnivore(0, birth_weight) #endret
-                 # This one is never called if the function returns a Herbivore or a Carnivore
+                if isinstance(self, Herbivore):
+                    return Herbivore(0, birth_weight)
+
+                elif isinstance(self, Carnivore):
+                    return Carnivore(0, birth_weight)
 
     def migrate(self):
         """
@@ -178,6 +206,7 @@ class Animals:
         prob_death = self.params['omega'] * (1 - self.fitness)
         random_num = np.random.uniform(0, 1)
         return prob_death > random_num
+
 
 class Herbivore(Animals):
     """
@@ -210,19 +239,14 @@ class Carnivore(Animals):
     """
 
     params = {
-    'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
-    'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
-    'zeta': 3.5,'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
-    }
+        'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125, 'a_half': 40.0,
+        'phi_age': 0.3, 'w_half': 4.0, 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8,
+        'zeta': 3.5, 'xi': 1.1, 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0
+        }
 
     def __init__(self, age=0, weight=None):
         super().__init__(age, weight)
-    """
-    def consumption_herb(self, herb_weight):
 
-        self.weight += self.params['beta'] * herb_weight
-        self.update_fitness()
-    """
     def slay(self, herb):
         if self.fitness <= herb.fitness:
             return False
@@ -233,15 +257,6 @@ class Carnivore(Animals):
 
         else:
             return True
-
-
-
-#            slay = True # Useless
-
-#        else:
-#            slay = False # Useless
-
-#        return slay # Delete all the slay variables. and return Random.uniform(0,1) < prob_kill instead.
 
     def eat_carn(self, herbivore_list):
 
@@ -264,26 +279,7 @@ class Carnivore(Animals):
                 else:
                     self.weight += self.params['beta'] * herbivore.weight
                     amount_eaten += herbivore.weight
-                #self.consumption_herb(herbivore.weight) # Consumption herb is also an useless function, you are dividing up the code too excessively.
+
                 self.update_fitness()
                 dead_herbs.append(herbivore)
         return dead_herbs
-
-
-if __name__ == "__main__":
-    """
-    h = Herbivore(age=2, weight=5.0)
-    c = Carnivore(age=10, weight=5.0)
-    print(h.fitness)
-    print(type(h.fitness))
-    print(c.fitness)
-    print(type(c.fitness))
-
-    h_list = [Herbivore() for _ in range(10)]
-    for h in h_list:
-        print(h.fitness)
-
-    #more for animals with more weight
-    #less for animals with less weight
-    """
-    pass
