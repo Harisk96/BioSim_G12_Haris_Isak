@@ -8,10 +8,10 @@ __author__ = 'Haris Karovic', 'Isak Finnøy'
 __email__ = 'harkarov@nmbu.no', 'isfi@nmbu.no'
 
 ini_herbs = [{'loc': (10, 10),
-                  'pop': [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(150)]}]
+              'pop': [{'species': 'Herbivore',
+                       'age': 5,
+                       'weight': 20}
+                      for _ in range(150)]}]
 ini_carns = [{'loc': (10, 10),
               'pop': [{'species': 'Carnivore',
                        'age': 5,
@@ -36,10 +36,12 @@ default_maps = """
 
 default_maps = textwrap.dedent(default_maps)
 
+
 class TestIsland:
     """
     Class that tests island class.
     """
+
     def test_constructor(self):
         """
         Tests the constructor of the island class, asserts it has the attributes that it has
@@ -109,8 +111,8 @@ class TestIsland:
             assert i == h.age
         for i in c_age_list:
             assert i == c.age
-        assert(h_age_list, list)
-        assert(c_age_list, list)
+        assert (h_age_list, list)
+        assert (c_age_list, list)
 
     def test_weight_list(self):
         i = Island(default_maps, default_population)
@@ -171,8 +173,8 @@ class TestIsland:
         new_weights_herb = i.weight_list()[0]
         new_weights_carn = i.weight_list()[1]
         assert sum(new_weights_carn) > sum(old_weights_carn)
-        assert sum(new_weights_herb)/len(new_weights_herb) > \
-               sum(old_weights_herb)/len(old_weights_herb)
+        assert sum(new_weights_herb) / len(new_weights_herb) > \
+               sum(old_weights_herb) / len(old_weights_herb)
 
     def test_age_in_cells(self):
         i = Island(default_maps, default_population)
@@ -211,24 +213,24 @@ class TestIsland:
         """
         i = Island(default_maps, default_population)
         hlist = [{'loc': (10, 9),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 40}
-                              for _ in range(10)]}]
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 40}
+                          for _ in range(10)]}]
         i.place_population(hlist)
         assert i.num_animals == 200
         badlist = [{'loc': (-1, -1),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 40}
-                              ]}]
-        with pytest.raises(KeyError):
-            assert i.place_population(badlist)
-        badlist2 = [{'loc': (1, 1),
                     'pop': [{'species': 'Herbivore',
                              'age': 5,
                              'weight': 40}
                             ]}]
+        with pytest.raises(KeyError):
+            assert i.place_population(badlist)
+        badlist2 = [{'loc': (1, 1),
+                     'pop': [{'species': 'Herbivore',
+                              'age': 5,
+                              'weight': 40}
+                             ]}]
         with pytest.raises(ValueError):
             assert i.place_population(badlist2)
 
@@ -282,36 +284,35 @@ class TestIsland:
                               for _ in range(40)]}]
         population = ini_herbs + ini_carns
         i = Island(default_maps, population)
-        i.year = 0 # initializes the current year as 0
-        old_herb_weight_list = i.weight_list()[0] # list of weights original herbivores
-        old_carn_weight_list = i.weight_list()[1] # list of weights original carnivores
-        old_herb_fitness_list = i.fitness_list()[0] # list of fitness of original herbivores
-        old_carn_fitness_list = i.fitness_list()[1] # list of fitness of original carnivores
+        i.year = 0  # initializes the current year as 0
+        old_herb_weight_list = i.weight_list()[0]  # list of weights original herbivores
+        old_carn_weight_list = i.weight_list()[1]  # list of weights original carnivores
+        old_herb_fitness_list = i.fitness_list()[0]  # list of fitness of original herbivores
+        old_carn_fitness_list = i.fitness_list()[1]  # list of fitness of original carnivores
         i.run_function_one_year()
-        assert i.year == 1 # asserts that the year has been updated by one year
-        herb_age_list = i.age_list()[0] # list of age of herbivores after one year
-        carn_age_list = i.age_list()[1] # list of age of carnivores after one year
+        assert i.year == 1  # asserts that the year has been updated by one year
+        herb_age_list = i.age_list()[0]  # list of age of herbivores after one year
+        carn_age_list = i.age_list()[1]  # list of age of carnivores after one year
         for herb_age in herb_age_list:
-            assert herb_age == 6 or herb_age == 1 # asserts that herbivores have aged by one year,
-                                                  # surviving original herbivores with age 6 and
-                                                  # surviving new_borns with age 1
+            assert herb_age == 6 or herb_age == 1  # asserts that herbivores have aged by one year,
+            # surviving original herbivores with age 6 and
+            # surviving new_borns with age 1
         for carn_age in carn_age_list:
-            assert carn_age == 6 or carn_age == 1 # asserts that herbivores have aged by one year,
-                                                  # surviving original herbivores with age 6 and
-                                                  # surviving new_borns with age 1
+            assert carn_age == 6 or carn_age == 1  # asserts that herbivores have aged by one year,
+            # surviving original herbivores with age 6 and
+        # surviving new_borns with age 1
 
-        assert i.weight_list()[0] != old_herb_weight_list # asserts that list of weights changed
-        assert i.weight_list()[1] != old_carn_weight_list # asserts that list of weights changed
-        assert i.fitness_list()[0] != old_herb_fitness_list # asserts that list of fitness changed
-        assert i.fitness_list()[1] != old_carn_fitness_list # asserts that list of fitness changed
-        c1 = i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores # population adjacent cell
-        c2 = i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores # population adjacent cell
-        c3 = i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores # population adjacent cell
-        c4 = i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores # population adjacent cell
-        assert c1 > 0 or c2 > 0 or c3 > 0 or c4 > 0 # checking if at least one originally empty
-                                                    # cells have received migrating animals
+        assert i.weight_list()[0] != old_herb_weight_list  # asserts that list of weights changed
+        assert i.weight_list()[1] != old_carn_weight_list  # asserts that list of weights changed
+        assert i.fitness_list()[0] != old_herb_fitness_list  # asserts that list of fitness changed
+        assert i.fitness_list()[1] != old_carn_fitness_list  # asserts that list of fitness changed
+        c1 = i.map[(11, 9)].n_carnivores + i.map[(11, 9)].n_herbivores  # population adjacent cell
+        c2 = i.map[(9, 9)].n_carnivores + i.map[(9, 9)].n_herbivores  # population adjacent cell
+        c3 = i.map[(10, 10)].n_carnivores + i.map[(10, 10)].n_herbivores  # population adjacent cell
+        c4 = i.map[(10, 8)].n_carnivores + i.map[(10, 8)].n_herbivores  # population adjacent cell
+        assert c1 > 0 or c2 > 0 or c3 > 0 or c4 > 0  # checking if at least one originally empty
+        # cells have received migrating animals
         for cell in i.map.values():
             for animal in cell.current_herbivores + cell.current_carnivores:
-                assert animal.has_migrated is False # asserts that the animal's has_migrated
-                                                    # status is reset to false after each cyclus
-
+                assert animal.has_migrated is False  # asserts that the animal's has_migrated
+        # status is reset to false after each cyclus
