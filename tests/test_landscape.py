@@ -74,13 +74,13 @@ class TestLandscape:
         """
         c = Cell()
         h_list = [{'species': 'Herbivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]
+                              'age': 5,
+                              'weight': 20}
+                              for _ in range(40)]
         c_list = [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]
+                              'age': 5,
+                              'weight': 20}
+                               for _ in range(40)]
 
         with pytest.raises(TypeError, match='list_of_animals has to be of type list'):
             assert c.place_animals("string")
@@ -95,13 +95,13 @@ class TestLandscape:
         in the cell.
         """
         mocker.patch('numpy.random.uniform', return_value=0)
-        l = Lowland()
-        l.current_herbivores = [Herbivore(5, 100), Herbivore(5, 100)]
-        l.current_carnivores = [Carnivore(5, 100), Carnivore(5, 100)]
-        l.birth_cycle()
+        low = Lowland()
+        low.current_herbivores = [Herbivore(5, 100), Herbivore(5, 100)]
+        low.current_carnivores = [Carnivore(5, 100), Carnivore(5, 100)]
+        low.birth_cycle()
 
-        assert len(l.current_herbivores) >= 3
-        assert len(l.current_carnivores) >= 3
+        assert len(low.current_herbivores) >= 3
+        assert len(low.current_carnivores) >= 3
 
     def test_death_in_cell(self):
         """
@@ -158,11 +158,12 @@ class TestLandscape:
 
     def test_feed_carnivore(self):
         """
-        Checks if the feed_carnivores result in the expected sorting of the herbivores and  
+        Checks if the feed_carnivores result in the expected sorting of the herbivores and
+        carnivores according to their fitness, and whether the carnivores eat the weakest herbivore.
         """
         c = Cell()
         c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
-        c.current_herbivores = [Herbivore(6, 6.0), Herbivore(2, 0.1), Herbivore(4, 12.0)]
+        c.current_herbivores = [Herbivore(6, 30.0), Herbivore(2, 0.1), Herbivore(4, 40.0)]
         c.feed_carnivores()
         assert c.current_carnivores[0].fitness > c.current_carnivores[1].fitness
         assert c.current_carnivores[1].fitness > c.current_carnivores[2].fitness
@@ -171,21 +172,33 @@ class TestLandscape:
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
+        """
+        Asserts that the feed_all method resets the amount of fodder to the max parameters.
+        """
         fc = FerCells()
         fc.feed_all()
         assert fc.fodder == fc.params['f_max']
 
     def test_age_animals(self):
-        l = Lowland()
-        l.current_carnivores = [Carnivore(1,1), Carnivore(3,3)]
-        l.current_herbivores = [Herbivore(9,9), Herbivore(2,2)]
-        l.age_animals()
-        assert l.current_carnivores[0].age == 2
-        assert l.current_carnivores[1].age == 4
-        assert l.current_herbivores[0].age == 10
-        assert l.current_herbivores[1].age == 3
+        """
+        Tests that the age_animals method ages the animals by one year. Creates a list of animals,
+        then assert element wise that they have indeed increased by one year.
+        """
+        low = Lowland()
+        low.current_carnivores = [Carnivore(1, 1), Carnivore(3, 3)]
+        low.current_herbivores = [Herbivore(9, 9), Herbivore(2, 2)]
+        low.age_animals()
+        assert low.current_carnivores[0].age == 2
+        assert low.current_carnivores[1].age == 4
+        assert low.current_herbivores[0].age == 10
+        assert low.current_herbivores[1].age == 3
 
     def test_add_immigrants(self):
+        """
+        Tests that the add_immigrants method adds new animals to the current animals in the cell.
+        Starts by defining current_herbivores and current_carnivores, then checking if they increase
+        by the number of immigrants we add.
+        """
         cell = Cell()
         cell.current_carnivores = [Carnivore() for _ in range(10)]
         cell.current_herbivores = [Herbivore() for _ in range(10)]
@@ -193,9 +206,14 @@ class TestLandscape:
         cell.add_immigrants(immigrants)
         assert cell.n_carnivores == 11 and cell.n_herbivores == 11
         with pytest.raises(TypeError):
-            assert cell.add_immigrants(tuple(3, 2))
+            assert cell.add_immigrants((3, 2))
 
     def test_remove_emigrants(self):
+        """
+        Tests that remove_emigrants removes emigrating animals from the current animals in the cell-
+        Starts by defining current_herbivores and current_carnivores, then checking if they decrease
+        by the number of emigrant we remove.
+        """
         cell = Cell()
         cell.current_carnivores = [Carnivore() for _ in range(10)]
         cell.current_herbivores = [Herbivore() for _ in range(10)]
@@ -203,7 +221,7 @@ class TestLandscape:
         cell.remove_emigrants(emigrants)
         assert cell.n_carnivores == 9 and cell.n_herbivores == 9
         with pytest.raises(TypeError):
-            assert cell.remove_emigrants(tuple(2,3))
+            assert cell.remove_emigrants((2, 3))
 
     def test_emigration(self, mocker):
         """
@@ -243,15 +261,15 @@ class TestLandscape:
 
     def test_set_params(self):
         """
-        Testing the set_params method in landscape file
+        Testing the set_params method in landscape file, that it sets the parameters according to
+        our specifications.
         """
         cell = Cell()
         low = Lowland()
         new_params = {'f_max': 100}
-        old_params = {'f_max': 800} # parameter for fodder for lowland object
+        old_params = {'f_max': 800}  # parameter for fodder for lowland object
         assert low.params == old_params
         low.set_params(new_params)
         assert low.params == new_params
         with pytest.raises(TypeError):
             assert cell.set_params([1, 2])
-
