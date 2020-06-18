@@ -214,8 +214,8 @@ class Island:
 
     def weightloss_island(self):
         """
-        Method that itereates over all the cells on the island, and makes the animals in the cells
-        lose weight.
+        Method that iterates over all the cells on the island, and makes the animals in the cells
+        lose weight on an annual basis.
         :return: None
         """
         for cell in self.map.values():
@@ -248,7 +248,7 @@ class Island:
     def map_size(self):
         """
         Determines the size of the island, by giving the length of the island.
-        :return:
+        :return: tuple, 
         """
         coordinates = self.map.keys()
         list_of_coordinates = list(coordinates)
@@ -271,7 +271,10 @@ class Island:
         """
         Method that implements migration of animals between the cells in the matrix that represents
         the island. It iterates through all the cells of the island, gets the adjacent cells,
-        colle
+        collects the animals qualifying for migration in a dictionary of potential emigrants, then
+        checks if the destinations is possible to migrate, i.e is not of type Sea before inserting
+        the animals into the new cell. It then removes the animals from the cell which it
+        migrated from.
         :return: None
         """
 
@@ -289,6 +292,10 @@ class Island:
 
     # I FUNKSJONEN UNDER SKAL VI KALLE PÅ FUNKSJONER FRA ISLAND CELLEN FOR Å KJØRE GJENNOM ETT ÅR
     def run_function_one_year(self):
+        """
+        Function that calls the methods in order to simulate one cycle of the island.
+        :return: None
+        """
         self.fitness_list()
         self.age_list()
         self.weight_list()
