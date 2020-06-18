@@ -230,7 +230,7 @@ class TestIsland:
 
     def test_die_island(self, mocker):
         """
-         
+        Asserts that the die_island function makes sure that the animals die across all the cells.
         """
         mocker.patch("numpy.random.uniform", return_value=0)
         i = Island(default_maps, default_population)
@@ -243,7 +243,8 @@ class TestIsland:
 
     def test_place_animals(self):
         """
-
+        Asserting that the place_population method places animals in valid cells, i.e cells that
+        corresponds to keys in the dictionary and that are not of type water.
         """
         i = Island(default_maps, default_population)
         hlist = [{'loc': (10, 9),
