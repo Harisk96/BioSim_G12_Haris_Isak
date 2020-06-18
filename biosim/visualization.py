@@ -77,15 +77,17 @@ class Visualization:
 
         plt.pause(0.01)
 
-    def update_graphics(self, distribution_array=None, num_species_dict=None):
+    def update_graphics(self, years, distribution_array=None, num_species_dict=None):
         """
         Updates the heatmaps and graphs
         :param distribution_array:
         :param num_species_dict: a dict containing the total number of animals per species
         :return: None
         """
-        self.steps += 1
-        self.changing_text.set_text('Year:' + str(self.steps))
+        self.steps +=1
+
+
+
 
         # Heatmap update
         if self.herbies_axis is None:
@@ -114,16 +116,21 @@ class Visualization:
         # line graph plot update:
         self.current_herbivore_data.append(num_species_dict['Herbivore'])
         self.current_carnivore_data.append(num_species_dict['Carnivore'])
+
         length = len(self.current_carnivore_data)
         x_value = list(np.arange(length))
-        self.linegraph_ax.set_ylim(0, max(self.current_herbivore_data) + 10)
+        x_value2 = []
+        for val in x_value:
+            x_value2.append(val*years)
+
+        self.linegraph_ax.set_ylim(0, (max(self.current_herbivore_data)))
 
         self.linegraph_ax.title.set_text('# of animals by species')
         self.linegraph_ax.set_xlabel('years')
         self.linegraph_ax.set_ylabel('number of species')
 
-        self.linegraph_ax.plot(x_value, self.current_herbivore_data, '-', color='g', linewidth=0.5)
-        self.linegraph_ax.plot(x_value, self.current_carnivore_data, '-', color='r', linewidth=0.5)
+        self.linegraph_ax.plot(x_value2, self.current_herbivore_data, '-', color='g', linewidth=0.5)
+        self.linegraph_ax.plot(x_value2, self.current_carnivore_data, '-', color='r', linewidth=0.5)
 
         plt.pause(1e-6)
 
