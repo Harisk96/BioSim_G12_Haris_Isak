@@ -154,19 +154,21 @@ class TestLandscape:
         for herb in c.current_herbivores:
             assert herb.weight - weight > 0
 
-    def test_feed_carnivore(self):
+    def test_feed_carnivore(self, mocker):
         """
         Checks if the feed_carnivores result in the expected sorting of the herbivores and
         carnivores according to their fitness, and whether the carnivores eat the weakest herbivore.
         """
         c = Cell()
+        mocker.patch("numpy.random.uniform", return_value=1)
         c.current_carnivores = [Carnivore(4, 8.0), Carnivore(2, 4.0), Carnivore(6, 12.0)]
         c.current_herbivores = [Herbivore(6, 30.0), Herbivore(2, 0.1), Herbivore(4, 40.0)]
         c.feed_carnivores()
         assert c.current_carnivores[0].fitness > c.current_carnivores[1].fitness
         assert c.current_carnivores[1].fitness > c.current_carnivores[2].fitness
         assert c.current_herbivores[0].fitness < c.current_herbivores[1].fitness
-        assert len(c.current_herbivores) < 3
+        assert c.current_herbivores[1].fitness < c.current_herbivores[2].fitness
+        #assert len(c.current_herbivores) < 3
 
     @pytest.mark.parametrize('FerCells', [Lowland, Highland])
     def test_feed_all(self, FerCells):
